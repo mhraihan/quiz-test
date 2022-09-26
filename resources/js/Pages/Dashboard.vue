@@ -11,11 +11,11 @@ import { store } from "@/store.js";
   <Head title="Quiz App" />
 
   <BreezeAuthenticatedLayout>
-    <!-- <template #header>
+    <template #header>
       <h2 class="text-xl font-semibold leading-tight text-gray-800">
         Dashboard
       </h2>
-    </template> -->
+    </template>
 
     <div class="py-12">
       <div class="text-gray-700">

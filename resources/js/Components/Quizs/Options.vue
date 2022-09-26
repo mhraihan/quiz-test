@@ -2,7 +2,7 @@
   <Loader v-if="store.loading"></Loader>
   <div v-else class="grid w-11/12 grid-cols-1 mx-auto gap-y-8 lg:w-5/12">
     <h1 class="my-12 text-3xl font-bold text-center">
-      Quiz<span class="text-purple-500">Test</span>
+      My Quiz<span class="text-purple-500">Test</span>
     </h1>
     <Listbox as="div" v-model="selectedCategory">
       <ListboxLabel class="block text-sm font-medium text-gray-700">
