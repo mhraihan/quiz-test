@@ -1,13 +1,19 @@
-import './bootstrap';
-import '../css/app.css';
+import '../css/main.css'
 
-import { createApp, h } from 'vue';
-import { createInertiaApp } from '@inertiajs/inertia-vue3';
-import { InertiaProgress } from '@inertiajs/progress';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
+import { createPinia } from 'pinia'
+import { useStyleStore } from '@/stores/style.js'
 
-const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
+import { darkModeKey, styleKey } from '@/config.js'
+
+import { createApp, h } from 'vue'
+import { createInertiaApp } from '@inertiajs/inertia-vue3'
+import { InertiaProgress } from '@inertiajs/progress'
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
+import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m'
+
+const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel'
+
+const pinia = createPinia()
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -15,9 +21,20 @@ createInertiaApp({
     setup({ el, app, props, plugin }) {
         return createApp({ render: () => h(app, props) })
             .use(plugin)
+            .use(pinia)
             .use(ZiggyVue, Ziggy)
-            .mount(el);
-    },
-});
+            .mount(el)
+    }
+})
 
-InertiaProgress.init({ color: '#4B5563' });
+InertiaProgress.init({ color: '#4B5563' })
+
+const styleStore = useStyleStore(pinia)
+
+/* App style */
+styleStore.setStyle(localStorage[styleKey] ?? 'basic')
+
+/* Dark mode */
+if ((!localStorage[darkModeKey] && window.matchMedia('(prefers-color-scheme: dark)').matches) || localStorage[darkModeKey] === '1') {
+  styleStore.setDarkMode(true)
+}
