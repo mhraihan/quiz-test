@@ -4,7 +4,6 @@ import { createPinia } from "pinia";
 import { useStyleStore } from "@/Stores/style.js";
 
 import { darkModeKey, styleKey } from "@/config.js";
-
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/inertia-vue3";
 import { InertiaProgress } from "@inertiajs/progress";
@@ -37,7 +36,7 @@ InertiaProgress.init({ color: "#4B5563" });
 const styleStore = useStyleStore(pinia);
 
 /* App style */
-styleStore.setStyle(localStorage[styleKey] ?? "basic");
+styleStore.setStyle("white");
 
 /* Dark mode */
 if (
@@ -45,5 +44,5 @@ if (
         window.matchMedia("(prefers-color-scheme: dark)").matches) ||
     localStorage[darkModeKey] === "1"
 ) {
-    styleStore.setDarkMode(true);
+    styleStore.setDarkMode(false);
 }

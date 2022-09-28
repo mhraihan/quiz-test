@@ -53,7 +53,7 @@ const is = computed(() => {
     return props.as;
   }
 
-  if (props.to) {
+  if (props.routeName) {
     return Link;
   }
 

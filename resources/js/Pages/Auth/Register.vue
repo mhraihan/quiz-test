@@ -11,6 +11,7 @@ import BaseDivider from "@/Components/BaseDivider.vue";
 import BaseButton from "@/Components/BaseButton.vue";
 import BaseButtons from "@/Components/BaseButtons.vue";
 import FormValidationErrors from "@/Components/FormValidationErrors.vue";
+import FormCheckRadioGroup from "@/Components/FormCheckRadioGroup.vue";
 const form = useForm({
   name: "",
   email: "",
@@ -110,7 +111,7 @@ const submit = () => {
             :class="{ 'opacity-25': form.processing }"
             :disabled="form.processing"
           />
-          <BaseButton route-name="login" color="info" outline label="Login" />
+          <BaseButton route-name="login" color="info" outline label="Login"/>
         </BaseButtons>
       </CardBox>
     </SectionFullScreen>

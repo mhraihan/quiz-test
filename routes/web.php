@@ -24,7 +24,7 @@ use Inertia\Inertia;
 //     ]);
 // });
 Route::get('/', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('HomeView');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/dashboard', function () {

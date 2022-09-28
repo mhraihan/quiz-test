@@ -59,7 +59,7 @@ const menuClick = (event) => {
 <template>
   <li>
     <component
-      :is="item.to ? Link : 'a'"
+      :is="item.route ? Link : 'a'"
       :href="itemHref"
       :target="item.target ?? null"
       class="flex cursor-pointer"
