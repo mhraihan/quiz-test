@@ -6,8 +6,8 @@ import {
   mdiMail,
   mdiAsterisk,
   mdiFormTextboxPassword,
-  mdiGithub,
 } from "@mdi/js";
+import { usePage } from "@inertiajs/inertia-vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import CardBox from "@/Components/CardBox.vue";
 import BaseDivider from "@/Components/BaseDivider.vue";
@@ -21,8 +21,8 @@ import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 const mainStore = useMainStore();
 const profileForm = reactive({
-  name: mainStore.userName,
-  email: mainStore.userEmail,
+  name: usePage().props.value.auth.user.name || mainStore.userName,
+  email: usePage().props.value.auth.user.name || mainStore.userEmail,
 });
 const passwordForm = reactive({
   password_current: "",
@@ -40,17 +40,7 @@ const submitPass = () => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiAccount" title="Profile" main>
-        <BaseButton
-          href="https://github.com/justboil/admin-one-vue-tailwind"
-          target="_blank"
-          :icon="mdiGithub"
-          label="Star on GitHub"
-          color="contrast"
-          rounded-full
-          small
-        />
-      </SectionTitleLineWithButton>
+      <SectionTitleLineWithButton :icon="mdiAccount" title="Profile" main />
 
       <UserCard class="mb-6" />
 

@@ -31,6 +31,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('HomeView');
 })->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/profile', function () {
+    // sleep(3);
     return Inertia::render('Profile');
 })->middleware(['auth', 'verified'])->name('profile');
 require __DIR__ . '/auth.php';

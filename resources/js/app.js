@@ -1,4 +1,4 @@
-import "../css/main.css";
+import "../css/main.scss";
 
 import { createPinia } from "pinia";
 import { useStyleStore } from "@/Stores/style.js";
