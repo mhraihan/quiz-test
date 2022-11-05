@@ -104,7 +104,7 @@ class QuestionController extends Controller
 //            'Question' => $question,
 //            'image' => $question->image ? $question->imageUrl() : null,
 //        ]);
-        return response()->json(['questions' => $question]);
+        return response()->json(['questions' => Category::all()]);
     }
 
     /**
