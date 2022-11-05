@@ -95,16 +95,16 @@ class QuestionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Question $question
-     * @return Question
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(Question $question): Question
+    public function edit(Question $question): \Illuminate\Http\JsonResponse
     {
 //        return inertia('Question/Edit', [
 //            'Categories' => Category::all(),
 //            'Question' => $question,
 //            'image' => $question->image ? $question->imageUrl() : null,
 //        ]);
-        return $question;
+        return response()->json(['questions' => $question]);
     }
 
     /**

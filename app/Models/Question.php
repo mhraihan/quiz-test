@@ -17,7 +17,7 @@ class Question extends Model
 
 
     protected $casts = [
-        'options' => 'object',
+        'options' => 'array',
         'is_active' => 'boolean',
     ];
 
