@@ -149,8 +149,8 @@ const destroyModal = () => {
         <BaseDivider />
 
         <FormField
-            label="Explain"
-            help="Required. Question explain"
+            label="Question Explaination (optional)"
+            help="Please explain about the question"
             :error="questions.errors.explain"
         >
             <div class="flex flex-col">

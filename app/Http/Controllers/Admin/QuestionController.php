@@ -95,22 +95,15 @@ class QuestionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Question $question
-     * @return RedirectResponse|Response|ResponseFactory
+     * @return Response|ResponseFactory
      */
-    public function edit(Question $question): Response|ResponseFactory|RedirectResponse
+    public function edit(Question $question): Response|ResponseFactory
     {
-//        ray('questions show: '. $question->id);
-        try {
-            return inertia('Question/Edit', [
-                'Categories' => Category::all(),
-                'Question' => $question,
-                'image' => $question->image ? $question->imageUrl() : null,
-            ]);
-        } catch (InvalidUploadFieldException $e) {
-            return redirect()->back()->withErrors([
-                'create' => 'ups, there was an error' . $e
-            ]);
-        }
+        return inertia('Question/Edit', [
+            'Categories' => Category::all(),
+            'Question' => $question,
+            'image' => $question->image ? $question->imageUrl() : null,
+        ]);
     }
 
     /**

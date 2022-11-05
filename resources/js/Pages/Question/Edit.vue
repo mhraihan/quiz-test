@@ -1,41 +1,61 @@
 <script setup>
-import Breadcrumbs from "@/Components/Breadcrumbs.vue";
-
 import { mdiPencilPlus } from "@mdi/js";
 import SectionMain from "@/Components/SectionMain.vue";
 import CardBox from "@/Components/CardBox.vue";
 
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
-import {Head, useForm} from "@inertiajs/inertia-vue3";
+import { Head, useForm } from "@inertiajs/inertia-vue3";
+import Form from "./Form.vue";
+import Breadcrumbs from "@/Components/Breadcrumbs.vue";
+import {computed, ref, watch} from "vue";
 import { notify } from "notiwind"
 import intus from "intus";
-import {isRequired, isIn, isBetween, isImage} from "intus/rules";
-import Form from "./Form.vue";
+import {isBetween, isImage, isIn, isRequired} from "intus/rules";
+
 const props = defineProps({
     Categories: Object,
+    Question: Object,
+    image: String,
 });
+
+const options = props.Question.options;
 const hasTable = true;
-
-const options = {
-    a: "",
-    b: "",
-    c: "",
-    d: "",
-};
 const questions = useForm({
-    title: "",
-    details: "",
-    explain: "",
+    id: props.Question.id,
+    title: props.Question.title,
+    details: props.Question.details,
+    explain: props.Question.explain,
     options,
-    correct_answer: "a",
-    is_active: true,
+    correct_answer: props.Question.correct_answer,
+    is_active: props.Question.is_active,
     image: null,
-    category_id: props?.Categories[0]?.id || null,
+    deleted_at: props.Question.deleted_at,
+    category_id: props.Question.category_id || null,
     topic_id: null,
+    _method: "put",
 });
+const link = computed(() => questions.deleted_at ? 'admin.questions.trash' : 'admin.questions.index');
 
-const createQuestion = () => {
+const removeQuestionImage = ref(false);
+const image = ref(props.image);
+
+watch(() => questions.image , () => {
+    if (questions.image){
+        image.value = URL.createObjectURL(questions.image)
+    }
+})
+const removeImage = () => {
+    console.log('remove image');
+    image.value = null;
+    removeQuestionImage.value = true;
+    questions.image = null;
+};
+const updateQuestion = () => {
+    console.log(questions.image,removeQuestionImage.value)
+    if (!questions.image && !removeQuestionImage.value) {
+        delete questions.image;
+    }
     questions.clearErrors();
     const validation = intus.validate(questions.data(), {
         title: [isRequired()],
@@ -53,55 +73,115 @@ const createQuestion = () => {
         'options.d.isRequired' : "Option C can not be blank",
         'image.isImage' : "Input file must be a valid image",
     });
-    if (validation.passes()) {
-        questions
-            .transform((data) => ({
-                ...data,
-                image: data.image ? data.image : null,
-                explain: data.explain !== "<p><br></p>" ? data.explain : null
-            }))
-            .post(route("admin.questions.store"), {
-                "onSuccess": () => {
-                    notify({
-                        group: "notification",
-                        type: "success",
-                        title: "Success",
-                        text:  'Question created successfully'
-                    }, 4000)
-                },
-                onError: (e) => console.log(e),
-            });
-    } else {
-        questions.setError(validation.errors());
-        notify({
-            group: "notification",
-            type: "error",
-            title: "Error",
-            text: 'Something went wrong'
-        }, 4000) // 4s
-    }
-
+   if (validation.passes()) {
+       questions
+           .transform((data) => ({
+               ...data,
+               details: data.details !== "<p><br></p>" ? data.details : null,
+               explain: data.explain !== "<p><br></p>" ? data.explain : null
+           }))
+           .post(route("admin.questions.update", props.Question.id), {
+               "onSuccess": () => {
+                   questions.image = null;
+                   notify({
+                       group: "notification",
+                       type: "success",
+                       title: "Success"
+                   }, 4000) // 4s
+                   removeQuestionImage.value = false;
+               },
+               onError: () => {
+                   notify({
+                       group: "notification",
+                       type: "error",
+                       title: "Error",
+                       text: 'Something went wrong'
+                   }, 4000) // 4s
+               }
+           });
+   }else {
+       notify({
+           group: "notification",
+           type: "error",
+           title: "Error",
+           text: 'Something went wrong'
+       }, 4000) // 4s
+       questions.setError(validation.errors());
+   }
 };
+
+
+const destroyQuestion = () => {
+    questions.delete(route('admin.questions.destroy',  questions.id), {
+        onSuccess: () => {
+            questions.deleted_at = questions.deleted_at || new Date();
+            notify({
+                group: "notification",
+                type: "success",
+                title: "Success"
+            }, 4000) // 4s
+            questions.clearErrors();
+        },
+        onError: () => {
+            notify({
+                group: "notification",
+                type: "error",
+                title: "Error",
+                text: 'Something went wrong'
+            }, 4000) // 4s
+        }
+    });
+}
+const restoreQuestion = () => {
+    questions.put(route('admin.questions.restore', questions.id),{
+            onSuccess: () => {
+                questions.deleted_at = null;
+                notify({
+                    group: "notification",
+                    type: "success",
+                    title: "Success"
+                }, 4000) // 4s
+            },
+            onError: () => {
+                notify({
+                    group: "notification",
+                    type: "error",
+                    title: "Error",
+                    text: 'Something went wrong'
+                }, 4000) // 4s
+            }
+        })
+
+}
 </script>
 
 <template>
-    <Head title="Create new Question" />
+    <Head><title>Edit Question - {{ questions.title }}</title></Head>
     <LayoutAuthenticated>
+
         <SectionMain>
-            <Breadcrumbs :href="route('admin.questions.index')" title="Questions" location="Create New Question" />
+            <Breadcrumbs :href="route(link)" title="Questions" :location="questions.title"/>
             <SectionTitleLineWithButton
+                v-if="!questions.deleted_at"
                 :icon="mdiPencilPlus"
-                title="Create new Question"
+                title="Update the Question"
                 main
             />
 
             <div class="grid grid-cols-1">
                 <CardBox
-                    is-form
-                    @submit.prevent="createQuestion"
                     :hasTable="hasTable"
-                >
-                    <Form :questions="questions" :Categories="Categories" />
+                    is-form
+                    @submit.prevent="updateQuestion">
+                    <Form
+                        :questions="questions"
+                        :image="image"
+                        :Categories="Categories"
+                        buttonText="Update Question"
+                        @destroy="destroyQuestion"
+                        @restore="restoreQuestion"
+                        @removeImage="removeImage"
+                    />
                 </CardBox>
             </div>
         </SectionMain>
