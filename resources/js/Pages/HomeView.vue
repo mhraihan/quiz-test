@@ -1,14 +1,10 @@
 <script setup>
-import { computed, ref, onMounted } from "vue";
+import { computed } from "vue";
 import { useMainStore } from "@/Stores/main";
 import {
     mdiAccountMultiple,
     mdiCartOutline,
     mdiChartTimelineVariant,
-    mdiMonitorCellphone,
-    mdiReload,
-    mdiGithub,
-    mdiChartPie,
 } from "@mdi/js";
 
 import SectionMain from "@/Components/SectionMain.vue";
@@ -21,7 +17,6 @@ import CardBoxTransaction from "@/Components/CardBoxTransaction.vue";
 import CardBoxClient from "@/Components/CardBoxClient.vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
-import SectionBannerStarOnGitHub from "@/Components/SectionBannerStarOnGitHub.vue";
 
 const mainStore = useMainStore();
 const clientBarItems = computed(() => mainStore.clients.slice(0, 4));

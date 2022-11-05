@@ -2,8 +2,8 @@ import "../css/main.scss";
 
 import { createPinia } from "pinia";
 import { useStyleStore } from "@/Stores/style.js";
-
-import { darkModeKey, styleKey } from "@/config.js";
+import Notifications from 'notiwind';
+import { darkModeKey } from "@/config.js";
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/inertia-vue3";
 import { InertiaProgress } from "@inertiajs/progress";
@@ -24,6 +24,7 @@ createInertiaApp({
         ),
     setup({ el, app, props, plugin }) {
         return createApp({ render: () => h(app, props) })
+            .use(Notifications)
             .use(plugin)
             .use(pinia)
             .use(ZiggyVue, Ziggy)

@@ -185,7 +185,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        QCod\ImageUp\ImageUpServiceProvider::class,
         /*
          * Application Service Providers...
          */

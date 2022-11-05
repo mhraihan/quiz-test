@@ -24,10 +24,14 @@ const props = defineProps({
     type: String,
     default: "info",
   },
+    error: {
+        type: String,
+        default: null,
+    },
   isRoundIcon: Boolean,
 });
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue","upload"]);
 
 const root = ref(null);
 
@@ -41,7 +45,7 @@ watch(modelValueProp, (value) => {
   file.value = value;
 
   if (!value) {
-    root.value.input.value = null;
+    root.value = null;
   }
 });
 
@@ -130,4 +134,5 @@ const upload = (event) => {
       </span>
     </div>
   </div>
+    <div v-if="error" class="mt-1 text-xs dark:text-slate-400 text-red-500">{{ error }}</div>
 </template>

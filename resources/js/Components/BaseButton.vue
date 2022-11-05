@@ -29,6 +29,14 @@ const props = defineProps({
     type: String,
     default: null,
   },
+    routeParams:{
+      type: Number,
+        default: null,
+    },
+    link: {
+        type: String,
+        default: null,
+    },
   type: {
     type: String,
     default: null,
@@ -41,6 +49,7 @@ const props = defineProps({
     type: String,
     default: null,
   },
+
   small: Boolean,
   outline: Boolean,
   active: Boolean,
@@ -56,9 +65,11 @@ const is = computed(() => {
   if (props.routeName) {
     return Link;
   }
-
+    if (props.link) {
+        return Link;
+    }
   if (props.href) {
-    return "a";
+      return Link;
   }
 
   return "button";
@@ -113,11 +124,11 @@ const componentClass = computed(() => {
     :is="is"
     :class="componentClass"
     :type="computedType"
-    :href="routeName ? route(routeName) : href"
+    :href="routeName ? route(routeName,routeParams) : href"
     :target="target"
     :disabled="disabled"
   >
     <BaseIcon v-if="icon" :path="icon" :size="iconSize" />
-    <span v-if="label" :class="labelClass">{{ label }}</span>
+    <span v-if="label" :class="labelClass" v-html="label"></span>
   </component>
 </template>

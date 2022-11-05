@@ -11,6 +11,7 @@ import NavBar from "@/Components/NavBar.vue";
 import NavBarItemPlain from "@/Components/NavBarItemPlain.vue";
 import AsideMenu from "@/Components/AsideMenu.vue";
 import FooterBar from "@/Components/FooterBar.vue";
+import FlashMessages from "@/Components/FlashMessages.vue";
 
 useMainStore().setUser({
     name: usePage().props.value.auth.user.name,
@@ -86,7 +87,8 @@ const menuClick = (event, item) => {
                 @menu-click="menuClick"
                 @aside-lg-close-click="isAsideLgActive = false"
             />
-            <div class="body-height">
+            <div class="body-height main-layout">
+                <flash-messages />
                 <slot />
             </div>
             <FooterBar></FooterBar>

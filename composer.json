@@ -11,9 +11,12 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.7",
+        "qcod/laravel-imageup": "^1.2",
+        "spatie/laravel-ray": "^1.31",
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.12",
         "fakerphp/faker": "^1.9.1",
         "laravel/breeze": "^1.12",
         "laravel/pint": "^1.0",

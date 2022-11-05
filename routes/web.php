@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\Admin\QuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,4 +35,25 @@ Route::get('/profile', function () {
     // sleep(3);
     return Inertia::render('Profile');
 })->middleware(['auth', 'verified'])->name('profile');
+
+
+/**O
+ * Admin Group Controller
+ *
+ */
+
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'verified'], 'as' => 'admin.'], function () {
+
+    /**
+     * Question Controller
+     */
+    Route::get('questions/trash', [QuestionController::class, 'trash'])
+        ->name('questions.trash')->withTrashed();
+    Route::put('questions/{question}/restore', [QuestionController::class, 'restore'])
+        ->name('questions.restore')->withTrashed();
+    Route::delete('questions/{question}', [QuestionController::class, 'forceDelete'])
+        ->name('questions.delete')->withTrashed();
+    route::resource("questions", QuestionController::class)->withTrashed(['index','show','edit','destroy']);
+});
+
 require __DIR__ . '/auth.php';

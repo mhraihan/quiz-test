@@ -27,3 +27,4 @@ Thumbs.db
 .DS_Store
 resources/.DS_Store
 resources/js/.DS_Store
+/_ide_helper_models.php

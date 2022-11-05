@@ -27,18 +27,5 @@ export const useMainStore = defineStore("main", {
         this.userAvatar = payload.avatar;
       }
     },
-
-    fetch(sampleDataKey) {
-      axios
-        .get(`data-sources/${sampleDataKey}.json`)
-        .then((r) => {
-          if (r.data && r.data.data) {
-            this[sampleDataKey] = r.data.data;
-          }
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
-    },
   },
 });
