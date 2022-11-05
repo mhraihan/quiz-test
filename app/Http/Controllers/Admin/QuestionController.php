@@ -95,15 +95,16 @@ class QuestionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Question $question
-     * @return Response|ResponseFactory
+     * @return Question
      */
-    public function edit(Question $question): Response|ResponseFactory
+    public function edit(Question $question): Question
     {
-        return inertia('Question/Edit', [
-            'Categories' => Category::all(),
-            'Question' => $question,
-            'image' => $question->image ? $question->imageUrl() : null,
-        ]);
+//        return inertia('Question/Edit', [
+//            'Categories' => Category::all(),
+//            'Question' => $question,
+//            'image' => $question->image ? $question->imageUrl() : null,
+//        ]);
+        return $question;
     }
 
     /**
