@@ -22,7 +22,7 @@ return new class extends Migration
             $table->longText('details');
             $table->binary('explain')->nullable();
             $table->string('image')->nullable();
-            $table->json('options');
+            $table->longText('options');
             $table->enum('correct_answer', ['a', 'b', 'c', 'd']);
             $table->boolean('is_active')->nullable()->default(true);
             $table->softDeletes();

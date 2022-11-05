@@ -46,13 +46,11 @@ watch(() => questions.image , () => {
     }
 })
 const removeImage = () => {
-    console.log('remove image');
     image.value = null;
     removeQuestionImage.value = true;
     questions.image = null;
 };
 const updateQuestion = () => {
-    console.log(questions.image,removeQuestionImage.value)
     if (!questions.image && !removeQuestionImage.value) {
         delete questions.image;
     }

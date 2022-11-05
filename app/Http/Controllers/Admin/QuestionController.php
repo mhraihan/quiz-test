@@ -95,16 +95,22 @@ class QuestionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Question $question
-     * @return \Illuminate\Http\JsonResponse
+     * @return RedirectResponse|Response|ResponseFactory
      */
-    public function edit(Question $question): \Illuminate\Http\JsonResponse
+    public function edit(Question $question): Response|ResponseFactory|RedirectResponse
     {
-//        return inertia('Question/Edit', [
-//            'Categories' => Category::all(),
-//            'Question' => $question,
-//            'image' => $question->image ? $question->imageUrl() : null,
-//        ]);
-        return response()->json(['questions' => Category::all()]);
+//        ray('questions show: '. $question->id);
+        try {
+            return inertia('Question/Edit', [
+                'Categories' => Category::all(),
+                'Question' => $question,
+                'image' => $question->image ? $question->imageUrl() : null,
+            ]);
+        } catch (InvalidUploadFieldException $e) {
+            return redirect()->back()->withErrors([
+                'create' => 'ups, there was an error' . $e
+            ]);
+        }
     }
 
     /**
@@ -116,7 +122,6 @@ class QuestionController extends Controller
      */
     public function update(StoreQuestionRequest $request, Question $question): RedirectResponse
     {
-        ray($request->all());
         if (is_null($request->image) && !is_null($question->image)){
             $question->deleteFile($question->image);
         }

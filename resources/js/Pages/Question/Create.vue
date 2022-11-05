@@ -69,7 +69,14 @@ const createQuestion = () => {
                         text:  'Question created successfully'
                     }, 4000)
                 },
-                onError: (e) => console.log(e),
+                onError: () => {
+                    notify({
+                        group: "notification",
+                        type: "error",
+                        title: "Error",
+                        text: 'Something went wrong'
+                    }, 4000) // 4s
+                }
             });
     } else {
         questions.setError(validation.errors());
