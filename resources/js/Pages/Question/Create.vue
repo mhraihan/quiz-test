@@ -12,6 +12,7 @@ import { notify } from "notiwind"
 import intus from "intus";
 import {isRequired, isIn, isBetween, isImage} from "intus/rules";
 import Form from "./Form.vue";
+import {ref, watch} from "vue";
 const props = defineProps({
     Categories: Object,
 });
@@ -34,7 +35,19 @@ const questions = useForm({
     category_id: props?.Categories[0]?.id || null,
     topic_id: null,
 });
+const removeQuestionImage = ref(false);
+const image = ref(null);
 
+watch(() => questions.image , () => {
+    if (questions.image){
+        image.value = URL.createObjectURL(questions.image)
+    }
+})
+const removeImage = () => {
+    image.value = null;
+    removeQuestionImage.value = true;
+    questions.image = null;
+};
 const createQuestion = () => {
     questions.clearErrors();
     const validation = intus.validate(questions.data(), {
@@ -108,7 +121,7 @@ const createQuestion = () => {
                     @submit.prevent="createQuestion"
                     :hasTable="hasTable"
                 >
-                    <Form :questions="questions" :Categories="Categories" />
+                    <Form :questions="questions" :Categories="Categories" :image="image"  @removeImage="removeImage"/>
                 </CardBox>
             </div>
         </SectionMain>

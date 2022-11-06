@@ -75,8 +75,7 @@ class QuestionController extends Controller
      */
     public function store(StoreQuestionRequest $request): RedirectResponse
     {
-        ray(request()->all(),$request);
-        $request->user()->questions()->create($request->all());
+        $request->user()->questions()->create($request->validated());
         return redirect()->route('admin.questions.index')->with('success', 'Question Created Successfully');
     }
 
@@ -99,7 +98,6 @@ class QuestionController extends Controller
      */
     public function edit(Question $question): Response|ResponseFactory|RedirectResponse
     {
-//        ray('questions show: '. $question->id);
         try {
             return inertia('Question/Edit', [
                 'Categories' => Category::all(),
@@ -137,7 +135,6 @@ class QuestionController extends Controller
      */
     public function destroy(Question $question): RedirectResponse
     {
-        ray($question);
         if ($question->deleted_at) {
             return $this->forceDelete($question);
         }
@@ -148,13 +145,11 @@ class QuestionController extends Controller
     public function restore(Question $question): RedirectResponse
     {
         $question->restore();
-        ray($question);
         return redirect()->back()->with('success', 'Question restored.');
     }
 
     public function forceDelete(Question $question): RedirectResponse
     {
-        ray($question);
         if (!is_null($question->image)){
             $question->deleteFile($question->image);
         }
