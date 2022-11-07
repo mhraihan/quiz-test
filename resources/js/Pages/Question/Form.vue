@@ -16,6 +16,7 @@ import {ref} from "vue";
 
 const props = defineProps({
     Categories: Object,
+    Topics: Object,
     questions: Object,
     image: String,
     buttonText: {
@@ -90,7 +91,23 @@ const destroyModal = () => {
         </div>
         <BaseDivider />
 
-        <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <FormField
+                label="Question topic"
+                help="Required. Question topic"
+                :error="questions.errors.topic_id"
+            >
+                <FormControl
+                    :uppercase="'capitalize'"
+                    v-model="questions.topic_id"
+                    name="topic"
+                    type="select"
+                    placeholder="please select the topic"
+                    required
+                    :options="props.Topics"
+                    :error="questions.errors.topic_id"
+                />
+            </FormField>
             <FormField
                 label="Question category"
                 help="Required. Question category"

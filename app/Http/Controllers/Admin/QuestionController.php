@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Category;
 use App\Models\Question;
+use App\Models\Topic;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Question\StoreQuestionRequest;
@@ -64,6 +65,7 @@ class QuestionController extends Controller
     {
         return inertia('Question/Create', [
             'Categories' => Category::all(),
+            'Topics' => Topic::all(),
         ]);
     }
 
@@ -101,12 +103,13 @@ class QuestionController extends Controller
         try {
             return inertia('Question/Edit', [
                 'Categories' => Category::all(),
+                'Topics' => Topic::all(),
                 'Question' => $question,
                 'image' => $question->image ? $question->imageUrl() : null,
             ]);
         } catch (InvalidUploadFieldException $e) {
             return redirect()->back()->withErrors([
-                'create' => 'ups, there was an error' . $e
+                'error' => 'ups, there was an error' . $e
             ]);
         }
     }

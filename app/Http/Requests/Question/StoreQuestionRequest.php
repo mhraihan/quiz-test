@@ -33,7 +33,7 @@ class StoreQuestionRequest extends FormRequest
             'options' => ['required', 'array', 'required_array_keys:a,b,c,d'],
             'options.*' => ['required', 'string'],
             'correct_answer' => ['required', 'string', Rule::in(['a', 'b', 'c', 'd'])],
-            'topic_id' => ['nullable', 'numeric'],
+            'topic_id' => ['nullable', 'numeric','exists:topics,id'],
             'category_id' => ['required', 'numeric', 'exists:categories,id', 'between:1,4']
         ];
     }

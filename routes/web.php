@@ -54,6 +54,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'verified'], 'as' =>
     Route::delete('questions/{question}', [QuestionController::class, 'forceDelete'])
         ->name('questions.delete')->withTrashed();
     route::resource("questions", QuestionController::class)->withTrashed(['index','show','edit','destroy']);
+    /**
+     * Topics Controller
+     */
+    route::resource("questions", QuestionController::class)->withTrashed(['index','show','edit','destroy']);
 });
 
 require __DIR__ . '/auth.php';

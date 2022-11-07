@@ -64,4 +64,8 @@ class Question extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    public function topic(): BelongsTo
+    {
+        return $this->belongsTo(Topic::class);
+    }
 }

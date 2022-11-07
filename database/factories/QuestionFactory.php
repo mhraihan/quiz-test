@@ -23,6 +23,7 @@ class QuestionFactory extends Factory
             'correct_answer' =>  fake()->randomElement(['a','b','c','d']),
             'category_id' => random_int(1,4),
             'user_id' => random_int(1,1),
+            'topic_id' => random_int(1,1),
             'options' => ["a" => fake()->word(), "b" => fake()->word(), "c" => fake()->word(),"d" => fake()->word()]
         ];
     }

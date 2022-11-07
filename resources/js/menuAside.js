@@ -1,16 +1,9 @@
 import {
-    mdiAccountCircle,
     mdiMonitor,
     mdiTrashCan,
-    mdiLock,
-    mdiAlertCircle,
-    mdiSquareEditOutline,
     mdiTable,
     mdiViewList,
-    mdiTelevisionGuide,
-    mdiResponsive,
-    mdiPalette,
-    mdiReact,
+    mdiMarker,
 } from "@mdi/js";
 
 export default [
@@ -41,13 +34,20 @@ export default [
         ],
     },
     {
-        route: "profile",
-        icon: mdiMonitor,
-        label: "Profile",
+        label: "Topics",
+        icon: mdiMarker,
+        menu: [
+            {
+                route: "admin.questions.index",
+                icon: mdiTable,
+                label: "All Topics",
+            },
+            {
+                route: "admin.questions.create",
+                icon: mdiTable,
+                label: "Create Topic",
+            },
+        ],
     },
-    {
-        to: "/register",
-        icon: mdiMonitor,
-        label: "Register",
-    },
+
 ];
