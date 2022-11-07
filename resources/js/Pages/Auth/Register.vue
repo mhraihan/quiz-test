@@ -12,6 +12,8 @@ import BaseButton from "@/Components/BaseButton.vue";
 import BaseButtons from "@/Components/BaseButtons.vue";
 import FormValidationErrors from "@/Components/FormValidationErrors.vue";
 import FormCheckRadioGroup from "@/Components/FormCheckRadioGroup.vue";
+import Expired from "@/Components/Expired.vue";
+
 const form = useForm({
   name: "",
   email: "",
@@ -43,6 +45,7 @@ const submit = () => {
         is-form
         @submit.prevent="submit"
       >
+          <Expired />
         <FormValidationErrors />
         <FormField label="Name" label-for="name" help="Please enter your name">
           <FormControl

@@ -11,6 +11,7 @@ import BaseButton from "@/Components/BaseButton.vue";
 import FormValidationErrors from "@/Components/FormValidationErrors.vue";
 import NotificationBarInCard from "@/Components/NotificationBarInCard.vue";
 import BaseLevel from "@/Components/BaseLevel.vue";
+import Expired from "@/Components/Expired.vue";
 
 defineProps({
   status: {
@@ -34,7 +35,9 @@ const submit = () => {
 
     <SectionFullScreen v-slot="{ cardClass }" bg="purplePink">
       <CardBox :class="cardClass" is-form @submit.prevent="submit">
-        <FormValidationErrors />
+          <Expired />
+
+          <FormValidationErrors />
 
         <NotificationBarInCard v-if="status" color="info">
           {{ status }}

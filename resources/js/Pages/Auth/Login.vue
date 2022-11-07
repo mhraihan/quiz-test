@@ -13,6 +13,7 @@ import BaseButtons from "@/Components/BaseButtons.vue";
 import FormValidationErrors from "@/Components/FormValidationErrors.vue";
 import NotificationBarInCard from "@/Components/NotificationBarInCard.vue";
 import BaseLevel from "@/Components/BaseLevel.vue";
+import Expired from "@/Components/Expired.vue";
 
 const props = defineProps({
   canResetPassword: Boolean,
@@ -46,6 +47,7 @@ const submit = () => {
 
     <SectionFullScreen v-slot="{ cardClass }" bg="purplePink">
       <CardBox :class="cardClass" is-form @submit.prevent="submit">
+        <Expired />
         <FormValidationErrors />
 
         <NotificationBarInCard v-if="status" color="info">
