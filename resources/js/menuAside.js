@@ -4,6 +4,7 @@ import {
     mdiTable,
     mdiViewList,
     mdiMarker,
+    mdiBookHeartOutline
 } from "@mdi/js";
 
 export default [
@@ -38,16 +39,20 @@ export default [
         icon: mdiMarker,
         menu: [
             {
-                route: "admin.questions.index",
+                route: "admin.topics.index",
                 icon: mdiTable,
                 label: "All Topics",
             },
             {
-                route: "admin.questions.create",
+                route: "admin.topics.create",
                 icon: mdiTable,
                 label: "Create Topic",
             },
         ],
     },
-
+    {
+        route: "quiz.index",
+        icon: mdiBookHeartOutline,
+        label: "Quiz",
+    },
 ];

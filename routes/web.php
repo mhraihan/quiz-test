@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\TopicController;
+use App\Http\Controllers\QuizController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -53,11 +55,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'verified'], 'as' =>
         ->name('questions.restore')->withTrashed();
     Route::delete('questions/{question}', [QuestionController::class, 'forceDelete'])
         ->name('questions.delete')->withTrashed();
-    route::resource("questions", QuestionController::class)->withTrashed(['index','show','edit','destroy']);
+    route::resource("questions", QuestionController::class)->withTrashed(['index', 'show', 'edit', 'destroy']);
     /**
      * Topics Controller
      */
-    route::resource("questions", QuestionController::class)->withTrashed(['index','show','edit','destroy']);
-});
+    route::resource("topics", TopicController::class);
 
+});
+Route::group(['middleware' => ['auth', 'verified']], function () {
+    /**
+     * Quiz Controller
+     */
+    route::get("quiz", [QuizController::class,'index'])->name('quiz.index');
+    route::post("quiz", [QuizController::class,'show'])->name('quiz.show');
+});
 require __DIR__ . '/auth.php';
