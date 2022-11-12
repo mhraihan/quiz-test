@@ -40,17 +40,26 @@ class Question extends Model
     ];
 
 
-    public function scopeFilter($query, array $filters): void
+    public function scopeFilter($query, array $search, $trash): void
     {
-        $query->when($filters['search'] ?? null, function ($query, $search) {
-            $query->where('title', 'like', '%'.$search.'%');
-        })->when($filters['trashed'] ?? null, function ($query, $trashed) {
-            if ($trashed === 'with') {
-                $query->withTrashed();
-            } elseif ($trashed === 'only') {
-                $query->onlyTrashed();
-            }
+        ray($search, $trash);
+        $query->when($search['search'] ?? null, function ($query, $input) {
+            $query->where('title', 'like', '%'.$input.'%');
+        })->when($trash ?? null, function ($query) {
+            $query->onlyTrashed();
         });
+    }
+
+    public function scopeIndex($query, array $trash = ['trash' => false]): mixed
+    {
+       return $query->latest()
+            ->filter(request()->only('search'),$trash['trash'])
+            ->paginate(20)
+            ->withQueryString()
+            ->through(fn ($question) => [
+                'id' => $question->id,
+                'title' => $question->title
+            ]);
     }
 
     /**

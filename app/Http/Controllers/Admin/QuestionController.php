@@ -23,15 +23,7 @@ class QuestionController extends Controller
     public function index(): Response|ResponseFactory
     {
         return inertia('Question/Index', [
-            'Questions' => Question::query()
-                ->orderBy('created_at', 'DESC')
-                ->filter(request()->only('search', 'trashed'))
-                ->paginate(20)
-                ->withQueryString()
-                ->through(fn ($question) => [
-                    'id' => $question->id,
-                    'title' => $question->title
-                ]),
+            'Questions' => Question::query()->index(),
             'title' => 'All Questions'
         ]);
     }
@@ -43,15 +35,7 @@ class QuestionController extends Controller
     public function trash(): Response|ResponseFactory
     {
         return inertia('Question/Trash', [
-            'Questions' => Question::query()
-                ->orderBy('created_at', 'DESC')
-                ->onlyTrashed()
-                ->paginate(20)
-                ->withQueryString()
-                ->through(fn ($question) => [
-                    'id' => $question->id,
-                    'title' => $question->title
-                ]),
+            'Questions' => Question::query()->index(['trash' => true]),
             'title' => 'All Trashed Questions'
         ]);
     }
