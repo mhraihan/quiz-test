@@ -22,25 +22,21 @@ class QuizController extends Controller
 
     public function show(Request $request)
     {
-//        ray($request->all());
+
         $request->validate([
-            'category_id' => ['required', 'numeric', 'exists:categories,id', 'between:1,4'],
+            'category_id' => ['required', 'numeric','between:1,4'],
             'topic_id' => ['nullable', 'array'],
-            'topic_id.*' => ['nullable', 'numeric', 'exists:topics,id'],
+            'topic_id.*' => ['nullable', 'numeric'],
             'howManyQuestions' => ['required', 'numeric', 'between:1,20'],
         ]);
 
         $topics = array_filter(request()->input('topic_id'));
 
         $questions = Question::query()
-            ->with(['topic', 'category'])
             ->when($topics, function ($query, $topics) {
-                ray($topics);
-
                 $query->whereIn('topic_id', $topics);
             })
             ->where('category_id', request()->input('category_id'))
-//            ->select('id', 'title', 'details', 'options')
             ->get()
             ->map(fn($quiz) => [
                 'id' => $quiz->id,
@@ -52,6 +48,6 @@ class QuizController extends Controller
             ->shuffle()
             ->take($request->input('howManyQuestions'));
 
-        return response()->json(['questions' => $questions]);
+        return response()->json(['questions' => $questions, 'start_time' => now()]);
     }
 }

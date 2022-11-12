@@ -21,6 +21,7 @@ import axios from "axios";
 import {computed, ref} from "vue";
 import Loader from "@/Components/Loader.vue";
 import Question from "@/Pages/Quiz/Question.vue";
+import Summary from "@/Pages/Quiz/Summary.vue";
 import {range} from "lodash";
 
 const props = defineProps({
@@ -28,58 +29,80 @@ const props = defineProps({
     Topics: Object,
 });
 
-const topics = [{
-    label: 'Random',
-    value: null
-}, ...props.Topics];
+const topics = props.Topics.length > 1 ? [{label: 'Random', value: 0}, ...props.Topics] : props.Topics;
 
 const quiz = useForm({
     category_id: props?.Categories[0]?.value || null,
     topic_id: [topics[0].value],
     howManyQuestions: 1,
-    questions: null
+    questions: null,
+    result: null,
+    start_time: null,
 });
-
+const backToQuiz = () => {
+    quiz.questions = null;
+}
 const loading = ref(false);
-const howManyQuestions = computed(() =>range(1,21));
+const howManyQuestions = computed(() => range(1, 21));
+const notification = ({ type = 'error', title = 'Error',text = 'Please select Question Topics, Difficulty label and Question Interval'} = {}) => {
+    notify({
+        group: "notification",
+        type,
+        title,
+        text,
+    }, 4000) // 4s
+}
+const showLoader = () => {
+    loading.value = !loading.value;
+}
 
 const getQuiz = () => {
     quiz.clearErrors();
     const validation = intus.validate(quiz.data(), {
-        topic_id: [isRequired()],
-        category_id: [isRequired(), isBetween(1, 4)],
-        howManyQuestions: [isRequired(), isBetween(1, 20)]
-    },{
+        "topic_id": [isRequired()],
+        "category_id": [isRequired(), isBetween(1, 4)],
+        "howManyQuestions": [isRequired(), isBetween(1, 20)]
+    }, {
         'topic_id.isRequired': 'Please select the questions Topics',
         'category_id.isRequired': 'Please select the questions Category',
         'howManyQuestions.isRequired': 'Please select the number of questions',
     });
     if (validation.passes()) {
-        loading.value = true;
+        showLoader();
         axios.post(route("quiz.show"), {
             topic_id: quiz.topic_id,
             category_id: quiz.category_id,
             howManyQuestions: quiz.howManyQuestions,
         }).then(res => {
-            console.log(res.data)
+            console.log(res.data.start_time, typeof res.data.start_time)
             quiz.questions = res.data.questions;
+            quiz.start_time = res.data.start_time;
+            if ( !quiz.questions.length  ) {
+                notification({text: 'No Question is available'});
+            }
         }).catch(() => {
-            notify({
-                group: "notification",
-                type: "error",
-                title: "Error",
-                text: 'Please select Question Topics, Difficulty label and Question Interval',
-            }, 4000) // 4s
-        }).finally(() => loading.value = false);
+            console.log(validation.errors())
+            notification();
+        }).finally(() => showLoader());
     } else {
-        notify({
-            group: "notification",
-            type: "error",
-            title: "Error",
-            text: 'Please select Question Topics, Difficulty label and Question Interval',
-        }, 4000) // 4s
+        notification();
         quiz.setError(validation.errors());
     }
+}
+const submit = (questions) => {
+    showLoader();
+    axios.post(route("result.store"), questions).then(res => {
+        quiz.result = res.data.result;
+        if ( quiz.result  ) {
+            notification({
+                type: 'info',
+                title: 'Success',
+                text: 'Here is your last exam Summary',
+            });
+        }
+    }).catch(() => {
+        notification({text: 'Something went wrong'});
+    }).finally(() => showLoader());
 }
 </script>
 
@@ -88,8 +111,8 @@ const getQuiz = () => {
     <LayoutAuthenticated>
         <SectionMain>
             <SectionTitleLineWithButton :icon="mdiTableBorder" title="Get your Quiz" main/>
-            <Loader v-if="loading" />
-            <CardBox v-if="!loading && !quiz.questions" @submit.prevent="getQuiz" is-form class="max-w-2xl mx-auto">
+            <Loader v-if="loading"/>
+            <CardBox v-if="!loading && !quiz.questions && !quiz.result" @submit.prevent="getQuiz" is-form class="max-w-2xl mx-auto">
                 <FormField
                     label="Choose one or more Topics"
                     help="Required. Please select the questions Topics"
@@ -146,12 +169,13 @@ const getQuiz = () => {
                                 :disabled="quiz.processing"
                             />
                         </BaseButtons>
-
-
                     </div>
                 </template>
             </CardBox>
-            <Question v-if="quiz.questions" :questions="quiz.questions"/>
+            <Question v-if="!loading && quiz.questions && !quiz.result" :questions="quiz.questions" :start_time="quiz.start_time"
+                      @backToQuiz="backToQuiz"  @submit="submit"/>
+            <Summary v-if="!loading && quiz.result" :result="quiz.result"
+                     @backToQuiz="backToQuiz"/>
         </SectionMain>
     </LayoutAuthenticated>
 </template>
