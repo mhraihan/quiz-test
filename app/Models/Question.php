@@ -42,7 +42,6 @@ class Question extends Model
 
     public function scopeFilter($query, array $search, $trash): void
     {
-        ray($search, $trash);
         $query->when($search['search'] ?? null, function ($query, $input) {
             $query->where('title', 'like', '%'.$input.'%');
         })->when($trash ?? null, function ($query) {
@@ -50,10 +49,10 @@ class Question extends Model
         });
     }
 
-    public function scopeIndex($query, array $trash = ['trash' => false]): mixed
+    public function scopeIndex($query, $trash = false): mixed
     {
        return $query->latest()
-            ->filter(request()->only('search'),$trash['trash'])
+            ->filter(request()->only('search'),$trash)
             ->paginate(20)
             ->withQueryString()
             ->through(fn ($question) => [

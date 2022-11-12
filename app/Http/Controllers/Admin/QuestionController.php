@@ -35,7 +35,7 @@ class QuestionController extends Controller
     public function trash(): Response|ResponseFactory
     {
         return inertia('Question/Trash', [
-            'Questions' => Question::query()->index(['trash' => true]),
+            'Questions' => Question::query()->index(true),
             'title' => 'All Trashed Questions'
         ]);
     }
