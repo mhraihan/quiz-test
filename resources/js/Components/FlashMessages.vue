@@ -1,4 +1,4 @@
-<script setup>
+<script setup >
 
 </script>
 <template>
@@ -36,7 +36,7 @@
                             <div class="px-4 py-2 -mx-3">
                                 <div class="mx-3">
                                     <span class="font-semibold text-blue-500">{{ notification.title }}</span>
-                                    <p class="text-sm text-gray-600">{{ notification.text }}</p>
+                                    <p class="text-sm text-gray-600">{{ $page.props.flash.info || notification.text }}</p>
                                 </div>
                             </div>
                         </div>
@@ -53,7 +53,7 @@
                             <div class="px-4 py-2 -mx-3">
                                 <div class="mx-3">
                                     <span class="font-semibold text-green-500">{{ notification.title }}</span>
-                                    <p class="text-sm text-gray-600">{{ $page.props.flash.success }}</p>
+                                    <p class="text-sm text-gray-600">{{ $page.props.flash.success || notification.text }}</p>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                             <div class="px-4 py-2 -mx-3">
                                 <div class="mx-3">
                                     <span class="font-semibold text-yellow-500">{{ notification.title }}</span>
-                                    <p class="text-sm text-gray-600">{{ notification.text }}</p>
+                                    <p class="text-sm text-gray-600">{{ $page.props.flash.warning || notification.text }}</p>
                                 </div>
                             </div>
                         </div>
@@ -93,7 +93,7 @@
                             <div class="px-4 py-2 -mx-3">
                                 <div class="mx-3">
                                     <span class="font-semibold text-red-500">{{ notification.title }}</span>
-                                    <p class="text-sm text-gray-600">{{ notification.text }}</p>
+                                    <p class="text-sm text-gray-600">{{ $page.props.flash.error ||  notification.text }}</p>
                                 </div>
                             </div>
                         </div>

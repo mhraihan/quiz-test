@@ -95,7 +95,7 @@ const submit = (questions) => {
         quiz.result = res.data.result;
         if ( quiz.result  ) {
             notification({
-                type: 'info',
+                type: 'success',
                 title: 'Success',
                 text: 'Here is your last exam Summary',
             });
