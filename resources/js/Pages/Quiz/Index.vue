@@ -110,8 +110,8 @@ const submit = (questions) => {
                 text: 'Here is your last exam Summary',
             });
         }
-    }).catch(() => {
-        notification({text: 'Something went wrong'});
+    }).catch((e) => {
+        notification({text: e.response?.data?.message || 'Something went wrong'});
     }).finally(() => showLoader());
 }
 </script>

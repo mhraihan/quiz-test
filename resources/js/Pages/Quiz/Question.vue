@@ -45,12 +45,12 @@ const submit = () => {
         stop_time: stop_time.value.valueOf(),
         total_questions: quiz.questions.length,
         complete: true,
-        questions_answered: quiz.questions.map(q => {
-            return {
+        questions_answered: quiz.questions.map(q => (
+            {
                 id: q.id,
                 answer: q.answer
             }
-        })
+        ))
     })
 }
 </script>
