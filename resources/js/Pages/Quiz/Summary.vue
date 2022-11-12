@@ -3,7 +3,6 @@ import { reactive } from "vue";
 import SectionMain from "@/Components/SectionMain.vue";
 
 import { usePage} from "@inertiajs/inertia-vue3";
-const emit = defineEmits(["update:modelValue", "cancel", "confirm"]);
 
 const profileForm = reactive({
     name: usePage().props.value.auth.user.name ,
@@ -24,11 +23,18 @@ const props = defineProps({
                 <div class="shadow overflow-hidden sm:rounded-lg">
                     <div class="container px-5 py-5 mx-auto">
                         <div class="text-center mb-5 justify-center">
-                            <h1 class=" sm:text-3xl text-2xl font-medium text-center title-font text-gray-900 mb-4">Quiz Result</h1>
+                            <h1 class=" sm:text-3xl text-2xl font-medium text-center title-font text-gray-900 mb-4">
+                                Quiz Result
+                            </h1>
+                            <p>
+                                <button class="bg-green-300 px-2 mx-2 hover:green-400 rounded-lg hover:underline" @click="$emit('backToQuiz')">
+                                    Take another Quiz
+                                </button>
+                            </p>
                             <p class="text-md mt-10"> Dear <span class="font-extrabold text-blue-600 mr-2"> {{ profileForm.name }}! </span> Your latest Quiz Result
                                 <a class="bg-green-300 px-2 mx-2 hover:green-400 rounded-lg underline" href="http://quizapp.test/appuser/userQuizDetails/14">Show quiz details</a></p>
                             <progress class="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto"  :value="props.result.score" max="100">{{ props.result.score }} </progress>
-                            <span> {{ props.result.score }}% </span>
+                            <span class="ml-2"> {{ props.result.score }}% </span>
                         </div>
                         <div class="flex flex-wrap lg:w-4/5 sm:mx-auto sm:mb-2 -mx-2">
                             <div class="p-2 sm:w-1/2 w-full">

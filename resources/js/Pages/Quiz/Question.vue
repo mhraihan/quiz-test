@@ -9,7 +9,7 @@ import FormField from "@/Components/FormField.vue";
 import {ref, reactive} from "vue";
 import {notify} from "notiwind"
 
-const emit = defineEmits(["submit"]);
+const emit = defineEmits(["submit","backToQuiz"]);
 
 const props = defineProps({
     questions: Object,

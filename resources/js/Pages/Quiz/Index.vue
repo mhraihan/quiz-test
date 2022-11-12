@@ -29,6 +29,7 @@ const props = defineProps({
     Topics: Object,
 });
 
+
 const topics = props.Topics.length > 1 ? [{label: 'Random', value: 0}, ...props.Topics] : props.Topics;
 
 const quiz = useForm({
@@ -39,12 +40,21 @@ const quiz = useForm({
     result: null,
     start_time: null,
 });
+const title = computed(() => quiz.result ? 'Quiz Summary' : 'Get your Quiz');
 const backToQuiz = () => {
     quiz.questions = null;
+    quiz.result = null;
+    quiz.category_id = props?.Categories[0]?.value || null;
+    quiz.topic_id = [topics[0].value];
+    quiz.howManyQuestions = 1;
 }
 const loading = ref(false);
 const howManyQuestions = computed(() => range(1, 21));
-const notification = ({ type = 'error', title = 'Error',text = 'Please select Question Topics, Difficulty label and Question Interval'} = {}) => {
+const notification = ({
+                          type = 'error',
+                          title = 'Error',
+                          text = 'Please select Question Topics, Difficulty label and Question Interval'
+                      } = {}) => {
     notify({
         group: "notification",
         type,
@@ -77,7 +87,7 @@ const getQuiz = () => {
             console.log(res.data.start_time, typeof res.data.start_time)
             quiz.questions = res.data.questions;
             quiz.start_time = res.data.start_time;
-            if ( !quiz.questions.length  ) {
+            if (!quiz.questions.length) {
                 notification({text: 'No Question is available'});
             }
         }).catch(() => {
@@ -93,7 +103,7 @@ const submit = (questions) => {
     showLoader();
     axios.post(route("result.store"), questions).then(res => {
         quiz.result = res.data.result;
-        if ( quiz.result  ) {
+        if (quiz.result) {
             notification({
                 type: 'success',
                 title: 'Success',
@@ -107,12 +117,13 @@ const submit = (questions) => {
 </script>
 
 <template>
-    <Head title="Generate Quiz"/>
+    <Head :title="title"/>
     <LayoutAuthenticated>
         <SectionMain>
-            <SectionTitleLineWithButton :icon="mdiTableBorder" title="Get your Quiz" main/>
+            <SectionTitleLineWithButton :icon="mdiTableBorder" :title="title" main/>
             <Loader v-if="loading"/>
-            <CardBox v-if="!loading && !quiz.questions && !quiz.result" @submit.prevent="getQuiz" is-form class="max-w-2xl mx-auto">
+            <CardBox v-if="!loading && !quiz.questions && !quiz.result" @submit.prevent="getQuiz" is-form
+                     class="max-w-2xl mx-auto">
                 <FormField
                     label="Choose one or more Topics"
                     help="Required. Please select the questions Topics"
@@ -172,8 +183,9 @@ const submit = (questions) => {
                     </div>
                 </template>
             </CardBox>
-            <Question v-if="!loading && quiz.questions && !quiz.result" :questions="quiz.questions" :start_time="quiz.start_time"
-                      @backToQuiz="backToQuiz"  @submit="submit"/>
+            <Question v-if="!loading && quiz.questions && !quiz.result" :questions="quiz.questions"
+                      :start_time="quiz.start_time"
+                      @backToQuiz="backToQuiz" @submit="submit"/>
             <Summary v-if="!loading && quiz.result" :result="quiz.result"
                      @backToQuiz="backToQuiz"/>
         </SectionMain>
