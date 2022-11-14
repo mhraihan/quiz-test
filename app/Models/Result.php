@@ -12,7 +12,7 @@ class Result extends Model
 {
     use HasFactory;
 
-    protected $appends = ['duration','date'];
+    protected $appends = ['exam'];
 
     protected $casts = [
         'complete' => 'boolean',
@@ -37,19 +37,7 @@ class Result extends Model
     ];
 
 
-    public function date(): Attribute
-    {
-
-        return Attribute::make(
-            get: fn() => [
-                'how_long' => $this->created_at->diffForHumans(),
-                'day' => $this->created_at->format('l'),
-                'exam' => $this->created_at->format('g:i A d/m/Y')
-            ]
-        );
-    }
-
-    public function duration(): Attribute
+    public function exam(): Attribute
     {
         $options = [
             'join' => true,
@@ -57,9 +45,15 @@ class Result extends Model
             'syntax' => CarbonInterface::DIFF_ABSOLUTE,
         ];
         return Attribute::make(
-            get: fn() => $this->stop_time->diffForHumans($this->start_time, $options)
+            get: fn() => [
+                'duration' => $this->stop_time->diffForHumans($this->start_time, $options),
+                'how_long' => $this->created_at->diffForHumans(),
+                'day' => $this->created_at->format('l'),
+                'date' => $this->created_at->format('g:i A d/m/Y')
+            ]
         );
     }
+
 
     public function getDataFromQuestions($query)
     {

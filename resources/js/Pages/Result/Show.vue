@@ -34,7 +34,7 @@ const props = defineProps({
                     </h1>
                     <p class="mt-1 max-w-2xl text-sm text-gray-700">
 
-                        You took this quiz {{ props.result.date.how_long }} on <span class="text-bold bg-green-300 px-2 rounded-lg"> {{ props.result.date.day }} </span>
+                        You took this quiz {{ props.result.exam.how_long }} on <span class="text-bold bg-green-300 px-2 rounded-lg"> {{ props.result.exam.day }} </span>
                     </p>
                 </div>
                 <div class="border-t border-gray-300">
@@ -44,7 +44,7 @@ const props = defineProps({
                                 Exam Date
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {{ props.result.date.exam }}
+                                {{ props.result.exam.date }}
                             </dd>
                         </div>
                         <div class="bg-white px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -77,7 +77,7 @@ const props = defineProps({
                                 Quiz Duration
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {{ props.result.duration }}
+                                {{ props.result.exam.duration }}
                             </dd>
                         </div>
                     </dl>

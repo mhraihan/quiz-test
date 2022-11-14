@@ -99,7 +99,7 @@ const score = computed(() => Math.ceil(props.result.score));
                                         <path d="M22 4L12 14.01l-3-3"></path>
                                     </svg>
                                     <span class="title-font font-medium mr-5 text-purple-700">Time Spent</span><span
-                                    class="title-font font-medium">{{ props.result.duration }}</span>
+                                    class="title-font font-medium">{{ props.result.exam.duration }}</span>
                                 </div>
                             </div>
                         </div>
