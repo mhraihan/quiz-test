@@ -5,7 +5,6 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\ResultController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
 use App\Http\Controllers\Admin\QuestionController;
 
 /*
@@ -72,7 +71,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     /**
      * Result Controller
      */
-    route::resource("result", ResultController::class)->only(['index', 'show', 'store', 'destroy']);
+    route::resource("result", ResultController::class)->only(['index', 'show', 'store']);
 
 });
 require __DIR__ . '/auth.php';

@@ -1,5 +1,5 @@
 <script setup>
-import {reactive} from "vue";
+import {computed, reactive} from "vue";
 import SectionMain from "@/Components/SectionMain.vue";
 import CardBox from "@/Components/CardBox.vue";
 
@@ -15,6 +15,8 @@ const profileForm = reactive({
 const props = defineProps({
     result: Object
 })
+
+const score = computed(() => Math.ceil(props.result.score));
 </script>
 
 <template>
@@ -35,7 +37,7 @@ const props = defineProps({
                                     Take another Quiz
                                 </button>
                             </p>
-                            <p class="text-md mt-10"> Dear <span
+                            <p class="text-md mt-10 mb-3"> Dear <span
                                 class="font-extrabold text-blue-600 mr-2"> {{ profileForm.name }}! </span> Your latest
                                 Quiz Result
                                 <BaseButton
@@ -47,9 +49,9 @@ const props = defineProps({
                                 />
                             </p>
                             <progress class="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto"
-                                      :value="props.result.score" max="100">{{ props.result.score }}
+                                      :value="props.result.score" max="100">{{ score }}
                             </progress>
-                            <span class="ml-2"> {{ props.result.score }}% </span>
+                            <span class="ml-2"> {{ score }}% </span>
                         </div>
                         <div class="flex flex-wrap lg:w-4/5 sm:mx-auto sm:mb-2 -mx-2">
                             <div class="p-2 sm:w-1/2 w-full">
@@ -85,7 +87,7 @@ const props = defineProps({
                                         <path d="M22 4L12 14.01l-3-3"></path>
                                     </svg>
                                     <span class="title-font font-medium mr-5 text-purple-700">Percentage Scored</span>
-                                    <span class="title-font font-medium">{{ props.result.score }}%</span>
+                                    <span class="title-font font-medium">{{ score }}%</span>
                                 </div>
                             </div>
                             <div class="p-2 sm:w-1/2 w-full">
