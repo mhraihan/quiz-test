@@ -1,11 +1,14 @@
 <script setup>
-import { reactive } from "vue";
+import {reactive} from "vue";
 import SectionMain from "@/Components/SectionMain.vue";
+import CardBox from "@/Components/CardBox.vue";
 
-import { usePage} from "@inertiajs/inertia-vue3";
+import {usePage} from "@inertiajs/inertia-vue3";
+import BaseButton from "@/Components/BaseButton.vue";
+import BaseButtons from "@/Components/BaseButtons.vue";
 
 const profileForm = reactive({
-    name: usePage().props.value.auth.user.name ,
+    name: usePage().props.value.auth.user.name,
     email: usePage().props.value.auth.user.name,
 });
 
@@ -16,7 +19,7 @@ const props = defineProps({
 
 <template>
     <SectionMain>
-        <div class="bg-white rounded-lg shadow-lg p-5 md:p-20 mx-2">
+        <CardBox class="">
             <!-- Start of quiz box -->
             <!-- end of quiz box -->
             <section class="text-gray-600 body-font">
@@ -27,19 +30,33 @@ const props = defineProps({
                                 Quiz Result
                             </h1>
                             <p>
-                                <button class="bg-green-300 px-2 mx-2 hover:green-400 rounded-lg hover:underline" @click="$emit('backToQuiz')">
+                                <button class="bg-green-300 px-2 mx-2 hover:green-400 rounded-lg hover:underline"
+                                        @click="$emit('backToQuiz')">
                                     Take another Quiz
                                 </button>
                             </p>
-                            <p class="text-md mt-10"> Dear <span class="font-extrabold text-blue-600 mr-2"> {{ profileForm.name }}! </span> Your latest Quiz Result
-                                <a class="bg-green-300 px-2 mx-2 hover:green-400 rounded-lg underline" href="http://quizapp.test/appuser/userQuizDetails/14">Show quiz details</a></p>
-                            <progress class="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto"  :value="props.result.score" max="100">{{ props.result.score }} </progress>
+                            <p class="text-md mt-10"> Dear <span
+                                class="font-extrabold text-blue-600 mr-2"> {{ profileForm.name }}! </span> Your latest
+                                Quiz Result
+                                <BaseButton
+                                    routeName="result.show"
+                                    :routeParams="props.result.id"
+                                    type="button"
+                                    class="bg-green-300 px-2 mx-2 py-0 hover:green-400 rounded-lg underline"
+                                    label="See Quizzes Details"
+                                />
+                            </p>
+                            <progress class="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto"
+                                      :value="props.result.score" max="100">{{ props.result.score }}
+                            </progress>
                             <span class="ml-2"> {{ props.result.score }}% </span>
                         </div>
                         <div class="flex flex-wrap lg:w-4/5 sm:mx-auto sm:mb-2 -mx-2">
                             <div class="p-2 sm:w-1/2 w-full">
                                 <div class="bg-gray-100 rounded flex p-4 h-full items-center">
-                                    <svg fill=" none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4" viewBox="0 0 24 24">
+                                    <svg fill=" none" stroke="currentColor" stroke-linecap="round"
+                                         stroke-linejoin="round" stroke-width="3"
+                                         class="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4" viewBox="0 0 24 24">
                                         <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
                                         <path d="M22 4L12 14.01l-3-3"></path>
                                     </svg>
@@ -49,7 +66,9 @@ const props = defineProps({
                             </div>
                             <div class="p-2 sm:w-1/2 w-full">
                                 <div class="bg-gray-100 rounded flex p-4 h-full items-center">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4" viewBox="0 0 24 24">
+                                    <svg fill="none" stroke="currentColor" stroke-linecap="round"
+                                         stroke-linejoin="round" stroke-width="3"
+                                         class="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4" viewBox="0 0 24 24">
                                         <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
                                         <path d="M22 4L12 14.01l-3-3"></path>
                                     </svg>
@@ -59,7 +78,9 @@ const props = defineProps({
                             </div>
                             <div class="p-2 sm:w-1/2 w-full">
                                 <div class="bg-gray-100 rounded flex p-4 h-full items-center">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4" viewBox="0 0 24 24">
+                                    <svg fill="none" stroke="currentColor" stroke-linecap="round"
+                                         stroke-linejoin="round" stroke-width="3"
+                                         class="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4" viewBox="0 0 24 24">
                                         <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
                                         <path d="M22 4L12 14.01l-3-3"></path>
                                     </svg>
@@ -69,21 +90,40 @@ const props = defineProps({
                             </div>
                             <div class="p-2 sm:w-1/2 w-full">
                                 <div class="bg-gray-100 rounded flex p-4 h-full items-center">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4" viewBox="0 0 24 24">
+                                    <svg fill="none" stroke="currentColor" stroke-linecap="round"
+                                         stroke-linejoin="round" stroke-width="3"
+                                         class="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4" viewBox="0 0 24 24">
                                         <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
                                         <path d="M22 4L12 14.01l-3-3"></path>
                                     </svg>
-                                    <span class="title-font font-medium mr-5 text-purple-700">Time Spent</span><span class="title-font font-medium">Fail</span>
+                                    <span class="title-font font-medium mr-5 text-purple-700">Time Spent</span><span
+                                    class="title-font font-medium">{{ props.result.duration }}</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="mx-auto min-w-full p-2 md:flex m-2 justify-between">
-                            <a href="http://quizapp.test/appuser/userQuizDetails/14" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">See Quizzes Deatils</a>
-                            <a href="http://quizapp.test/appuser/userQuizHome" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">See All Your Quizzes</a>
+
+                        <div class="flex flex-wrap lg:w-4/5 sm:mx-auto sm:mb-2 -mx-2 mt-4">
+                            <BaseButtons class="justify-between w-full p-2">
+                                <BaseButton
+                                    routeName="result.show"
+                                    :routeParams="props.result.id"
+                                    color="info"
+                                    type="button"
+                                    label="See Quizzes Details"
+                                    class="w-full sm:w-auto mr-0 "
+                                />
+                                <BaseButton
+                                    routeName="result.index"
+                                    color="info"
+                                    type="button"
+                                    label="See All Your Quizzes"
+                                    class="w-full sm:w-auto mr-0 "
+                                />
+                            </BaseButtons>
                         </div>
                     </div>
                 </div>
             </section>
-        </div>
+        </CardBox>
     </SectionMain>
 </template>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Result\StoreResultRequest;
+use Carbon\CarbonInterface;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use App\Models\{Result, Question};
@@ -56,6 +57,11 @@ class ResultController extends Controller
                 'stop_time' => $request->input('stop_time'),
                 'correct_answered' => $correct_answer,
                 'score' => $score,
+            ]);
+            $result['duration'] =  $result->stop_time->diffForHumans($result->start_time,[
+                'join' => true,
+                'parts' => 3,
+                'syntax' => CarbonInterface::DIFF_ABSOLUTE,
             ]);
 
             return response()->json(['result' => $result],201);

@@ -26,8 +26,8 @@ class StoreResultRequest extends FormRequest
         return [
             'class_id' => ['nullable'],
             'complete' => ['nullable', 'boolean'],
-            'start_time' => ['required','numeric'],
-            'stop_time' => ['required','numeric'],
+            'start_time' => ['required','date'],
+            'stop_time' => ['required','date'],
             'questions_answered' => ['required', 'array'],
             'questions_answered.*.id' => ['required', 'numeric'],
             'questions_answered.*.answer' => ['required', 'string'],

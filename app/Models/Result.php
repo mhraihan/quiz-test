@@ -15,8 +15,8 @@ class Result extends Model
         'correct_answered' => 'integer',
         'questions_answered' => 'array',
         'is_active' => 'boolean',
-        'start_time' => 'integer',
-        'stop_time' => 'integer',
+        'start_time' => 'datetime',
+        'stop_time' => 'datetime',
         'total_questions' => 'integer',
     ];
 
@@ -30,6 +30,8 @@ class Result extends Model
         'questions_answered',
         'total_questions'
     ];
+
+//    protected $with = ['users'];
     /**
      *Relations
      */

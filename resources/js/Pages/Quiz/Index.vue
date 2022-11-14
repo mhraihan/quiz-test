@@ -84,7 +84,7 @@ const getQuiz = () => {
             category_id: quiz.category_id,
             howManyQuestions: quiz.howManyQuestions,
         }).then(res => {
-            console.log(res.data.start_time, typeof res.data.start_time)
+            console.log(res.data.questions.length,res.data.questions)
             quiz.questions = res.data.questions;
             quiz.start_time = res.data.start_time;
             if (!quiz.questions.length) {

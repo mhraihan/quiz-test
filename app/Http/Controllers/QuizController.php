@@ -37,6 +37,7 @@ class QuizController extends Controller
                 $query->whereIn('topic_id', $topics);
             })
             ->where('category_id', request()->input('category_id'))
+            ->select(['id', 'title', 'details','options'])
             ->get()
             ->map(fn($quiz) => [
                 'id' => $quiz->id,

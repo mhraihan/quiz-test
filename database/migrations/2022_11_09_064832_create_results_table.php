@@ -20,8 +20,8 @@ return new class extends Migration
             $table->boolean('complete')->default(true);
             $table->unsignedInteger('correct_answered');
             $table->unsignedInteger('score');
-            $table->text('start_time');
-            $table->text('stop_time');
+            $table->timestamp('start_time');
+            $table->timestamp('stop_time');
             $table->json('questions_answered');
             $table->unsignedInteger('total_questions');
             $table->timestamps();

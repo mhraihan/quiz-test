@@ -41,8 +41,8 @@ const submit = () => {
     stop_time.value = new Date();
     emit('submit',{
         class_id: null,
-        start_time: start_time.value.valueOf(),
-        stop_time: stop_time.value.valueOf(),
+        start_time: start_time.value,
+        stop_time: stop_time.value,
         total_questions: quiz.questions.length,
         complete: true,
         questions_answered: quiz.questions.map(q => (
