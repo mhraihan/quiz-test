@@ -16,7 +16,7 @@ const props = defineProps({
     result: Object
 })
 
-const score = computed(() => Math.ceil(props.result.score));
+const score = computed(() => props.result.score);
 </script>
 
 <template>

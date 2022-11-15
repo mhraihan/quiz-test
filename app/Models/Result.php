@@ -12,11 +12,10 @@ class Result extends Model
 {
     use HasFactory;
 
-    protected $appends = ['exam'];
+    protected $appends = ['exam','score'];
 
     protected $casts = [
         'complete' => 'boolean',
-//        'score' => 'float',
         'correct_answered' => 'integer',
         'questions_answered' => 'array',
         'is_active' => 'boolean',
@@ -29,7 +28,6 @@ class Result extends Model
         'class_id',
         'complete',
         'correct_answered',
-        'score',
         'start_time',
         'stop_time',
         'questions_answered',
@@ -53,7 +51,12 @@ class Result extends Model
             ]
         );
     }
-
+    public function score(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => (float) number_format(($this->correct_answered / $this->total_questions) * 100, 2)
+        );
+    }
 
     public function getDataFromQuestions($query)
     {
@@ -65,13 +68,12 @@ class Result extends Model
             $questions[$key]['answer'] = $answers[$key];
             return $answer;
         });
-        $correct_answer = count($answered->filter());
+        $correct_answered = count($answered->filter());
 
         return [
             'questions' =>  $questions,
             'answered' => $answered->all(),
-            'score' => number_format(($correct_answer / count($answers)) * 100, 2),
-            'correct_answer' => $correct_answer,
+            'correct_answered' => $correct_answered,
         ];
     }
 

@@ -18,12 +18,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('class_id')->index()->nullable();
             $table->boolean('complete')->default(true);
+            $table->unsignedInteger('total_questions');
             $table->unsignedInteger('correct_answered');
-            $table->unsignedInteger('score');
+            $table->json('questions_answered');
             $table->timestamp('start_time');
             $table->timestamp('stop_time');
-            $table->json('questions_answered');
-            $table->unsignedInteger('total_questions');
             $table->timestamps();
         });
     }

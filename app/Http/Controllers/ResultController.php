@@ -25,14 +25,13 @@ class ResultController extends Controller
         try {
             $result = new Result();
             [
-                'score' => $score,
-                'correct_answer' => $correct_answer
+                'correct_answered' => $correct_answered
             ] = $result->getDataFromQuestions($request->input('questions_answered'));
             $result = $request->user()->results()->create(
                 $request->validated() + [
-                'correct_answered' => $correct_answer,
-                'score' => $score,
+                'correct_answered' => $correct_answered
             ]);
+            ray($result);
             return response()->json(['result' => $result], 201);
         } catch (Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
