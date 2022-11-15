@@ -41,8 +41,10 @@ class ResultController extends Controller
 
     public function show(Result $result): Response
     {
+        ['questions' => $questions ] = $result->getDataFromQuestions($result->questions_answered);
         return inertia('Result/Show', [
-            'result' => $result
+            'result' => $result,
+            'questions' => $questions
         ]);
     }
 

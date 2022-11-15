@@ -59,12 +59,16 @@ class Result extends Model
     {
         $ids = array_column($query, 'id');
         $answers = array_column($query, 'answer');
-
-//        $questions = Question::query()->whereIn('id',$ids);
-        $answered = Question::query()->whereIn('id', $ids)->pluck('correct_answer')->map(fn($item, $key): bool => ($item == $answers[$key]));
+        $questions = Question::query()->whereIn('id',$ids)->select('title','correct_answer','explain','options')->get();
+        $answered = collect($questions)->pluck('correct_answer')->map(function ($item,$key) use($answers,$questions) {
+            $answer = $item === $answers[$key];
+            $questions[$key]['answer'] = $answers[$key];
+            return $answer;
+        });
         $correct_answer = count($answered->filter());
 
         return [
+            'questions' =>  $questions,
             'answered' => $answered->all(),
             'score' => number_format(($correct_answer / count($answers)) * 100, 2),
             'correct_answer' => $correct_answer,
