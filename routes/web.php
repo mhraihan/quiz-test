@@ -71,7 +71,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     /**
      * Result Controller
      */
-    route::resource("result", ResultController::class)->only(['index', 'show', 'store']);
+    route::resource("results", ResultController::class)->only(['index', 'show', 'store']);
 
 });
 require __DIR__ . '/auth.php';

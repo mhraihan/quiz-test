@@ -41,7 +41,7 @@ const score = computed(() => props.result.score);
                                 class="font-extrabold text-blue-600 mr-2"> {{ profileForm.name }}! </span> Your latest
                                 Quiz Result
                                 <BaseButton
-                                    routeName="result.show"
+                                    routeName="results.show"
                                     :routeParams="props.result.id"
                                     type="button"
                                     class="bg-green-300 px-2 mx-2 py-0 hover:green-400 rounded-lg underline"
@@ -107,7 +107,7 @@ const score = computed(() => props.result.score);
                         <div class="flex flex-wrap lg:w-4/5 sm:mx-auto sm:mb-2 -mx-2 mt-4">
                             <BaseButtons class="justify-between w-full p-2">
                                 <BaseButton
-                                    routeName="result.show"
+                                    routeName="results.show"
                                     :routeParams="props.result.id"
                                     color="info"
                                     type="button"
@@ -115,7 +115,7 @@ const score = computed(() => props.result.score);
                                     class="w-full sm:w-auto mr-0 "
                                 />
                                 <BaseButton
-                                    routeName="result.index"
+                                    routeName="results.index"
                                     color="info"
                                     type="button"
                                     label="See All Your Quizzes"

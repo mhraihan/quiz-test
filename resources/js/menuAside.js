@@ -4,7 +4,8 @@ import {
     mdiTable,
     mdiViewList,
     mdiMarker,
-    mdiBookHeartOutline
+    mdiBookHeartOutline,
+    mdiTableQuestion,
 } from "@mdi/js";
 
 export default [
@@ -52,7 +53,12 @@ export default [
     },
     {
         route: "quiz.index",
-        icon: mdiBookHeartOutline,
+        icon: mdiTableQuestion,
         label: "Quiz",
+    },
+    {
+        route: "results.index",
+        icon: mdiBookHeartOutline,
+        label: "Result",
     },
 ];

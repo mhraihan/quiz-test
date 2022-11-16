@@ -6,18 +6,32 @@ use App\Http\Requests\Result\StoreResultRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Inertia\Response;
-use App\Models\{Result, Question};
+use App\Models\{Result, Question, User};
 
 class ResultController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(): Response
     {
-        //
+        $query = auth()->user()->loadSum('results','total_questions');
+        $avg = 0;
+        $result  =$query->results()
+        ->latest()->paginate(12)->withQueryString()
+        ->through(fn ($result) => [
+            'id' => $result->id,
+            'complete' =>    $result->complete,
+            'correct_answered' => $result->correct_answered,
+            'total_questions' => $result->total_questions,
+            'score' => $result->score,
+            'exam' => $result->exam['how_long'],
+        ]);
+        ray( $query, $result);
+        return inertia('Result/Index',[
+            'results' => $result,
+              'total_exam' =>    0,
+              'total_questions' => $query->results_sum_total_questions,
+              'score' => $avg
+            ]
+        );
     }
 
     public function store(StoreResultRequest $request): JsonResponse

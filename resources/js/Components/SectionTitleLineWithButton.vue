@@ -2,9 +2,14 @@
 import { useSlots, computed } from "vue";
 import BaseIcon from "@/Components/BaseIcon.vue";
 import IconRounded from "@/Components/IconRounded.vue";
+import { Link } from "@inertiajs/inertia-vue3";
 
 defineProps({
     icon: {
+        type: String,
+        default: null,
+    },
+    link: {
         type: String,
         default: null,
     },
@@ -23,9 +28,18 @@ const hasSlot = computed(() => useSlots().default);
         :class="{ 'pt-6': !main }"
         class="flex items-center justify-between mb-6"
     >
-        <div class="flex items-center justify-start">
+        <div   class="flex items-center justify-start">
+            <Link  v-if="icon && main && link" :href="route(link)">
+                <IconRounded
+                    v-if="icon && main"
+                    :icon="icon"
+                    color="light"
+                    class="mr-3"
+                    bg
+                />
+            </Link>
             <IconRounded
-                v-if="icon && main"
+                v-else-if="icon && main"
                 :icon="icon"
                 color="light"
                 class="mr-3"

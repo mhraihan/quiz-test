@@ -3,7 +3,7 @@
 
 import {Head} from "@inertiajs/inertia-vue3";
 import {
-    mdiTableBorder,
+    mdiArrowLeft,
 } from "@mdi/js";
 import CardBox from "@/Components/CardBox.vue";
 
@@ -32,7 +32,7 @@ const quiz = (answer,correct_answer,  key ) => {
     <Head title="Result Details"/>
     <LayoutAuthenticated>
         <SectionMain>
-            <SectionTitleLineWithButton :icon="mdiTableBorder" title="Result Details" main/>
+            <SectionTitleLineWithButton link="results.index" :icon="mdiArrowLeft" title="Result Details" main/>
 
             <CardBox  class=" overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6">
@@ -58,7 +58,7 @@ const quiz = (answer,correct_answer,  key ) => {
                                 Quiz Completion Status
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {{ props.result.complete ? 'Complete' : 'Incomplete' }}
+                                {{ props.result.complete ? 'Completed' : 'Not Completed' }}
                             </dd>
                         </div>
                         <div class="bg-gray-50 px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -102,7 +102,7 @@ const quiz = (answer,correct_answer,  key ) => {
                    <div class="text-lg leading-6 mb-4 font-medium text-gray-900">
                        <h3><span class="mr-2 font-extrabold"> {{ key + 1}}</span> {{ question.title }}</h3>
                        <details class="block text-xs mt-2" v-if="question.explain">
-                           <summary class="p-1" id="headingOne">
+                           <summary class="p-1 hover:cursor-pointer" id="headingOne">
                                <span class="underline text-blue-500 hover:text-blue-700 focus:outline-none text-xs " type="button">
                                    Explanation
                                </span>
@@ -113,6 +113,7 @@ const quiz = (answer,correct_answer,  key ) => {
                    <div v-for="(option,key) in question.options"  :class="quiz(question.answer,question.correct_answer,key)" class="mt-1 max-w-auto text-sm px-2 rounded-lg  bg-none ">
                        <span class="mr-2 font-extrabold">{{ key }} </span> {{ option }}
                        <span v-if="key === question.correct_answer" class="p-1 font-extrabold">(Correct Answer)</span>
+                       <span v-if="key === question.answer" class="p-1 font-extrabold">(Your Answer)</span>
                    </div>
 
                </div>
