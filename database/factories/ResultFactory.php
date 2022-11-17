@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Question;
+use App\Models\Result;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -19,15 +20,19 @@ class ResultFactory extends Factory
      */
     public function definition()
     {
+        $result = new Result();
         $questions = random_int(10,20);
         $answer = ['a','b','c','d'];
-
+        $questions_answered =  Question::take($questions)->pluck('id')->map(fn($item, $key) => ['id' => $item, "answer" => $answer[random_int(0,3)]])->all();
+        [
+            'correct_answered' => $correct_answered
+        ] = $result->getDataFromQuestions($questions_answered);
         return [
             'total_questions' => $questions,
-            'correct_answered' =>random_int(0,$questions),
+            'correct_answered' => $correct_answered,
             'start_time' => now(),
-            'stop_time' => now()->addMinutes(random_int(1,10)),
-            'questions_answered' =>Question::take($questions)->pluck('id')->map(fn($item, $key) => ['id' => $item, "answer" => $answer[random_int(0,3)]])->all(),
+            'stop_time' => now()->addMinutes(random_int(1,140)),
+            'questions_answered' => $questions_answered,
         ];
     }
 }

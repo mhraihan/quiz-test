@@ -13,12 +13,11 @@ class ResultController extends Controller
     public function index(): Response
     {
         $query = auth()->user();
-        ray( $query);
         return inertia('Result/Index', [
                 'results' => fn() =>   $query->results()
                     ->latest()
                     ->select('id', 'complete', 'correct_answered', 'total_questions', 'stop_time', 'start_time', 'created_at')
-                    ->paginate()
+                    ->paginate(30)
                     ->withQueryString()
                     ->through(fn($result) => [
                         'id' => $result->id,
