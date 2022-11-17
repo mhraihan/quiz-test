@@ -99,7 +99,7 @@ const getQuiz = () => {
 }
 const submit = (questions) => {
     showLoader();
-    axios.post(route("result.store"), questions).then(res => {
+    axios.post(route("results.store"), questions).then(res => {
         quiz.result = res.data.result;
         if (quiz.result) {
             notification({
