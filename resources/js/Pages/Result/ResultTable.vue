@@ -79,6 +79,7 @@ const currentPageHuman = computed(() => currentPage.value);
                     :label="link.label"
                     :color=" link.active ? 'lightDark' : 'whiteDark'"
                     small
+                    :only="['results']"
                     :href="link.url"
                 />
             </BaseButtons>

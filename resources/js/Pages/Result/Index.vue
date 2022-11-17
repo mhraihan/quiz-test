@@ -10,18 +10,17 @@ import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 import CardBoxComponentEmpty from "@/Components/CardBoxComponentEmpty.vue";
 import ResultTable from "@/Pages/Result/ResultTable.vue";
-import {ref} from "vue";
+import {ref, computed} from "vue";
 
 
 const props = defineProps({
     results: Object,
-    total_exam: Number,
-    total_questions: Number,
-    score: Number,
+    exam: Object,
 });
 const title = ref("Exam Results");
-
-
+const total_questions = computed(() => parseInt(props.exam.results_sum_total_questions));
+const correct_answered = computed(() => parseInt(props.exam.results_sum_correct_answered));
+const score = parseFloat(((correct_answered.value/total_questions.value) * 100).toFixed(2));
 
 </script>
 
@@ -42,14 +41,14 @@ const title = ref("Exam Results");
                     trend="Overview"
                     trend-type="info"
                     color="text-blue-500"
-                    :number="props.total_questions"
+                    :number="total_questions"
                     label="Answered Questions"
                 />
                 <CardBoxWidget
                     trend="Overview"
                     trend-type="info"
                     color="text-red-500"
-                    :number="props.score"
+                    :number="score"
                     label="Avg. Score"
                     suffix="%"
                 />

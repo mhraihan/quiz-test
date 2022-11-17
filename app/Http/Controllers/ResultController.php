@@ -12,24 +12,22 @@ class ResultController extends Controller
 {
     public function index(): Response
     {
-        $query = auth()->user()->loadSum('results', 'total_questions')->loadSum('results', 'correct_answered');
-        $result = $query->results()
-            ->latest()
-            ->select('id', 'complete', 'correct_answered', 'total_questions', 'stop_time', 'start_time', 'created_at')
-            ->paginate(12)
-            ->withQueryString()
-            ->through(fn($result) => [
-                'id' => $result->id,
-                'complete' => $result->complete,
-                'total_questions' => $result->total_questions,
-                'score' => $result->score,
-                'exam' => $result->exam['how_long'],
-            ]);
+        $query = auth()->user();
+        ray( $query);
         return inertia('Result/Index', [
-                'results' => $result,
-                'total_exam' => 0,
-                'total_questions' => (int) $query->results_sum_total_questions,
-                'score' => (float) number_format(($query->results_sum_correct_answered / $query->results_sum_total_questions) * 100,2)
+                'results' => fn() =>   $query->results()
+                    ->latest()
+                    ->select('id', 'complete', 'correct_answered', 'total_questions', 'stop_time', 'start_time', 'created_at')
+                    ->paginate()
+                    ->withQueryString()
+                    ->through(fn($result) => [
+                        'id' => $result->id,
+                        'complete' => $result->complete,
+                        'total_questions' => $result->total_questions,
+                        'score' => $result->score,
+                        'exam' => $result->exam['how_long'],
+                    ]),
+                'exam' => fn() =>  $query->loadSum('results', 'total_questions')->loadSum('results', 'correct_answered'),
             ]
         );
     }
