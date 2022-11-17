@@ -50,8 +50,6 @@ const quiz = (answer, correct_answer, key) => {
                         <Overview label="Correct Answered" :value="props.result.correct_answered"/>
                         <Overview label=" Quiz Score" :value="props.result.score" prefix="%"/>
                         <Overview label="Quiz Duration" :value="props.result.exam.duration"/>
-
-
                     </dl>
                 </div>
             </CardBox>
@@ -59,6 +57,17 @@ const quiz = (answer, correct_answer, key) => {
                 <div class="px-4 py-5 sm:px-6">
                     <div class="text-lg leading-6 mb-4 font-medium text-gray-900">
                         <h3><span class="mr-2 font-extrabold"> {{ key + 1 }}</span> {{ question.title }}</h3>
+                        <details class="block text-xs mt-2" v-if="question.details">
+                            <summary class="p-1 hover:cursor-pointer" id="headingOne">
+                               <span class="underline text-blue-500 hover:text-blue-700 focus:outline-none text-xs "
+                                     type="button">
+                                   Question Details
+                               </span>
+                            </summary>
+                            <div class="block p-2 bg-green-100 text-xs leading-5 my-3" v-html="question.details"></div>
+
+
+                        </details>
                         <details class="block text-xs mt-2" v-if="question.explain">
                             <summary class="p-1 hover:cursor-pointer" id="headingOne">
                                <span class="underline text-blue-500 hover:text-blue-700 focus:outline-none text-xs "
