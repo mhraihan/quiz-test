@@ -58,7 +58,7 @@ const score = parseFloat(((correct_answered.value/total_questions.value) * 100).
                 <ResultTable  :results="props.results"/>
             </CardBox>
             <CardBox v-else>
-                <CardBoxComponentEmpty />
+                <CardBoxComponentEmpty text="No Results found!" routeName="quiz.index" label="New Quiz Test"/>
             </CardBox>
         </SectionMain>
     </LayoutAuthenticated>
