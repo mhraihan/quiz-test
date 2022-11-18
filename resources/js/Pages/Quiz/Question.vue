@@ -22,7 +22,9 @@ const stop_time = ref(null);
 
 const quiz = reactive({
     questions: props.questions
-})
+});
+
+
 const next = (key) => {
     if (!quiz.questions[key].answer) {
         notify({
@@ -37,20 +39,20 @@ const next = (key) => {
         step.value++;
     }
 }
-const submit = () => {
+const submit = (complete = true) => {
     stop_time.value = new Date();
     emit('submit',{
         class_id: null,
         start_time: start_time.value,
         stop_time: stop_time.value,
         total_questions: quiz.questions.length,
-        complete: true,
+        complete,
         questions_answered: quiz.questions.map(q => (
             {
                 id: q.id,
                 answer: q.answer
             }
-        ))
+        )).filter(q => q.answer)
     })
 }
 </script>
@@ -107,14 +109,22 @@ const submit = () => {
 
                 <template #footer>
                     <div class="flex items-center justify-end mt-4">
-                        <div class="flex">
-                            <BaseButtons class="block w-full">
+                        <div class="flex  justify-between px-6 w-full">
+                            <BaseButtons class="flex w-full  " :class="!quiz.questions[quiz.questions.length - 1].answer ? 'justify-between' : 'justify-end'">
+                                <BaseButton
+                                    v-show="!quiz.questions[quiz.questions.length - 1].answer"
+                                    color="danger"
+                                    type="button"
+                                    label="End Exam"
+                                    class=""
+                                    @click="submit(false)"
+                                />
                                 <BaseButton
                                     v-if="step < quiz.questions.length - 1"
                                     color="info"
                                     type="button"
                                     label="Next Quiz"
-                                    class="block w-full"
+                                    class=""
                                     @click="next(step)"
                                     :disabled="!quiz.questions[step].answer"
                                 />
@@ -123,7 +133,7 @@ const submit = () => {
                                     color="info"
                                     type="button"
                                     label="Show Result"
-                                    class="block w-full"
+                                    class=""
                                     @click="submit()"
                                     :disabled="!quiz.questions[step].answer || quiz.processing"
                                 />

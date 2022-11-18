@@ -99,6 +99,12 @@ const getQuiz = () => {
 }
 const submit = (questions) => {
     showLoader();
+    if (!questions.questions_answered.length){
+        notification({text:  'Exam Postponed'});
+        showLoader();
+        backToQuiz();
+        return;
+    }
     axios.post(route("results.store"), questions).then(res => {
         quiz.result = res.data.result;
         if (quiz.result) {
