@@ -58,7 +58,7 @@ const quiz = (answer, correct_answer, key) => {
                     <div class="text-lg leading-6 mb-4 font-medium text-gray-900">
                         <h3><span class="mr-2 font-extrabold"> {{ key + 1 }}</span> {{ question.title }}</h3>
                         <details class="block text-xs mt-2" v-if="question.details">
-                            <summary class="p-1 hover:cursor-pointer" id="headingOne">
+                            <summary class="p-1 hover:cursor-pointer" :id="'questions-details' + key">
                                <span class="underline text-blue-500 hover:text-blue-700 focus:outline-none text-xs "
                                      type="button">
                                    Question Details
@@ -69,7 +69,7 @@ const quiz = (answer, correct_answer, key) => {
 
                         </details>
                         <details class="block text-xs mt-2" v-if="question.explain">
-                            <summary class="p-1 hover:cursor-pointer" id="headingOne">
+                            <summary class="p-1 hover:cursor-pointer" :id="'questions-explain' + key">
                                <span class="underline text-blue-500 hover:text-blue-700 focus:outline-none text-xs "
                                      type="button">
                                    Explanation

@@ -37,14 +37,15 @@ class QuizController extends Controller
                 $query->whereIn('topic_id', $topics);
             })
             ->where('category_id', request()->input('category_id'))
-            ->select(['id', 'title', 'details','options'])
+            ->select(['id', 'title', 'details','options', 'image'])
             ->get()
             ->map(fn($quiz) => [
                 'id' => $quiz->id,
                 'title' => $quiz->title,
                 'details' => $quiz->details,
                 'options' => $quiz->options,
-                'answer' => null
+                'answer' => null,
+                'image' => $quiz->image ? $quiz->imageUrl() : null
             ])
             ->shuffle()
             ->take($request->input('howManyQuestions'));

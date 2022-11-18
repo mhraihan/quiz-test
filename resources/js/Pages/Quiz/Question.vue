@@ -9,7 +9,7 @@ import FormField from "@/Components/FormField.vue";
 import {ref, reactive} from "vue";
 import {notify} from "notiwind"
 
-const emit = defineEmits(["submit","backToQuiz"]);
+const emit = defineEmits(["submit", "backToQuiz"]);
 
 const props = defineProps({
     questions: Object,
@@ -41,7 +41,7 @@ const next = (key) => {
 }
 const submit = (complete = true) => {
     stop_time.value = new Date();
-    emit('submit',{
+    emit('submit', {
         class_id: null,
         start_time: start_time.value,
         stop_time: stop_time.value,
@@ -67,7 +67,9 @@ const submit = (complete = true) => {
                 <p class="mt-1 max-w-2xl text-sm text-gray-500">
                     <span class="text-gray-400 font-extrabold p-1">Quiz Progress </span>
                     <span
-                        class="font-bold p-3 leading-loose bg-blue-500 text-white rounded-full">{{ step + 1 }}/{{ quiz.questions.length }}</span>
+                        class="font-bold p-3 leading-loose bg-blue-500 text-white rounded-full">{{
+                            step + 1
+                        }}/{{ quiz.questions.length }}</span>
                 </p>
             </div>
         </div>
@@ -82,15 +84,21 @@ const submit = (complete = true) => {
                             </h3>
 
                             <div class="block text-xs">
-                                <div class="p-1" id="headingOne">
-                                    <button
-                                        class="underline text-blue-500 hover:text-blue-700 focus:outline-none text-xs px-3"
-                                        type="button">
-                                        Question Details
-                                    </button>
-                                </div>
-                                <div class="block p-2 bg-green-100 text-xs" style="display: none;">
-                                    {{ question.details }}
+                                <div class="p-1" :id="'questions-details' + key">
+                                    <details class="block text-xs mt-2" v-if="question.details" open>
+                                        <summary class="p-1 hover:cursor-pointer" :id="'questions-details' + key">
+                                           <span class="underline text-blue-500 hover:text-blue-700 focus:outline-none text-xs "
+                                                 type="button">
+                                               Question Details
+                                           </span>
+                                        </summary>
+                                        <div class="block p-3 bg-green-100 text-xs leading-6 my-3"
+                                             v-html="question.details"></div>
+                                        <div v-if="question.image" class="py-3">
+                                            <img :src="question.image" loading="lazy" :alt="question.title">
+                                        </div>
+
+                                    </details>
                                 </div>
                             </div>
                         </div>
@@ -110,7 +118,8 @@ const submit = (complete = true) => {
                 <template #footer>
                     <div class="flex items-center justify-end mt-4">
                         <div class="flex  justify-between px-6 w-full">
-                            <BaseButtons class="flex w-full  " :class="!quiz.questions[quiz.questions.length - 1].answer ? 'justify-between' : 'justify-end'">
+                            <BaseButtons class="flex w-full  "
+                                         :class="!quiz.questions[quiz.questions.length - 1].answer ? 'justify-between' : 'justify-end'">
                                 <BaseButton
                                     v-show="!quiz.questions[quiz.questions.length - 1].answer"
                                     color="danger"
@@ -146,7 +155,7 @@ const submit = (complete = true) => {
         <!-- end of quiz box -->
     </CardBox>
     <CardBox v-else>
-        <CardBoxComponentEmpty text="No Question found." />
+        <CardBoxComponentEmpty text="No Question found."/>
         <div class="flex justify-center">
             <BaseButtons class="justify-center">
                 <BaseButton
