@@ -37,8 +37,11 @@ class QuizController extends Controller
                 $query->whereIn('topic_id', $topics);
             })
             ->where('category_id', request()->input('category_id'))
+            ->inRandomOrder()
+            ->limit($request->input('howManyQuestions'))
             ->select(['id', 'title', 'details','options', 'image'])
             ->get()
+            ->shuffle()
             ->map(fn($quiz) => [
                 'id' => $quiz->id,
                 'title' => $quiz->title,
@@ -46,9 +49,7 @@ class QuizController extends Controller
                 'options' => $quiz->options,
                 'answer' => null,
                 'image' => $quiz->image ? $quiz->imageUrl() : null
-            ])
-            ->shuffle()
-            ->take($request->input('howManyQuestions'));
+            ]);
 
         return response()->json(['questions' => $questions, 'start_time' => now()]);
     }
