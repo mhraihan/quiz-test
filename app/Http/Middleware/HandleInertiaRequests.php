@@ -18,7 +18,7 @@ class HandleInertiaRequests extends Middleware
     /**
      * Determine the current asset version.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return string|null
      */
     public function version(Request $request)
@@ -29,7 +29,7 @@ class HandleInertiaRequests extends Middleware
     /**
      * Define the props that are shared by default.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function share(Request $request)
@@ -41,12 +41,7 @@ class HandleInertiaRequests extends Middleware
                     'name' => $request->user()->name ?? null,
                     'email' => $request->user()->email ?? null,
                 ],
-                'can'  => $request->user()?->loadMissing('roles.permissions')
-                    ->roles->flatMap(function ($role) {
-                        return $role->permissions;
-                    })->map(function ($permission) {
-                        return [$permission['name'] => auth()->user()->can($permission['name'])];
-                    })->collapse()->all(),
+                'can' => $request->user()?->loadMissing('roles.permissions')->roles->flatMap(fn($role) => $role->permissions)->map(fn($permission) => [$permission['name'] => $request->user()->can($permission['name'])])->collapse()->all(),
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [
