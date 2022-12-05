@@ -13,10 +13,12 @@ export default [
         route: "dashboard",
         icon: mdiMonitor,
         label: "Dashboard",
+        roles: ['super-admin', 'admin'],
     },
     {
         label: "Questions",
         icon: mdiViewList,
+        roles: ['super-admin', 'admin'],
         menu: [
             {
                 route: "admin.questions.index",
@@ -38,6 +40,7 @@ export default [
     {
         label: "Topics",
         icon: mdiMarker,
+        roles: ['super-admin', 'admin'],
         menu: [
             {
                 route: "admin.topics.index",
@@ -55,10 +58,12 @@ export default [
         route: "quiz.index",
         icon: mdiTableQuestion,
         label: "Quiz",
+        roles: ['super-admin', 'admin','student'],
     },
     {
         route: "results.index",
         icon: mdiBookHeartOutline,
         label: "Result",
+        roles: ['super-admin', 'admin','student'],
     },
 ];

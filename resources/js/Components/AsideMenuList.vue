@@ -1,7 +1,7 @@
 <script setup>
 import AsideMenuItem from "@/Components/AsideMenuItem.vue";
 
-defineProps({
+const props = defineProps({
   isDropdownList: Boolean,
   menu: {
     type: Array,
@@ -11,9 +11,12 @@ defineProps({
 
 const emit = defineEmits(["menu-click"]);
 
+
 const menuClick = (event, item) => {
   emit("menu-click", event, item);
 };
+
+
 </script>
 
 <template>
@@ -23,6 +26,7 @@ const menuClick = (event, item) => {
       :key="index"
       :item="item"
       :is-dropdown-list="isDropdownList"
+
       @menu-click="menuClick"
     />
   </ul>

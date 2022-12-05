@@ -10,80 +10,53 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Question\StoreQuestionRequest;
 use Inertia\Response;
 use Inertia\ResponseFactory;
-use JetBrains\PhpStorm\NoReturn;
 use QCod\ImageUp\Exceptions\InvalidUploadFieldException;
 
 class QuestionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response|ResponseFactory
-     */
+
     public function index(): Response|ResponseFactory
     {
+        $this->authorize('view');
         return inertia('Question/Index', [
             'Questions' => Question::query()->index(),
             'title' => 'All Questions'
         ]);
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response|ResponseFactory
-     */
+
     public function trash(): Response|ResponseFactory
     {
+        $this->authorize('view');
         return inertia('Question/Trash', [
             'Questions' => Question::query()->index(true),
             'title' => 'All Trashed Questions'
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response|ResponseFactory
-     */
     public function create(): Response|ResponseFactory
     {
+        $this->authorize('create');
         return inertia('Question/Create', [
             'Categories' => Category::all(),
             'Topics' => Topic::all(),
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param StoreQuestionRequest $request
-     * @return RedirectResponse
-     */
     public function store(StoreQuestionRequest $request): RedirectResponse
     {
+        $this->authorize('update');
         $request->user()->questions()->create($request->validated());
         return redirect()->route('admin.questions.index')->with('success', 'Question Created Successfully');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param Question $question
-     * @return \Illuminate\Http\Response|null
-     */
-    #[NoReturn] public function show(Question $question): ?\Illuminate\Http\Response
+    public function show(): void
     {
-        dd($question);
+       abort(404);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Question $question
-     * @return RedirectResponse|Response|ResponseFactory
-     */
     public function edit(Question $question): Response|ResponseFactory|RedirectResponse
     {
+        $this->authorize('view');
         try {
             return inertia('Question/Edit', [
                 'Categories' => Category::all(),
@@ -98,30 +71,21 @@ class QuestionController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param StoreQuestionRequest $request
-     * @param Question $question
-     * @return RedirectResponse
-     */
     public function update(StoreQuestionRequest $request, Question $question): RedirectResponse
     {
-        if (is_null($request->image) && !is_null($question->image)){
+        $this->authorize('update');
+
+        if (is_null($request->image) && !is_null($question->image)) {
             $question->deleteFile($question->image);
         }
         $question->update($request->validated());
         return redirect()->back()->with('success', 'Question updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Question $question
-     * @return RedirectResponse
-     */
     public function destroy(Question $question): RedirectResponse
     {
+        $this->authorize('delete');
+
         if ($question->deleted_at) {
             return $this->forceDelete($question);
         }
@@ -131,13 +95,17 @@ class QuestionController extends Controller
 
     public function restore(Question $question): RedirectResponse
     {
+        $this->authorize('update');
+
         $question->restore();
         return redirect()->back()->with('success', 'Question restored.');
     }
 
     public function forceDelete(Question $question): RedirectResponse
     {
-        if (!is_null($question->image)){
+        $this->authorize('delete');
+
+        if (!is_null($question->image)) {
             $question->deleteFile($question->image);
         }
         $question->forceDelete();

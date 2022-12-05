@@ -44,6 +44,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function getRedirectRoute()
+    {
+        return match($this->roles()->pluck('name')->first()) {
+            'super-admin' => 'dashboard',
+            'admin' => 'dashboard',
+            'teacher' => 'teacher.dashboard',
+            'student' => 'results.index',
+        };
+    }
+
     public function questions(): HasMany
     {
         return $this->hasMany(Question::class);

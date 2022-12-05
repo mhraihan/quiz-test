@@ -23,7 +23,19 @@ class PermissionSeeder extends Seeder
          *
          * EVERYTHING HERE IS USED IN A SINGULAR SENSE
          */
-
+        // Permissions for questions
+        Permission::firstOrCreate([
+            'name' => 'create question',
+        ]);
+        Permission::firstOrCreate([
+            'name' => 'read question',
+        ]);
+        Permission::firstOrCreate([
+            'name' => 'update question',
+        ]);
+        Permission::firstOrCreate([
+            'name' => 'delete question',
+        ]);
 
         // Permissions for class
         Permission::firstOrCreate([
@@ -123,10 +135,16 @@ class PermissionSeeder extends Seeder
         //assign permissions to admin
         $admin = Role::where('name', 'admin')->first();
         $admin->givePermissionTo([
+            'create question',
+            'update question',
+            'delete question',
+            'read question',
+
             'create class',
             'read class',
             'update class',
             'delete class',
+
             'create student',
             'read student',
             'update student',

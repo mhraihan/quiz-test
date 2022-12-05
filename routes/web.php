@@ -27,10 +27,11 @@ use App\Http\Controllers\Admin\QuestionController;
 //     ]);
 // });
 Route::get('/', function () {
-    return Inertia::render('HomeView');
+    return redirect()->route('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/dashboard', function () {
+    if (auth())
     return Inertia::render('HomeView');
 })->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/profile', function () {

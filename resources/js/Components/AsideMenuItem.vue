@@ -6,6 +6,7 @@ import { mdiMinus, mdiPlus } from "@mdi/js";
 import { getButtonColor } from "@/colors.js";
 import BaseIcon from "@/Components/BaseIcon.vue";
 import AsideMenuList from "@/Components/AsideMenuList.vue";
+import { usePage } from "@inertiajs/inertia-vue3";
 
 const props = defineProps({
   item: {
@@ -54,10 +55,15 @@ const menuClick = (event) => {
     isDropdownActive.value = !isDropdownActive.value;
   }
 };
+const showMenu =computed(() => {
+    if (props.isDropdownList) return true;
+    return props.item.roles?.includes(usePage().props.value.auth.roles);
+});
+
 </script>
 
 <template>
-  <li>
+  <li v-if="showMenu">
     <component
       :is="item.route ? Link : 'a'"
       :href="itemHref"
