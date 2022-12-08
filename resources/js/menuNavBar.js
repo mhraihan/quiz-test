@@ -7,7 +7,7 @@ export default [
             {
                 icon: mdiAccount,
                 label: "My Profile",
-                route: "profile",
+                route: "user.profile",
             },
 
             {
