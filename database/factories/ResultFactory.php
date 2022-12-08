@@ -28,6 +28,8 @@ class ResultFactory extends Factory
             'correct_answered' => $correct_answered
         ] = $result->getDataFromQuestions($questions_answered);
         return [
+            'user_id' => random_int(1,4),
+            'complete' => random_int(0, 1),
             'total_questions' => $questions,
             'correct_answered' => $correct_answered,
             'start_time' => now(),

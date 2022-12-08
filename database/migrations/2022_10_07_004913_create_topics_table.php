@@ -22,7 +22,9 @@ return new class extends Migration
         /**
          * Seed the categories.
          */
-        Topic::create(['title' => 'Default']);
+        Topic::create(['title' => 'Science']);
+        Topic::create(['title' => 'Mathematics']);
+        Topic::create(['title' => 'Physics']);
     }
 
     /**

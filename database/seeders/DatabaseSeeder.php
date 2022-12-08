@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
         $admin = User::factory()->create([
             'name'              => 'MH Doe',
             'email'             => 'admin@admin.com',
-            'password'          => Hash::make('password'),
+            'password'          => Hash::make('admin'),
             'email_verified_at' => now()
         ]);
         $admin->assignRole('admin');
@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
         $teacher = User::factory()->create([
             'name'              => 'Yuu Doe',
             'email'             => 'teacher@teacher.com',
-            'password'          => Hash::make('password'),
+            'password'          => Hash::make('teacher'),
             'email_verified_at' => now(),
         ]);
         $teacher->assignRole('teacher');
@@ -51,7 +51,7 @@ class DatabaseSeeder extends Seeder
         $student = User::factory()->create([
             'name'              => 'Jane Doe',
             'email'             => 'student@student.com',
-            'password'          => Hash::make('password'),
+            'password'          => Hash::make('student'),
             'email_verified_at' => now(),
         ]);
         $student->assignRole('student');
@@ -59,9 +59,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(QuestionSeeder::class);
 
-        Result::factory()->count(1000)->create([
-            'user_id' => random_int(1,4),
-            'complete' => random_int(0, 1),
-        ]);
+        Result::factory()->count(1000)->create();
     }
 }
