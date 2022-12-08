@@ -11,8 +11,9 @@ use App\Http\Controllers\Admin\QuestionController;
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
 
-    Route::get('/', HomeController::class)->name('index');
-    Route::get('/dashboard', HomeController::class)->name('dashboard');
+    Route::get('/', fn() => redirect()->route(auth()->user()->getRedirectRoute()))->name('index');
+    Route::get('/dashboard', HomeController::class)->middleware('is_admin')->name('dashboard');
+
     Route::get('/profile', ProfileController::class)->name('user.profile');
     /**
      * Quiz Controller

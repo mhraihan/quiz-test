@@ -44,6 +44,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function isAdmin(): Bool
+    {
+        $role = $this->roles()->pluck('name')->first();
+        return $role === 'super-admin' || $role === 'admin';
+    }
     public function getRedirectRoute()
     {
         return match($this->roles()->pluck('name')->first()) {
