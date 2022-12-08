@@ -34,7 +34,6 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
-        $roles = $request->user()?->loadMissing('roles.permissions')->roles;
 
         return array_merge(parent::share($request), [
             'auth' => [
@@ -43,8 +42,7 @@ class HandleInertiaRequests extends Middleware
                     'name' => $request->user()->name ?? null,
                     'email' => $request->user()->email ?? null,
                 ],
-                'roles' => $roles?->pluck('name')->first(),
-                'can' => $roles?->flatMap(fn($role) => $role->permissions)->map(fn($permission) => [$permission['name'] => $request->user()->can($permission['name'])])->collapse()->all(),
+                'roles' => $request->user()?->roles()->pluck('name')->first(),
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [
