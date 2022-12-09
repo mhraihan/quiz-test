@@ -17,13 +17,6 @@ class Category extends Model
     protected $fillable = ['title'];
     public $timestamps = false;
 
-    public static function boot()
-    {
-        parent::boot();
-        static::creating(function ($model) {
-            $model->slug = Str::slug($model->title);
-        });
-    }
 
     public function questions(): HasMany
     {
