@@ -90,7 +90,8 @@ const getQuiz = () => {
                 notification({text: 'No Question is available'});
             }
         }).catch(() => {
-            notification();
+            location.reload();
+            notification({'text':'Session is expired'});
         }).finally(() => showLoader());
     } else {
         notification();
