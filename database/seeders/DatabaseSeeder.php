@@ -56,6 +56,7 @@ class DatabaseSeeder extends Seeder
         ]);
         $student->assignRole('student');
 
+        User::factory(100)->create();
 
         $this->call(QuestionSeeder::class);
 
