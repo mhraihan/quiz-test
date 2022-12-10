@@ -27,7 +27,7 @@ class EloquentEventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        User::observe(UserObserver::class);
+        //User::observe(UserObserver::class);
         Category::observe(CategoryObserver::class);
     }
 }
