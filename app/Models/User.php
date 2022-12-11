@@ -20,9 +20,21 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'photo_path',
+        'gender',
+        'birthday',
+        'country',
+        'state',
+        'city',
+        'phone',
+        'address',
+        'postcode',
+        'active',
+
     ];
 
     /**
@@ -42,8 +54,14 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'birthday' => 'datetime',
+        'active' => 'boolean',
     ];
 
+    public function name()
+    {
+        return $this->first_name.' ' . $this->last_name;
+    }
     public function isAdmin(): Bool
     {
         $role = $this->roles()->pluck('name')->first();
@@ -52,9 +70,8 @@ class User extends Authenticatable
     public function getRedirectRoute()
     {
         return match($this->roles()->pluck('name')->first()) {
-            'super-admin' => 'dashboard',
-            'admin' => 'dashboard',
-            'teacher' => 'teacher.dashboard',
+            'super-admin', 'admin' => 'dashboard',
+            'teacher' => 'results.index',
             'student' => 'results.index',
         };
     }

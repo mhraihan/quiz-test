@@ -8,6 +8,6 @@ class UserObserver
 {
     public function created(User $user): void
     {
-        $user->assignRole('student');
+        $user->assignRole(request()->roles ?? 'student');
     }
 }
