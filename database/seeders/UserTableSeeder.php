@@ -23,8 +23,7 @@ class UserTableSeeder extends Seeder
             'password' => bcrypt('mhraihan'),
             'email_verified_at' => now()
         ]);
-        $superAdmin->assignRole('super-admin');
-        $superAdmin->save();
+        $superAdmin->syncRoles('super-admin');
 
         $admin = User::factory()->create([
             'first_name' => 'MH',
@@ -33,7 +32,7 @@ class UserTableSeeder extends Seeder
             'password' => Hash::make('admin'),
             'email_verified_at' => now()
         ]);
-        $admin->assignRole('admin');
+        $admin->syncRoles('admin');
 
         $teacher = User::factory()->create([
             'first_name' => 'Teacher',
@@ -42,7 +41,7 @@ class UserTableSeeder extends Seeder
             'password' => Hash::make('teacher'),
             'email_verified_at' => now(),
         ]);
-        $teacher->assignRole('teacher');
+        $teacher->syncRoles('teacher');
 
         $student = User::factory()->create([
             'first_name' => 'Student',
@@ -51,7 +50,7 @@ class UserTableSeeder extends Seeder
             'password' => Hash::make('student'),
             'email_verified_at' => now(),
         ]);
-        $student->assignRole('student');
+        $student->syncRoles('student');
 
         User::factory(100)->create();
     }
