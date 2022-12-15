@@ -10,7 +10,9 @@ class UserObserver
 
     public function saving(User $user): void
     {
-        $user->password = Hash::make(request()->password);
+        if (request()->has('password')){
+            $user->password = Hash::make(request()->password );
+        }
         $user->assignRole(request()->roles ?? 'student');
     }
 }
