@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Enums\UserEnum;
+//use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -16,16 +17,16 @@ class RoleSeeder extends Seeder
     public function run()
     {
         Role::firstOrCreate([
-            'name' => 'super-admin',
+            'name' => UserEnum::SUPER_ADMIN->value,
         ]);
         Role::firstOrCreate([
-            'name' => 'admin',
+            'name' => UserEnum::ADMIN->value,
         ]);
         Role::firstOrCreate([
-            'name' => 'teacher',
+            'name' => UserEnum::TEACHER->value,
         ]);
         Role::firstOrCreate([
-            'name' => 'student',
+            'name' => UserEnum::STUDENT->value,
         ]);
     }
 }

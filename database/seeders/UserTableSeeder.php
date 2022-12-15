@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 //use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Enums\UserEnum;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -23,7 +24,7 @@ class UserTableSeeder extends Seeder
             'password' => bcrypt('mhraihan'),
             'email_verified_at' => now()
         ]);
-        $superAdmin->syncRoles('super-admin');
+        $superAdmin->syncRoles(UserEnum::SUPER_ADMIN->value);
 
         $admin = User::factory()->create([
             'first_name' => 'MH',
@@ -32,16 +33,16 @@ class UserTableSeeder extends Seeder
             'password' => Hash::make('admin'),
             'email_verified_at' => now()
         ]);
-        $admin->syncRoles('admin');
+        $admin->syncRoles(UserEnum::ADMIN->value);
 
         $teacher = User::factory()->create([
             'first_name' => 'Teacher',
             'last_name' => 'Raihan',
             'email' => 'teacher@teacher.com',
-            'password' => Hash::make('teacher'),
+            'password' =>'teacher',
             'email_verified_at' => now(),
         ]);
-        $teacher->syncRoles('teacher');
+        $teacher->syncRoles(UserEnum::TEACHER->value);
 
         $student = User::factory()->create([
             'first_name' => 'Student',
@@ -50,7 +51,7 @@ class UserTableSeeder extends Seeder
             'password' => Hash::make('student'),
             'email_verified_at' => now(),
         ]);
-        $student->syncRoles('student');
+        $student->syncRoles(UserEnum::TEACHER->value);
 
         User::factory(100)->create();
     }

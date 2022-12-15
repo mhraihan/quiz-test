@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Question;
 use App\Models\Result;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -28,7 +29,7 @@ class ResultFactory extends Factory
             'correct_answered' => $correct_answered
         ] = $result->getDataFromQuestions($questions_answered);
         return [
-            'user_id' => random_int(1,4),
+            'user_id' => random_int(1,User::query()->count()),
             'complete' => random_int(0, 1),
             'total_questions' => $questions,
             'correct_answered' => $correct_answered,

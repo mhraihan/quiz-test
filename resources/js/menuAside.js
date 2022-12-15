@@ -55,6 +55,28 @@ export default [
         ],
     },
     {
+        label: "Students",
+        icon: mdiViewList,
+        roles: ['super-admin', 'admin'],
+        menu: [
+            {
+                route: "admin.students.index",
+                icon: mdiTable,
+                label: "All Students",
+            },
+            {
+                route: "admin.students.create",
+                icon: mdiTable,
+                label: "Create Student",
+            },
+            // {
+            //     route: "admin.students.trash",
+            //     icon: mdiTrashCan,
+            //     label: "Trash",
+            // },
+        ],
+    },
+    {
         route: "quiz.index",
         icon: mdiTableQuestion,
         label: "Quiz",

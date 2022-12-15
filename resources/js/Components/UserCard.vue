@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import { useMainStore } from "@/Stores/main";
+
 import { usePage } from "@inertiajs/inertia-vue3";
 import UserAvatar from "@/Components/UserAvatar.vue";
 import { mdiCheckDecagram } from "@mdi/js";
@@ -9,8 +9,6 @@ import BaseLevel from "@/Components/BaseLevel.vue";
 import CardBox from "@/Components/CardBox.vue";
 import FormCheckRadio from "@/Components/FormCheckRadio.vue";
 import PillTag from "@/Components/PillTag.vue";
-
-const mainStore = useMainStore();
 
 const userSwitchVal = ref(false);
 const userName = computed(() => usePage().props.value.auth.user.name);
