@@ -1,6 +1,6 @@
 <script setup>
-import { computed, ref } from "vue";
-import { mdiEye, mdiTrashCan } from "@mdi/js";
+import {computed, ref} from "vue";
+import {mdiEye, mdiTrashCan} from "@mdi/js";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
 import BaseLevel from "@/Components/BaseLevel.vue";
 import BaseButtons from "@/Components/BaseButtons.vue";
@@ -16,13 +16,15 @@ const id = ref(null);
 const links = computed(() => props.Questions.links);
 
 const isModalDangerActive = ref(false);
-const currentPage = ref(props.Questions.current_page );
+const currentPage = ref(props.Questions.current_page);
 const numPages = computed(() => props.Questions.last_page);
-const currentPageHuman = computed(() => currentPage.value );
-const form = useForm();
+const currentPageHuman = computed(() => currentPage.value);
+const form = useForm({
+    _method: 'delete'
+});
 
 const destroyQuestion = () => {
-        form.delete(route('admin.questions.destroy', id.value),{
+    form.post(route('admin.questions.destroy', id.value), {
             onSuccess: () => {
                 notify({
                     group: "notification",
@@ -60,14 +62,14 @@ const destroyQuestion = () => {
         <thead>
         <tr>
             <th>Question Name</th>
-            <th />
+            <th/>
         </tr>
         </thead>
         <tbody>
         <tr v-for="question in props.Questions.data" :key="question.id">
 
             <td data-label="Title">
-               <Link :href="route('admin.questions.edit',question.id)"> {{ question.title }}</Link>
+                <Link :href="route('admin.questions.edit',question.id)"> {{ question.title }}</Link>
             </td>
 
             <td class="before:hidden lg:w-1 whitespace-nowrap">

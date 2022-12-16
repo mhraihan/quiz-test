@@ -111,7 +111,9 @@ const updateQuestion = () => {
 
 
 const destroyQuestion = () => {
-    questions.delete(route('admin.questions.destroy', questions.id), {
+    questions['_method'] = "delete";
+    questions
+        .post(route('admin.questions.destroy', questions.id), {
         onSuccess: () => {
             questions.deleted_at = questions.deleted_at || new Date();
             notify({
@@ -132,7 +134,7 @@ const destroyQuestion = () => {
     });
 }
 const restoreQuestion = () => {
-    questions.put(route('admin.questions.restore', questions.id), {
+    questions.post(route('admin.questions.restore', questions.id), {
         onSuccess: () => {
             questions.deleted_at = null;
             notify({
