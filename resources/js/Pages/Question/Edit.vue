@@ -134,6 +134,7 @@ const destroyQuestion = () => {
     });
 }
 const restoreQuestion = () => {
+    questions['_method'] = "put";
     questions.post(route('admin.questions.restore', questions.id), {
         onSuccess: () => {
             questions.deleted_at = null;
