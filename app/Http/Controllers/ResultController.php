@@ -26,7 +26,7 @@ class ResultController extends Controller
                         'score' => $result->score,
                         'exam' => $result->exam['how_long'],
                     ]),
-                'exam' => fn() =>  $query->loadSum('results', 'total_questions')->loadSum('results', 'correct_answered'),
+                'exam' => fn() =>  $query->loadSum('results', 'total_questions')->loadSum('results', 'correct_answered')->only(['results_sum_total_questions', 'results_sum_correct_answered']),
             ]
         );
     }
