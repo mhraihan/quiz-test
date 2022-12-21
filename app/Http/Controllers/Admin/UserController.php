@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
@@ -32,7 +33,7 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request): RedirectResponse
     {
-        $property = User::getUserProperty($request->roles);
+        $property = UserEnum::from($request->roles)->getUserProperty();
         User::create($request->safe()->all());
         return redirect()->route($property['url'])->with('success', $property['store']);
     }
@@ -60,19 +61,28 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
+        $property = UserEnum::from($request->roles)->getUserProperty();
         $user->update($request->safe()->all());
-        return redirect()->back()->withSuccess("Profile updated successfully");
+        return redirect()->back()->withSuccess($property['update']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(User $user): RedirectResponse
     {
+        $property = UserEnum::from($user->roles()->pluck('name')->first())->getUserProperty();
+        if ($user->deleted_at) {
+             $user->forceDelete();
+            return redirect()->route($property['url'],request('query'))->with('success', $property['delete']);
+        }
         $user->delete();
-        return redirect()->back()->with('success', 'User Moved to Trash Successfully');
+        return redirect()->back()->with('success', $property['trash']);
+    }
+
+    public function restore(User $user): RedirectResponse
+    {
+//        $this->authorize('update');
+        $property = UserEnum::from($user->roles()->pluck('name')->first())->getUserProperty();
+        $user->restore();
+        return redirect()->back()->with('success', $property['restore']);
     }
 }

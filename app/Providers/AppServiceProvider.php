@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Enums\UserEnum;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -26,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Implicitly grant "Super-Admin" role all permission checks using can()
         Gate::after(function ($user, $ability) {
-            if ($user->hasRole('super-admin')) {
+            if ($user->hasRole(UserEnum::SUPER_ADMIN->value)) {
                 return true;
             }
         });

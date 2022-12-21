@@ -26,6 +26,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserTableSeeder::class);
         $this->call(QuestionSeeder::class);
 
-        Result::factory()->count(1000)->create();
+        Result::factory()->count(600)->create();
     }
 }

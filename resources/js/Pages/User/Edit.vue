@@ -8,8 +8,9 @@ import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.
 import {Head} from "@inertiajs/inertia-vue3";
 import {notify} from "notiwind"
 import useValidatedForm from "@/useValidatorForm";
-import {isRequired, isIn, isMin, isImage, isEmail, isSame} from "intus/rules";
+import {isRequired, isIn, isMin, isEmail, isSame} from "intus/rules";
 import Form from "./Form.vue";
+import {computed} from "vue";
 
 const props = defineProps({
     Role: String,
@@ -35,11 +36,16 @@ const User = useValidatedForm({
     postcode: [props.User.postcode || null, [isRequired()]],
     gender: [props.User.gender || "male", [isRequired(), isIn("male", "female")]],
     deleted_at: [props.User.deleted_at || null],
-    roles: ['student'],
+    roles: [props.Role.toLowerCase()],
     _method: ["put"],
 });
+const url = computed(() => {
+    if (props.Role === 'User')  return 'admin.users.index';
+    if (props.Role === 'Teacher')  return 'admin.teachers.index';
+    return 'admin.students.index';
+});
 const updateUser = () => {
-    if (!User.password && !User.password_confirmation){
+    if (!User.password && !User.password_confirmation) {
         delete User.password_confirmation;
         delete User.password;
     }
@@ -67,28 +73,35 @@ const updateUser = () => {
         });
 }
 const destroyUser = () => {
-    User.delete(route('admin.users.destroy', User.id), {
-        onSuccess: () => {
-            User.deleted_at = User.deleted_at || new Date();
-            notify({
-                group: "notification",
-                type: "success",
-                title: "Success"
-            }, 4000) // 4s
-            User.clearErrors();
-        },
-        onError: () => {
-            notify({
-                group: "notification",
-                type: "error",
-                title: "Error",
-                text: 'Something went wrong'
-            }, 4000) // 4s
-        }
-    });
+    User['_method'] = "delete";
+    User
+        .transform((data) => ({
+            _method: ["delete"],
+            ...data,
+        }))
+        .post(route('admin.users.destroy', User.id), {
+            onSuccess: () => {
+                User.deleted_at = User.deleted_at || new Date();
+                notify({
+                    group: "notification",
+                    type: "success",
+                    title: "Success"
+                }, 4000) // 4s
+                User.clearErrors();
+            },
+            onError: () => {
+                notify({
+                    group: "notification",
+                    type: "error",
+                    title: "Error",
+                    text: 'Something went wrong'
+                }, 4000) // 4s
+            }
+        });
 }
-const restorUser = () => {
-    User.put(route('admin.users.restore', User.id), {
+const restoreUser = () => {
+    User['_method'] = "put";
+    User.post(route('admin.users.restore', User.id), {
         onSuccess: () => {
             User.deleted_at = null;
             notify({
@@ -114,10 +127,10 @@ const restorUser = () => {
     <Head title="Create new Question"/>
     <LayoutAuthenticated>
         <SectionMain>
-            <Breadcrumbs :href="route('admin.students.index')" title="Students" location="Create New Student"/>
+            <Breadcrumbs :href="route(url)" :title="props.Role" :location="`Update ${props.Role}`" />
             <SectionTitleLineWithButton
                 :icon="mdiPencilPlus"
-                title="Create new Student"
+                :title="`Update ${props.Role}`"
                 main
             />
 
@@ -127,7 +140,8 @@ const restorUser = () => {
                     @submit.prevent="updateUser"
                     :hasTable="hasTable"
                 >
-                    <Form :User="User" :Role="props.Role"  @destroy="destroyUser" buttonText="Update Student"/>
+                    <Form :User="User" :Role="props.Role" @destroy="destroyUser" @restore="restoreUser"
+                          :buttonText="`Update ${props.Role}`"/>
                 </CardBox>
             </div>
         </SectionMain>

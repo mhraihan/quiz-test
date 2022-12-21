@@ -6,7 +6,7 @@ import BaseDivider from "@/Components/BaseDivider.vue";
 import Grid from "@/Components/Grid.vue";
 import FormField from "@/Components/FormField.vue";
 import FormControl from "@/Components/FormControl.vue";
-import FormFilePicker from "@/Components/FormFilePicker.vue";
+// import FormFilePicker from "@/Components/FormFilePicker.vue";
 import BaseButton from "@/Components/BaseButton.vue";
 import BaseButtons from "@/Components/BaseButtons.vue";
 
@@ -39,7 +39,6 @@ const gender = [
 const emit = defineEmits(["destroy", "restore",]);
 const isModalDangerActive = ref(false);
 const destroyModal = () => {
-    console.log('destroy');
     emit('destroy');
 }
 
@@ -55,9 +54,9 @@ const destroyModal = () => {
             has-cancel
             @confirm="destroyModal"
         >
-            <p>Are you sure you want to Delete the question?</p>
+            <p>Are you sure you want to Delete the {{ props.Role }}?</p>
         </CardBoxModal>
-        <trashed-message v-if="User.deleted_at" @restore="$emit('restore')" class="mb-6"> This Question has been
+        <trashed-message v-if="User.deleted_at" @restore="$emit('restore')" class="mb-6" :restore="`Are you sure you want to restore this ${props.Role}?`"> This {{ props.Role }} has been
             deleted.
         </trashed-message>
         <ValidationError/>

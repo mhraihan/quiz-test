@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Result\StoreResultRequest;
+use App\Traits\ResultTraits;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Inertia\Response;
@@ -10,23 +11,14 @@ use App\Models\{Result, Question, User};
 
 class ResultController extends Controller
 {
+    use ResultTraits;
+
     public function index(): Response
     {
-        $query = auth()->user();
+        $user = auth()->user();
         return inertia('Result/Index', [
-                'results' => fn() =>   $query->results()
-                    ->latest()
-                    ->select('id', 'complete', 'correct_answered', 'total_questions', 'stop_time', 'start_time', 'created_at')
-                    ->paginate()
-                    ->withQueryString()
-                    ->through(fn($result) => [
-                        'id' => $result->id,
-                        'complete' => $result->complete,
-                        'total_questions' => $result->total_questions,
-                        'score' => $result->score,
-                        'exam' => $result->exam['how_long'],
-                    ]),
-                'exam' => fn() =>  $query->loadSum('results', 'total_questions')->loadSum('results', 'correct_answered')->only(['results_sum_total_questions', 'results_sum_correct_answered']),
+                'results' => fn() => $this->results($user),
+                'exam' => fn() => $this->exam($user)->only(['results_sum_total_questions', 'results_sum_correct_answered']),
             ]
         );
     }

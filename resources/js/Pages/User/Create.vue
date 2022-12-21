@@ -8,7 +8,7 @@ import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.
 import {Head} from "@inertiajs/inertia-vue3";
 import {notify} from "notiwind"
 import useValidatedForm from "@/useValidatorForm";
-import {isRequired, isIn, isMin, isImage, isEmail, isSame} from "intus/rules";
+import {isRequired, isIn, isMin, isEmail, isSame} from "intus/rules";
 import Form from "./Form.vue";
 
 const props = defineProps({
@@ -33,7 +33,7 @@ const User = useValidatedForm({
     postcode: ["",[isRequired()]],
     gender: ["male",[isRequired(), isIn("male", "female")]],
     deleted_at: [null],
-    roles: ['student'],
+    roles: [props.Role.toLowerCase()],
 });
 const createUser = () => {
     User

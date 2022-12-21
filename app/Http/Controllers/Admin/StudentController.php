@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\UserResource;
 use App\Models\User;
+use App\Traits\ResultTraits;
 use Inertia\Response;
 use Inertia\ResponseFactory;
 
 class StudentController extends Controller
 {
+    use ResultTraits;
 
     public function index(): Response|ResponseFactory
     {
@@ -17,39 +19,38 @@ class StudentController extends Controller
             'Users' => UserResource::collection(
                 User::query()
                     ->latest()
+                    ->select('id', 'first_name', 'last_name', 'email', 'deleted_at')
+                    ->filter(request()->only('search', 'trashed'))
                     ->role('student')
-                    ->when(request()->input('search'), function ($query, $search) {
-                        $query->role('student')->where('first_name', 'LIKE', "%$search%");
-                        $query->role('student')->orWhere('last_name', 'LIKE', "%$search%");
-                        $query->role('student')->orWhere('email', 'LIKE', "%$search%");
-                    })
                     ->paginate()
                     ->withQueryString())
             ,
-            'title' => 'All Student'
+            'title' => 'All Student',
+            'filters' => request()->all('search', 'trashed'),
         ]);
     }
 
     public function create(): Response|ResponseFactory
     {
         return inertia('User/Create', [
-            'Role' => 'student',
+            'Role' => 'Student',
         ]);
     }
 
     public function show(User $user): Response|ResponseFactory
     {
-        return inertia('User/Edit', [
-            'Role' => 'student',
-            'User' => $user,
+        return inertia('User/Student', [
+            'User' => fn() => $this->exam($user),
+            'results' => fn() => $this->results($user),
+            'Role' => 'Student',
         ]);
     }
 
     public function edit(User $user): Response|ResponseFactory
     {
         return inertia('User/Edit', [
+            'Role' => 'Student',
             'User' => $user,
-            'Role' => 'student',
         ]);
     }
 }

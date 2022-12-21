@@ -5,7 +5,12 @@ import CardBoxModal from "@/Components/CardBoxModal.vue";
 
 import {ref} from "vue";
 const emit = defineEmits(["restore"]);
-
+const props = defineProps({
+    restore: {
+        type: String,
+        default: "Are you sure you want to restore this Question?"
+    }
+})
 const isModalRestoreActive = ref(false);
 
 const restoreModal = () => {
@@ -30,23 +35,8 @@ const restoreModal = () => {
                 has-cancel
                 @confirm="restoreModal"
             >
-                <p>Are you sure you want to restore this Question?</p>
+                <p>{{ props.restore }}</p>
             </CardBoxModal>
         </div>
     </transition>
 </template>
-
-
-<style scoped>
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
-}
-.fade-enter-to {
-    opacity: 0;
-}
-.fade-enter-active,
-.fade-leave-active {
-   /*transition: opacity 2s ease-in-out;*/
-}
-</style>

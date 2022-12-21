@@ -50,9 +50,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
          * Topics Controller
          */
         Route::resource("topics", TopicController::class);
+
         /**
          * User Management Controller
          */
+        Route::put('users/{user}/restore', [UserController::class, 'restore'])
+            ->name('users.restore')->withTrashed();
         route::resource("users", UserController::class)->withTrashed(['index', 'show', 'edit', 'destroy']);
 
         route::resource("students", StudentController::class)->parameters([

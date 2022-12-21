@@ -25,6 +25,7 @@ class UserTableSeeder extends Seeder
             'email_verified_at' => now()
         ]);
         $superAdmin->syncRoles(UserEnum::SUPER_ADMIN->value);
+        $superAdmin->removeRole(UserEnum::STUDENT->value);
 
         $admin = User::factory()->create([
             'first_name' => 'MH',
@@ -39,7 +40,7 @@ class UserTableSeeder extends Seeder
             'first_name' => 'Teacher',
             'last_name' => 'Raihan',
             'email' => 'teacher@teacher.com',
-            'password' =>'teacher',
+            'password' => Hash::make('teacher'),
             'email_verified_at' => now(),
         ]);
         $teacher->syncRoles(UserEnum::TEACHER->value);
@@ -51,8 +52,8 @@ class UserTableSeeder extends Seeder
             'password' => Hash::make('student'),
             'email_verified_at' => now(),
         ]);
-        $student->syncRoles(UserEnum::TEACHER->value);
+        $student->syncRoles(UserEnum::STUDENT->value);
 
-        User::factory(100)->create();
+        User::factory(50)->create();
     }
 }

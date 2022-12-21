@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+ use App\Enums\UserEnum;
  use App\Models\Question;
  use App\Policies\QuestionPolicy;
  use Illuminate\Support\Facades\Gate;
@@ -43,7 +44,7 @@ class AuthServiceProvider extends ServiceProvider
         // Implicitly grant "Super Admin" role all permissions
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
         Gate::before(function ($user, $ability) {
-            return $user->hasRole('super-admin') ? true : null;
+            return $user->hasRole(UserEnum::SUPER_ADMIN->value) ? true : null;
         });
     }
 }
