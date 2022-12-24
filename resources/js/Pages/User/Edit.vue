@@ -11,7 +11,7 @@ import useValidatedForm from "@/useValidatorForm";
 import {isRequired, isIn, isMin, isEmail, isSame} from "intus/rules";
 import Form from "./Form.vue";
 import {computed} from "vue";
-
+import { useMainStore } from "@/Stores/main.js";
 const props = defineProps({
     Role: String,
     User: Object,
@@ -49,77 +49,13 @@ const updateUser = () => {
         delete User.password_confirmation;
         delete User.password;
     }
-    User
-        .transform((data) => ({
-            ...data,
-        }))
-        .post(route("admin.users.update", props.User.id), {
-            "onSuccess": () => {
-                notify({
-                    group: "notification",
-                    type: "success",
-                    title: "Success",
-                    text: 'Student Profile updated successfully'
-                }, 4000)
-            },
-            onError: () => {
-                notify({
-                    group: "notification",
-                    type: "error",
-                    title: "Error",
-                    text: 'Something went wrong'
-                }, 4000) // 4s
-            }
-        });
+    useMainStore().update(User, 'admin.users.update');
 }
 const destroyUser = () => {
-    User['_method'] = "delete";
-    User
-        .transform((data) => ({
-            _method: ["delete"],
-            ...data,
-        }))
-        .post(route('admin.users.destroy', User.id), {
-            onSuccess: () => {
-                User.deleted_at = User.deleted_at || new Date();
-                notify({
-                    group: "notification",
-                    type: "success",
-                    title: "Success"
-                }, 4000) // 4s
-                User.clearErrors();
-            },
-            onError: () => {
-                notify({
-                    group: "notification",
-                    type: "error",
-                    title: "Error",
-                    text: 'Something went wrong'
-                }, 4000) // 4s
-            }
-        });
+   useMainStore().destroy(User, 'admin.users.destroy');
 }
 const restoreUser = () => {
-    User['_method'] = "put";
-    User.post(route('admin.users.restore', User.id), {
-        onSuccess: () => {
-            User.deleted_at = null;
-            notify({
-                group: "notification",
-                type: "success",
-                title: "Success"
-            }, 4000) // 4s
-        },
-        onError: () => {
-            notify({
-                group: "notification",
-                type: "error",
-                title: "Error",
-                text: 'Something went wrong'
-            }, 4000) // 4s
-        }
-    })
-
+    useMainStore().restore(User, 'admin.users.restore');
 }
 </script>
 

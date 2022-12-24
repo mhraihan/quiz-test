@@ -14,7 +14,6 @@ const props = defineProps({
 const isModalRestoreActive = ref(false);
 
 const restoreModal = () => {
-    console.log('restore');
     emit('restore');
 }
 </script>

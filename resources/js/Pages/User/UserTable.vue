@@ -9,6 +9,7 @@ import BaseButton from "@/Components/BaseButton.vue";
 import BaseIcon from "@/Components/BaseIcon.vue";
 import {Link, useForm, usePage} from '@inertiajs/inertia-vue3'
 import {notify} from "notiwind";
+import {useMainStore} from "@/Stores/main";
 
 const props = defineProps({
     Users: Object,
@@ -37,25 +38,9 @@ const form = useForm({
 
 
 const destroyQuestion = () => {
+    form['id'] = id.value;
     form['queries'] = props.Query;
-    form.post(route('admin.users.destroy', id.value), {
-        onSuccess: () => {
-            notify({
-                group: "notification",
-                type: "success",
-                title: "Success",
-                text: usePage().props.flash?.success || `${props.Role} Moved to Trash Successfully`
-            }, 4000) // 4s
-        },
-        onError: () => {
-            notify({
-                group: "notification",
-                type: "error",
-                title: "Error",
-                text: usePage().props.flash?.error || 'Something went wrong'
-            }, 4000) // 4s
-        }
-    });
+    useMainStore().destroy(form, 'admin.users.destroy');
 }
 
 

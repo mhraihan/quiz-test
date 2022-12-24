@@ -10,6 +10,7 @@ import {notify} from "notiwind"
 import useValidatedForm from "@/useValidatorForm";
 import {isRequired, isIn, isMin, isEmail, isSame} from "intus/rules";
 import Form from "./Form.vue";
+import {useMainStore} from "@/Stores/main";
 
 const props = defineProps({
     Role: String,
@@ -36,28 +37,7 @@ const User = useValidatedForm({
     roles: [props.Role.toLowerCase()],
 });
 const createUser = () => {
-    User
-        .transform((data) => ({
-            ...data,
-        }))
-        .post(route("admin.users.store"), {
-            "onSuccess": () => {
-                notify({
-                    group: "notification",
-                    type: "success",
-                    title: "Success",
-                    text: 'Student created successfully'
-                }, 4000)
-            },
-            onError: () => {
-                notify({
-                    group: "notification",
-                    type: "error",
-                    title: "Error",
-                    text: 'Something went wrong'
-                }, 4000) // 4s
-            }
-        });
+    useMainStore().create(User, 'admin.users.store');
 }
 </script>
 
