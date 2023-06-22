@@ -16,6 +16,23 @@ export default [
         roles: ['super-admin', 'admin'],
     },
     {
+        icon: mdiTable,
+        label: "Schools",
+        roles: ['super-admin', 'admin'],
+        menu: [
+            {
+                route: "admin.schools.index",
+                icon: mdiTable,
+                label: "All Schools",
+            },
+            {
+                route: "admin.schools.create",
+                icon: mdiTable,
+                label: "Create School",
+            }
+        ],
+    },
+    {
         label: "Questions",
         icon: mdiViewList,
         roles: ['super-admin', 'admin'],

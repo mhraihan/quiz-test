@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserEnum;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -24,6 +25,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'school_id',
         'first_name',
         'last_name',
         'email',
@@ -73,7 +75,15 @@ class User extends Authenticatable
         return $role === UserEnum::SUPER_ADMIN->value || $role === UserEnum::ADMIN->value;
     }
 
-    public function getRedirectRoute()
+    public function isStudent(): bool
+    {
+        return $this->roles()->pluck('name')->first() === UserEnum::STUDENT->value;
+    }
+    public function isTeacher(): bool
+    {
+        return $this->roles()->pluck('name')->first() === UserEnum::TEACHER->value;
+    }
+    public function getRedirectRoute(): string
     {
         return match ($this->roles()->pluck('name')->first()) {
             UserEnum::SUPER_ADMIN->value, UserEnum::ADMIN->value => 'dashboard',
@@ -81,6 +91,7 @@ class User extends Authenticatable
             UserEnum::STUDENT->value => 'results.index',
         };
     }
+
     /**
      * Filter
      */
@@ -93,9 +104,9 @@ class User extends Authenticatable
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('first_name', 'like', '%'.$search.'%')
-                    ->orWhere('last_name', 'like', '%'.$search.'%')
-                    ->orWhere('email', 'like', '%'.$search.'%');
+                $query->where('first_name', 'like', '%' . $search . '%')
+                    ->orWhere('last_name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
             });
         })->when($filters['trashed'] ?? null, function ($query, $trashed) {
             if ($trashed === 'with') {
@@ -103,6 +114,10 @@ class User extends Authenticatable
             } elseif ($trashed === 'only') {
                 $query->onlyTrashed();
             }
+        })->when($filters['column'] ?? null, function ($query, $column) {
+            $query->orderBy($column, request('direction'));
+        }, function ($query) {
+            $query->latest();
         });
     }
 
@@ -117,5 +132,20 @@ class User extends Authenticatable
     public function results(): HasMany
     {
         return $this->hasMany(Result::class);
+    }
+
+    public function school(): BelongsTo
+    {
+        return $this->belongsTo(School::class);
+    }
+
+    public function teachers()
+    {
+        return $this->belongsToMany(User::class, 'teacher_user', 'user_id', 'teacher_id');
+    }
+
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'teacher_user', 'teacher_id', 'user_id');
     }
 }

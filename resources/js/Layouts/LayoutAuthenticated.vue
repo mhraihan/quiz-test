@@ -16,7 +16,7 @@ import FlashMessages from "@/Components/FlashMessages.vue";
 useMainStore().setUser({
     name: usePage().props.value.auth.user.name,
     email: usePage().props.value.auth.user.email,
-    avatar: "https://avatars.dicebear.com/api/avataaars/example.svg?options[top][]=shortHair&options[accessoriesChance]=93",
+    avatar: `https://api.dicebear.com/6.x/pixel-art/svg?seed=${usePage().props.value.auth.user.name}&options[top][]=shortHair&options[accessoriesChance]=93`,
 });
 
 const layoutAsidePadding = "xl:pl-60";

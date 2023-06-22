@@ -7,47 +7,30 @@ import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 import {Head} from "@inertiajs/inertia-vue3";
 import useValidatedForm from "@/useValidatorForm";
-import {isRequired, isIn, isMin, isEmail, isSame} from "intus/rules";
+import {isRequired} from "intus/rules";
 import Form from "./Form.vue";
 import {useMainStore} from "@/Stores/main";
 
-const props = defineProps({
-    Role: String,
-});
 const hasTable = true;
 
-const User = useValidatedForm({
-    first_name: ["",[isRequired()]],
-    last_name: ["",[isRequired()]],
-    email: ["",[isRequired(), isEmail()]],
-    password: ["",[isRequired(), isMin(8)]],
-    password_confirmation: ["",[isRequired(),isSame('password')]],
-    photo_path:[null],
-    active:[true],
-    state: ["",[isRequired()]],
-    birthday: ["",[isRequired()]],
-    city: ["",[isRequired()]],
-    phone: ["",[isRequired()]],
-    country: ["HK",[isRequired()]],
-    address: ["",[isRequired()]],
-    postcode: ["",[isRequired()]],
-    gender: ["male",[isRequired(), isIn("male", "female")]],
+const School = useValidatedForm({
+    name: ["",[isRequired()]],
+    short_name: ["",[isRequired()]],
     deleted_at: [null],
-    roles: [props.Role.toLowerCase()],
 });
 const createUser = () => {
-    useMainStore().create(User, 'admin.users.store');
+    useMainStore().create(School, 'admin.schools.store');
 }
 </script>
 
 <template>
-    <Head title="Create new Question"/>
+    <Head title="Create new School"/>
     <LayoutAuthenticated>
         <SectionMain>
-            <Breadcrumbs :href="route('admin.students.index')" title="Students" location="Create New Student"/>
+            <Breadcrumbs :href="route('admin.schools.index')" title="Schools" location="Create New Schools"/>
             <SectionTitleLineWithButton
                 :icon="mdiPencilPlus"
-                title="Create new Student"
+                title="Create new Schools"
                 main
             />
 
@@ -57,7 +40,7 @@ const createUser = () => {
                     @submit.prevent="createUser"
                     :hasTable="hasTable"
                 >
-                    <Form :User="User" :Role="props.Role"/>
+                    <Form :School="School" />
                 </CardBox>
             </div>
         </SectionMain>

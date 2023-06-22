@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 
+use App\Models\Question;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -38,7 +39,7 @@ class QuestionPolicy
      * @param \App\Models\User $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Question $question)
+    public function update(User $user)
     {
         return $user->can('update question');
     }
@@ -49,7 +50,7 @@ class QuestionPolicy
      * @param \App\Models\User $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Question $question)
+    public function delete(User $user)
     {
         return $user->can('delete question');
     }

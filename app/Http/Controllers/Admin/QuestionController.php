@@ -17,7 +17,8 @@ class QuestionController extends Controller
 
     public function index(): Response|ResponseFactory
     {
-        $this->authorize('view');
+
+        $this->authorize('view', Question::class);
         return inertia('Question/Index', [
             'Questions' => Question::query()->index(),
             'title' => 'All Questions'
@@ -26,7 +27,7 @@ class QuestionController extends Controller
 
     public function trash(): Response|ResponseFactory
     {
-        $this->authorize('view');
+        $this->authorize('view', Question::class);
         return inertia('Question/Trash', [
             'Questions' => Question::query()->index(true),
             'title' => 'All Trashed Questions'
@@ -35,7 +36,7 @@ class QuestionController extends Controller
 
     public function create(): Response|ResponseFactory
     {
-        $this->authorize('create');
+        $this->authorize('create', Question::class);
         return inertia('Question/Create', [
             'Categories' => Category::all(),
             'Topics' => Topic::all(),
@@ -44,7 +45,7 @@ class QuestionController extends Controller
 
     public function store(StoreQuestionRequest $request): RedirectResponse
     {
-        $this->authorize('update');
+        $this->authorize('create', Question::class);
         $request->user()->questions()->create($request->validated());
         return redirect()->route('admin.questions.index')->with('success', 'Question Created Successfully');
     }
@@ -56,7 +57,7 @@ class QuestionController extends Controller
 
     public function edit(Question $question): Response|ResponseFactory|RedirectResponse
     {
-        $this->authorize('view');
+        $this->authorize('view', Question::class);
         try {
             return inertia('Question/Edit', [
                 'Categories' => Category::all(),
@@ -73,7 +74,7 @@ class QuestionController extends Controller
 
     public function update(StoreQuestionRequest $request, Question $question): RedirectResponse
     {
-        $this->authorize('update');
+        $this->authorize('update', Question::class);
 
         if (is_null($request->image) && !is_null($question->image)) {
             $question->deleteFile($question->image);
@@ -84,7 +85,7 @@ class QuestionController extends Controller
 
     public function destroy(Question $question): RedirectResponse
     {
-        $this->authorize('delete');
+        $this->authorize('delete', Question::class);
 
         if ($question->deleted_at) {
             return $this->forceDelete($question);
@@ -95,7 +96,7 @@ class QuestionController extends Controller
 
     public function restore(Question $question): RedirectResponse
     {
-        $this->authorize('update');
+        $this->authorize('update', Question::class);
 
         $question->restore();
         return redirect()->back()->with('success', 'Question restored.');
@@ -103,7 +104,7 @@ class QuestionController extends Controller
 
     public function forceDelete(Question $question): RedirectResponse
     {
-        $this->authorize('delete');
+        $this->authorize('delete', Question::class);
 
         if (!is_null($question->image)) {
             $question->deleteFile($question->image);

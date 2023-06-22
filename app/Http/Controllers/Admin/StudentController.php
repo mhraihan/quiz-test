@@ -15,18 +15,18 @@ class StudentController extends Controller
 
     public function index(): Response|ResponseFactory
     {
+    ray(request()->all('search', 'trashed','column', 'direction'));
         return inertia('User/Index', [
             'Users' => UserResource::collection(
                 User::query()
-                    ->latest()
                     ->select('id', 'first_name', 'last_name', 'email', 'deleted_at')
-                    ->filter(request()->only('search', 'trashed'))
+                    ->filter(request()->only('search', 'trashed','column', 'direction'))
                     ->role('student')
                     ->paginate()
                     ->withQueryString())
             ,
             'title' => 'All Student',
-            'filters' => request()->all('search', 'trashed'),
+            'filters' => request()->all('search', 'trashed','column', 'direction'),
         ]);
     }
 

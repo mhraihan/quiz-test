@@ -2,7 +2,6 @@
 import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import { useMainStore } from "@/Stores/main";
 import FormControlIcon from "@/Components/FormControlIcon.vue";
-import { usePage } from "@inertiajs/inertia-vue3";
 
 const props = defineProps({
     name: {

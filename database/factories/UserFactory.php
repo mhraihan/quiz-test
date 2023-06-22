@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\School;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -18,6 +19,7 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
+            'school_id' => School::inRandomOrder()->first()->id, // Assign a random school_id
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'email' => fake()->safeEmail(),

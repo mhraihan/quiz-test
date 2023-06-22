@@ -1,14 +1,14 @@
 <script setup>
 import {computed, ref} from "vue";
-import {mdiEye, mdiTrashCan} from "@mdi/js";
+import {mdiEye, mdiPencil, mdiTrashCan, mdiSortAscending, mdiSortDescending} from "@mdi/js";
 import UserAvatar from "@/Components/UserAvatar.vue";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
 import BaseLevel from "@/Components/BaseLevel.vue";
 import BaseButtons from "@/Components/BaseButtons.vue";
 import BaseButton from "@/Components/BaseButton.vue";
 import BaseIcon from "@/Components/BaseIcon.vue";
-import {Link, useForm, usePage} from '@inertiajs/inertia-vue3'
-import {notify} from "notiwind";
+import {Link, useForm} from '@inertiajs/inertia-vue3'
+
 import {useMainStore} from "@/Stores/main";
 
 const props = defineProps({
@@ -19,18 +19,23 @@ const props = defineProps({
         default: "Student"
     }
 });
+const emit = defineEmits(['sort']);
 const id = ref(null);
 const url = computed(() => {
     if (props.Role === 'User') return 'admin.users.edit';
     if (props.Role === 'Teacher') return 'admin.teachers.edit';
     return 'admin.students.edit';
 });
+const view = computed(() => {
+    if (props.Role === 'User') return 'admin.users.show';
+    if (props.Role === 'Teacher') return 'admin.teachers.show';
+    return 'admin.students.show';
+});
 const links = computed(() => props.Users.meta.links);
 const isModalDangerActive = ref(false);
 const currentPage = ref(props.Users.meta.current_page);
 const numPages = computed(() => props.Users.meta.last_page);
 const currentPageHuman = computed(() => currentPage.value);
-
 const form = useForm({
     queries: props.Query,
     _method: 'delete'
@@ -43,6 +48,11 @@ const destroyQuestion = () => {
     useMainStore().destroy(form, 'admin.users.destroy');
 }
 
+const filter = (name) => {
+    console.log(props.Query, name)
+    emit('sort', name);
+}
+console.log(props.Query,props.Query.direction === "ASC" ? 'asc' : 'desc');
 
 </script>
 
@@ -64,9 +74,27 @@ const destroyQuestion = () => {
         <tr>
             <th>#</th>
             <th>Avatar</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
+            <th @click="filter('first_name')">
+                <div class="flex items-center cursor-pointer">
+                    First Name
+                    <BaseIcon class="ml-1" v-if="props.Query.column === 'first_name' && props.Query.direction === 'ASC'" small :path="mdiSortAscending"/>
+                    <BaseIcon class="ml-1" v-if="props.Query.column === 'first_name' && props.Query.direction === 'DESC' " small :path="mdiSortDescending"/>
+                </div>
+            </th>
+            <th @click="filter('last_name')">
+                <div class="flex items-center cursor-pointer">
+                    Last Name
+                    <BaseIcon class="ml-1" v-if="props.Query.column === 'last_name' && props.Query.direction === 'ASC'" small :path="mdiSortAscending"/>
+                    <BaseIcon class="ml-1" v-if="props.Query.column === 'last_name' && props.Query.direction === 'DESC' " small :path="mdiSortDescending"/>
+                </div>
+            </th>
+            <th @click="filter('email')">
+                <div class="flex items-center cursor-pointer">
+                    Email
+                    <BaseIcon class="ml-1" v-if="props.Query.column === 'email' && props.Query.direction === 'ASC'" small :path="mdiSortAscending"/>
+                    <BaseIcon class="ml-1" v-if="props.Query.column === 'email' && props.Query.direction === 'DESC' " small :path="mdiSortDescending"/>
+                </div>
+            </th>
             <th/>
         </tr>
         </thead>
@@ -105,12 +133,23 @@ const destroyQuestion = () => {
                         small
                         :data="{ prev_pages: props.Users.meta.current_page,...props.Query}"
                         :routeParams="user.id"
+                        :routeName="view"
+                        title="View Profile"
+                    />
+                    <BaseButton
+                        color="info"
+                        :icon="mdiPencil"
+                        small
+                        :data="{ prev_pages: props.Users.meta.current_page,...props.Query}"
+                        :routeParams="user.id"
                         :routeName="url"
+                        title="Edit Profile"
                     />
                     <BaseButton
                         color="danger"
                         :icon="mdiTrashCan"
                         small
+                        title="Delete Profile"
                         @click="isModalDangerActive = true;id=user.id"
                     />
                 </BaseButtons>

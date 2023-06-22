@@ -6,7 +6,6 @@ import CardBox from "@/Components/CardBox.vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 import {Head} from "@inertiajs/inertia-vue3";
-import {notify} from "notiwind"
 import useValidatedForm from "@/useValidatorForm";
 import {isRequired, isIn, isMin, isEmail, isSame} from "intus/rules";
 import Form from "./Form.vue";

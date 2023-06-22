@@ -3,10 +3,10 @@
 </script>
 <template>
     <NotificationGroup group="notification">
-        <div class="z-50 fixed inset-0 flex items-start justify-end p-6 px-4 py-6 pointer-events-none">
+        <div class="z-50 fixed top-0 right-0 flex items-start justify-end w-96">
             <div class="w-full max-w-sm">
                 <Notification
-                    v-slot="{ notifications }"
+                    v-slot="{ notifications, close }"
                     enter="transform ease-out duration-300 transition"
                     enter-from="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-4"
                     enter-to="translate-y-0 opacity-100 sm:translate-x-0"
@@ -16,10 +16,11 @@
                     move="transition duration-500"
                     move-delay="delay-300"
                 >
-                    <div v-for="notification in notifications" :key="notification.id">
+                    <div class="" v-for="(notification,index) in notifications" :key="index">
+
                         <div
                             v-if="notification.type === 'info'"
-                            class="flex w-full max-w-sm mx-auto mt-4 overflow-hidden bg-white rounded-lg shadow-md"
+                            class="flex w-full max-w-sm mx-auto mt-4 overflow-hidden bg-white rounded-lg shadow-md relative"
                         >
                             <div class="flex items-center justify-center w-12 bg-blue-500">
                                 <svg
@@ -39,10 +40,22 @@
                                     <p class="text-sm text-gray-600">{{ $page.props.flash.info || notification.text }}</p>
                                 </div>
                             </div>
+                            <button @click="close(notification.id)" class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                                <svg
+                                    class="w-6 h-6 text-red-500 fill-current"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20"
+                                >
+                                    <title>Close</title>
+                                    <path
+                                        d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"
+                                    />
+                                </svg>
+                            </button>
                         </div>
                         <div
                             v-if="notification.type === 'success'"
-                            class="flex w-full max-w-sm mx-auto mt-4 overflow-hidden bg-white rounded-lg shadow-md"
+                            class="flex w-full max-w-sm mx-auto mt-4 overflow-hidden bg-white rounded-lg shadow-md relative"
                         >
                             <div class="flex items-center justify-center w-12 bg-green-500">
                                 <svg class="w-6 h-6 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
@@ -56,9 +69,21 @@
                                     <p class="text-sm text-gray-600">{{ $page.props.flash.success || notification.text }}</p>
                                 </div>
                             </div>
+                            <button @click="close(notification.id)" class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                                <svg
+                                    class="w-6 h-6 text-red-500 fill-current"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20"
+                                >
+                                    <title>Close</title>
+                                    <path
+                                        d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"
+                                    />
+                                </svg>
+                            </button>
                         </div>
                         <div
-                            class="flex w-full max-w-sm mx-auto mt-4 overflow-hidden bg-white rounded-lg shadow-md"
+                            class="flex w-full max-w-sm mx-auto mt-4 overflow-hidden bg-white rounded-lg shadow-md relative"
                             v-if="notification.type === 'warning'"
                         >
                             <div class="flex items-center justify-center w-12 bg-yellow-500">
@@ -78,6 +103,18 @@
                                     <span class="font-semibold text-yellow-500">{{ notification.title }}</span>
                                     <p class="text-sm text-gray-600">{{ $page.props.flash.warning || notification.text }}</p>
                                 </div>
+                                <button @click="close(notification.id)" class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                                    <svg
+                                        class="w-6 h-6 text-red-500 fill-current"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <title>Close</title>
+                                        <path
+                                            d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"
+                                        />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                         <div
@@ -96,6 +133,18 @@
                                     <p class="text-sm text-gray-600">{{ $page.props.flash.error ||  notification.text }}</p>
                                 </div>
                             </div>
+                            <button @click="close(notification.id)" class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                                <svg
+                                    class="w-6 h-6 text-red-500 fill-current"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20"
+                                >
+                                    <title>Close</title>
+                                    <path
+                                        d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"
+                                    />
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </Notification>

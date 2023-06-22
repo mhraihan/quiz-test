@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\SchoolController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\TopicController;
@@ -12,12 +13,17 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\QuestionController;
 
 
-Route::group(['middleware' => ['auth', 'verified']], function () {
+Route::group(['middleware' => ['auth', 'check_roles']], static function () {
 
-    Route::get('/', fn() => redirect()->route(auth()->user()->getRedirectRoute()))->name('index');
+    Route::get('/', static fn() => redirect()->route(auth()->user()?->getRedirectRoute()))->name('index');
     Route::get('/dashboard', HomeController::class)->middleware('is_admin')->name('dashboard');
 
-    Route::get('/profile', ProfileController::class)->name('user.profile');
+    // This route is not protected by the 'check_roles' middleware
+    Route::withoutMiddleware(['check_roles'])->group(function () {
+        Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile');
+        Route::post('/profile/school', [ProfileController::class, 'updateSchool'])->name('user.profile.school');
+    });
+
     /**
      * Quiz Controller
      */
@@ -29,12 +35,14 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
      */
 
     route::resource("results", ResultController::class)->only(['index', 'show', 'store']);
+});
+Route::group(['middleware' => ['auth', 'verified', 'is_admin']], static function () {
     /**
      * Admin Group Controller
      *
      */
 
-    Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+    Route::group(['prefix' => 'admin', 'as' => 'admin.'], static function () {
 
         /**
          * Question Controller
@@ -52,6 +60,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::resource("topics", TopicController::class);
 
         /**
+         * School Management Controller
+         */
+        route::resource("schools", SchoolController::class)->withTrashed(['index', 'show', 'edit', 'update', 'destroy']);
+
+        /**
          * User Management Controller
          */
         Route::put('users/{user}/restore', [UserController::class, 'restore'])
@@ -60,10 +73,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
         route::resource("students", StudentController::class)->parameters([
             'students' => 'user'
-        ])->only(['index','create','show','edit'])->withTrashed(['index', 'show', 'edit']);
+        ])->only(['index', 'create', 'show', 'edit'])->withTrashed(['index', 'show', 'edit']);
         Route::resource('teachers', TeacherController::class)->parameters([
             'teachers' => 'user'
-        ])->only(['index','create','show','edit'])->withTrashed(['index', 'show', 'edit']);
+        ])->only(['index', 'create', 'show', 'edit'])->withTrashed(['index', 'show', 'edit']);
     });
 });
 

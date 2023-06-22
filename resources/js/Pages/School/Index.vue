@@ -15,14 +15,17 @@ import CardBoxComponentEmpty from "@/Components/CardBoxComponentEmpty.vue";
 import {ref, watch, computed} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import {debounce, pickBy} from "lodash";
-import UserTable from "@/Pages/User/UserTable.vue";
+import SchoolTable from "@/Pages/School/SchoolTable.vue";
 
 const props = defineProps({
-    Users: Object,
-    title: String,
+    Schools: Object,
+    title: {
+        type: String,
+        default: "All Schools"
+    },
     Role: {
         type: String,
-        default: "Student"
+        default: "Schools"
     },
     filters: Object,
 });
@@ -41,9 +44,7 @@ const options = computed(() => [
     }
 ]);
 const url = computed(() => {
-    if (props.Role === 'User') return 'admin.users.index';
-    if (props.Role === 'Teacher') return 'admin.teachers.index';
-    return 'admin.students.index';
+    return 'admin.schools.index';
 });
 
 const search = ref(props.filters?.search);
@@ -111,12 +112,12 @@ const reset = () => {
                         </button>
                     </div>
                 </div>
-                <BaseButton v-if="route().current('admin.students.index')" color="info" label="Create a new Student"
-                            routeName="admin.students.create"/>
+                <BaseButton  color="info" label="Create a new School"
+                            routeName="admin.schools.create"/>
             </div>
-            <CardBox v-if="props.Users?.data?.length > 0" class="mb-6" has-table>
-                <UserTable :Users="props.Users" :Role="props.Role" @sort="sort"
-                           :Query="{search, trashed, column, direction }"/>
+            <CardBox v-if="props.Schools?.data?.length > 0" class="mb-6" has-table>
+                <SchoolTable :Schools="props.Schools" :Role="props.Role" @sort="sort"
+                             :Query="{search, trashed, column, direction }"/>
             </CardBox>
             <CardBox v-else>
                 <CardBoxComponentEmpty/>
