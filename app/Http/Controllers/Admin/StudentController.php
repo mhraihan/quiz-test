@@ -15,7 +15,6 @@ class StudentController extends Controller
 
     public function index(): Response|ResponseFactory
     {
-    ray(request()->all('search', 'trashed','column', 'direction'));
         return inertia('User/Index', [
             'Users' => UserResource::collection(
                 User::query()
