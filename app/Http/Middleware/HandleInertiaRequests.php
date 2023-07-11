@@ -42,7 +42,7 @@ class HandleInertiaRequests extends Middleware
                     'name' => optional($request->user())->name() ,
                     'email' => $request->user()->email ?? null,
                 ],
-                'roles' => $request->user()?->roles()->pluck('name')->first(),
+                'roles' => app('userRole'),
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [

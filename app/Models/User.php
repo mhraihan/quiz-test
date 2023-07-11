@@ -71,18 +71,20 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        $role = $this->roles()->pluck('name')->first();
+        $role = app('userRole');
         return $role === UserEnum::SUPER_ADMIN->value || $role === UserEnum::ADMIN->value;
     }
 
     public function isStudent(): bool
     {
-        return $this->roles()->pluck('name')->first() === UserEnum::STUDENT->value;
+        return app('userRole') === UserEnum::STUDENT->value;
     }
+
     public function isTeacher(): bool
     {
-        return $this->roles()->pluck('name')->first() === UserEnum::TEACHER->value;
+        return app('userRole') === UserEnum::TEACHER->value;
     }
+
     public function getRedirectRoute(): string
     {
         return match ($this->roles()->pluck('name')->first()) {
