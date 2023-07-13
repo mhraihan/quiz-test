@@ -39,7 +39,7 @@ const asideMenuItemActiveStyle = computed(() =>
 
 const isDropdownActive = ref(false);
 
-const componentClass = computed(() => [
+const componentClass = computed(() => [props.item.route && route().current(props.item.route) ? 'pointer-events-none': '',
   props.isDropdownList ? "py-3 px-6 text-sm" : "py-3",
   hasColor.value
     ? getButtonColor(props.item.color, false, true)
@@ -49,6 +49,7 @@ const componentClass = computed(() => [
 const hasDropdown = computed(() => !!props.item.menu);
 
 const menuClick = (event) => {
+
   emit("menu-click", event, props.item);
 
   if (hasDropdown.value) {

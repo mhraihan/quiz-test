@@ -13,7 +13,10 @@ import {useMainStore} from "@/Stores/main";
 
 const props = defineProps({
     Users: Object,
-    Query: Object,
+    Query: {
+        type: Object,
+        required: true
+    },
     Role: {
         type: String,
         default: "Student"

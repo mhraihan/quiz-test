@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -69,6 +70,10 @@ class User extends Authenticatable
         return $this->first_name . ' ' . $this->last_name;
     }
 
+    public function isSuperAdmin(): bool
+    {
+        return  app('userRole') === UserEnum::SUPER_ADMIN->value;
+    }
     public function isAdmin(): bool
     {
         $role = app('userRole');
@@ -97,12 +102,12 @@ class User extends Authenticatable
     /**
      * Filter
      */
-    public function scopeOrderByName($query)
+    public function scopeOrderByName($query): void
     {
         $query->orderBy('last_name')->orderBy('first_name');
     }
 
-    public function scopeFilter($query, array $filters)
+    public function scopeFilter($query, array $filters): void
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
@@ -141,13 +146,13 @@ class User extends Authenticatable
         return $this->belongsTo(School::class);
     }
 
-    public function teachers()
+    public function teachers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'teacher_user', 'user_id', 'teacher_id');
+        return $this->belongsToMany(__CLASS__, 'teacher_user', 'user_id', 'teacher_id');
     }
 
-    public function students()
+    public function students(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'teacher_user', 'teacher_id', 'user_id');
+        return $this->belongsToMany(__CLASS__, 'teacher_user', 'teacher_id', 'user_id');
     }
 }

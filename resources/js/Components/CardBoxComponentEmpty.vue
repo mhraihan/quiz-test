@@ -20,7 +20,7 @@ const props = defineProps({
 const text = computed(() => props.text || "Nothing's here…");
 </script>
 <template>
-    <div class="text-center py-24 text-gray-500 dark:text-slate-400">
+    <div class="bg-white rounded text-center py-24 text-gray-500 dark:text-slate-400">
         <p>{{ text }}</p>
         <BaseButtons v-if="props.routeName" class="mt-5 flex justify-center">
             <BaseButton
