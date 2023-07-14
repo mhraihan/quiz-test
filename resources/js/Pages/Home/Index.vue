@@ -50,7 +50,7 @@ onMounted(() => {
             ></SectionTitleLineWithButton>
 
 
-            <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-4">
+            <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3 sm:grid-cols-2">
                 <CardBoxWidget
                     trend="Overview"
                     trend-type="info"
@@ -76,8 +76,22 @@ onMounted(() => {
                     trend="Overview"
                     trend-type="info"
                     color="text-emerald-500"
+                    :number="props?.data?.totalQuestions"
+                    label="Total Questions"
+                />
+                  <CardBoxWidget
+                    trend="Overview"
+                    trend-type="info"
+                    color="text-emerald-500"
+                    :number="props?.data?.totalTopics"
+                    label="Total Topics"
+                />
+                  <CardBoxWidget
+                    trend="Overview"
+                    trend-type="info"
+                    color="text-emerald-500"
                     :number="props?.data?.examTakenCount"
-                    label="Total Exam Taken"
+                    label="Exam Taken"
                 />
             </div>
 

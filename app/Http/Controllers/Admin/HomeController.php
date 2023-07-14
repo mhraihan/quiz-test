@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\UserEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\UserResource;
+use App\Models\Question;
 use App\Models\Result;
 use App\Models\School;
+use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Cache;
@@ -52,6 +54,8 @@ class HomeController extends Controller
             $totalStudent = $this->usersCount(UserEnum::STUDENT->value);
             $examTakenCount = Result::query()->count();
             $totalSchools = School::query()->count();
+            $totalTopics = Topic::query()->count();
+            $totalQuestions = Question::query()->count();
 
             if (auth()->user()->isSuperAdmin()) {
                 $superAdmin = $this->getUsersByRole(UserEnum::SUPER_ADMIN->value);
@@ -64,7 +68,7 @@ class HomeController extends Controller
             $teacher = $this->getUsersByRole(UserEnum::TEACHER->value);
 
             // Store the data in cache
-            $data = compact('superAdmin', 'admin', 'student', 'teacher', 'totalTeacher', 'totalStudent', 'examTakenCount', 'totalSchools');
+            $data = compact('superAdmin', 'admin', 'student', 'teacher', 'totalTeacher', 'totalStudent', 'examTakenCount', 'totalSchools','totalTopics','totalQuestions');
 
             // Cache the data for a specific duration (e.g., 60 minutes)
             $data['loading'] = false;
