@@ -35,6 +35,8 @@ class UserTableSeeder extends Seeder
             'email_verified_at' => now()
         ]);
         $admin->syncRoles(UserEnum::ADMIN->value);
+        $superAdmin->removeRole(UserEnum::STUDENT->value);
+
 
         $teacher = User::factory()->create([
             'first_name' => 'Teacher',
@@ -44,6 +46,7 @@ class UserTableSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
         $teacher->syncRoles(UserEnum::TEACHER->value);
+        $superAdmin->removeRole(UserEnum::STUDENT->value);
 
         $student = User::factory()->create([
             'first_name' => 'Student',
@@ -55,5 +58,12 @@ class UserTableSeeder extends Seeder
         $student->syncRoles(UserEnum::STUDENT->value);
 
         User::factory(50)->create();
+        // assign all the users with a teacher
+        $teacher_id = 3;
+        User::query()->limit(50)->get()->each(function ($user) use ($teacher_id) {
+            if ($user) {
+                $user?->teachers()->sync($teacher_id);
+            }
+        });
     }
 }

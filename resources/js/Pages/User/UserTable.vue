@@ -10,6 +10,7 @@ import BaseIcon from "@/Components/BaseIcon.vue";
 import {Link, useForm} from '@inertiajs/inertia-vue3'
 
 import {useMainStore} from "@/Stores/main";
+import {isAdmin, isTeacher} from "@/config";
 
 const props = defineProps({
     Users: Object,
@@ -27,11 +28,13 @@ const id = ref(null);
 const url = computed(() => {
     if (props.Role === 'User') return 'admin.users.edit';
     if (props.Role === 'Teacher') return 'admin.teachers.edit';
+    if(isTeacher()) return 'teacher.student.profile';
     return 'admin.students.edit';
 });
 const view = computed(() => {
     if (props.Role === 'User') return 'admin.users.show';
-    if (props.Role === 'Teacher') return 'admin.teachers.show';
+    if (props.Role === 'Teacher') return 'teacher.student.profile';
+     if(isTeacher()) return 'teacher.student.profile';
     return 'admin.students.show';
 });
 const links = computed(() => props.Users.meta.links);
@@ -62,6 +65,7 @@ console.log(props.Query,props.Query.direction === "ASC" ? 'asc' : 'desc');
 <template>
 
     <CardBoxModal
+        v-if="isAdmin()"
         v-model="isModalDangerActive"
         title="Please confirm"
         button="danger"
@@ -108,7 +112,7 @@ console.log(props.Query,props.Query.direction === "ASC" ? 'asc' : 'desc');
             </td>
 
             <td data-label="Avatar">
-                <Link :href="route('admin.students.show',user.id)"
+                <Link :href="route(url,user.id)"
                       :data="{ prev_pages: props.Users.meta.current_page,...props.Query}" preserve-state>
                     <userAvatar :username="user.name" api="initials" class="w-12"/>
                 </Link>
@@ -140,6 +144,7 @@ console.log(props.Query,props.Query.direction === "ASC" ? 'asc' : 'desc');
                         title="View Profile"
                     />
                     <BaseButton
+                        v-if="isAdmin()"
                         color="info"
                         :icon="mdiPencil"
                         small
@@ -149,6 +154,7 @@ console.log(props.Query,props.Query.direction === "ASC" ? 'asc' : 'desc');
                         title="Edit Profile"
                     />
                     <BaseButton
+                        v-if="isAdmin()"
                         color="danger"
                         :icon="mdiTrashCan"
                         small

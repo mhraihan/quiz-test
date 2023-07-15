@@ -3,7 +3,7 @@ import Breadcrumbs from "@/Components/Breadcrumbs.vue";
 import SectionMain from "@/Components/SectionMain.vue";
 import CardBox from "@/Components/CardBox.vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
-import {Head, useForm} from "@inertiajs/inertia-vue3";
+import {Head, useForm, usePage} from "@inertiajs/inertia-vue3";
 import Overview from "@/Pages/Result/Overview.vue";
 import CardBoxComponentEmpty from "@/Components/CardBoxComponentEmpty.vue";
 import ResultTable from "@/Pages/Result/ResultTable.vue";
@@ -14,6 +14,7 @@ import BaseButtons from "@/Components/BaseButtons.vue";
 import BaseButton from "@/Components/BaseButton.vue";
 import BaseDivider from "@/Components/BaseDivider.vue";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
+import {isAdmin, isTeacher} from "@/config";
 const props = defineProps({
     User: Object,
     results: Object,
@@ -38,12 +39,19 @@ const restore = () => {
 const destroy = () => {
     useMainStore().destroy(form, 'admin.users.destroy');
 }
+
+const url = computed(() => {
+    if(isTeacher()) return 'teacher.student';
+    return 'admin.students.index';
+});
+
 </script>
 
 <template>
     <Head title="Create new Question"/>
     <LayoutAuthenticated>
         <CardBoxModal
+            v-if="isAdmin()"
             v-model="isModalDangerActive"
             title="Please confirm"
             button="danger"
@@ -53,8 +61,9 @@ const destroy = () => {
             <p>Are you sure you want to Delete the Student?</p>
         </CardBoxModal>
         <SectionMain>
-            <Breadcrumbs :href="route('admin.students.index')" title="Student" :location="profile"/>
-            <trashed-message v-if="props.User.deleted_at" @restore="restore" class="mb-6" :restore="`Are you sure you want to restore this ${props.Role}?`"> This {{ props.Role }} has been
+            <Breadcrumbs :href="route(url)" title="Student" :location="profile"/>
+
+            <trashed-message  v-if="props.User.deleted_at" @restore="restore" class="mb-6" :restore="`Are you sure you want to restore this ${props.Role}?`"> This {{ props.Role }} has been
                 deleted.
             </trashed-message>
             <CardBox class=" overflow-hidden sm:rounded-lg mb-8">
@@ -82,7 +91,7 @@ const destroy = () => {
                     </dl>
                     <BaseDivider/>
 
-                    <div class="flex">
+                    <div v-if="isAdmin()" class="flex">
                         <BaseButtons class="mr-10" v-if="!props.User.deleted_at">
                             <BaseButton
                                 color="info"
@@ -94,7 +103,7 @@ const destroy = () => {
                             />
                         </BaseButtons>
 
-                        <BaseButtons v-if="route().current('admin.students.show')">
+                        <BaseButtons v-if="isAdmin() && route().current('admin.students.show')">
                             <BaseButton
 
                                 color="danger"

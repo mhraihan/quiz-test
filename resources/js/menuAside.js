@@ -7,18 +7,19 @@ import {
     mdiBookHeartOutline,
     mdiTableQuestion,
 } from "@mdi/js";
+import {userAdmin, userAdminStudent, UserEnum} from "@/config";
 
 export default [
     {
         route: "dashboard",
         icon: mdiMonitor,
         label: "Dashboard",
-        roles: ['super-admin', 'admin'],
+        roles: userAdmin(),
     },
     {
         icon: mdiTable,
         label: "Schools",
-        roles: ['super-admin', 'admin'],
+        roles: userAdmin(),
         menu: [
             {
                 route: "admin.schools.index",
@@ -35,7 +36,7 @@ export default [
     {
         label: "Questions",
         icon: mdiViewList,
-        roles: ['super-admin', 'admin'],
+        roles: userAdmin(),
         menu: [
             {
                 route: "admin.questions.index",
@@ -57,7 +58,7 @@ export default [
     {
         label: "Topics",
         icon: mdiMarker,
-        roles: ['super-admin', 'admin'],
+        roles: userAdmin(),
         menu: [
             {
                 route: "admin.topics.index",
@@ -74,7 +75,7 @@ export default [
     {
         label: "Students",
         icon: mdiViewList,
-        roles: ['super-admin', 'admin'],
+        roles: userAdmin(),
         menu: [
             {
                 route: "admin.students.index",
@@ -97,12 +98,18 @@ export default [
         route: "quiz.index",
         icon: mdiTableQuestion,
         label: "Quiz",
-        roles: ['super-admin', 'admin','student'],
+        roles: userAdminStudent(),
     },
     {
         route: "results.index",
         icon: mdiBookHeartOutline,
         label: "Result",
-        roles: ['super-admin', 'admin','student'],
+        roles: userAdminStudent(),
+    },
+    {
+        route: "teacher.index",
+        icon: mdiTableQuestion,
+        label: "Dashboard",
+        roles: [UserEnum.TEACHER],
     },
 ];

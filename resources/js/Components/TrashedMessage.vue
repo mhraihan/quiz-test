@@ -4,6 +4,7 @@ import BaseIcon from "@/Components/BaseIcon.vue";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
 
 import {ref} from "vue";
+import {isAdmin} from "@/config";
 const emit = defineEmits(["restore"]);
 const props = defineProps({
     restore: {
@@ -26,8 +27,9 @@ const restoreModal = () => {
                     <slot />
                 </div>
             </div>
-            <button class="text-yellow-800 hover:underline text-sm" @click="isModalRestoreActive=true" tabindex="-1" type="button">Restore</button>
+            <button v-if="isAdmin()" class="text-yellow-800 hover:underline text-sm" @click="isModalRestoreActive=true" tabindex="-1" type="button">Restore</button>
             <CardBoxModal
+                v-if="isAdmin()"
                 v-model="isModalRestoreActive"
                 title="Please confirm"
                 button="danger"
