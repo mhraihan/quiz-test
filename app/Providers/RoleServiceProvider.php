@@ -11,14 +11,6 @@ class RoleServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    private function getCachedRole()
-    {
-        $cacheKey = 'user_role:' . $this->id;
-
-        return cache()->remember($cacheKey, now()->addMinutes(60), function () {
-            return $this->roles()->pluck('name')->first();
-        });
-    }
 
     public function register()
     {
