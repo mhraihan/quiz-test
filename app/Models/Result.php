@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,7 @@ class Result extends Model
 {
     use HasFactory;
 
-    protected $appends = ['exam','score'];
+    protected $appends = ['exam', 'score'];
 
     protected $casts = [
         'complete' => 'boolean',
@@ -34,6 +35,10 @@ class Result extends Model
         'total_questions'
     ];
 
+    public function resolveRouteBinding($value, $field = null): Model|Builder|null
+    {
+        return $this->with('user')->where($field ?? $this->getRouteKeyName(), $value)->firstOrFail();
+    }
 
     public function exam(): Attribute
     {
@@ -51,10 +56,11 @@ class Result extends Model
             ]
         );
     }
+
     public function score(): Attribute
     {
         return Attribute::make(
-            get: fn() => (float) number_format(($this->correct_answered / $this->total_questions) * 100, 2)
+            get: fn() => (float)number_format(($this->correct_answered / $this->total_questions) * 100, 2)
         );
     }
 
@@ -62,8 +68,8 @@ class Result extends Model
     {
         $ids = array_column($query, 'id');
         $answers = array_column($query, 'answer');
-        $questions = Question::query()->whereIn('id',$ids)->select('title','details','correct_answer','explain','options')->get();
-        $answered = collect($questions)->pluck('correct_answer')->map(function ($item,$key) use($answers,$questions) {
+        $questions = Question::query()->whereIn('id', $ids)->select('title', 'details', 'correct_answer', 'explain', 'options')->get();
+        $answered = collect($questions)->pluck('correct_answer')->map(function ($item, $key) use ($answers, $questions) {
             $answer = $item === $answers[$key];
             $questions[$key]['answer'] = $answers[$key];
             return $answer;
@@ -71,7 +77,7 @@ class Result extends Model
         $correct_answered = count($answered->filter());
 
         return [
-            'questions' =>  $questions,
+            'questions' => $questions,
             'answered' => $answered->all(),
             'correct_answered' => $correct_answered,
         ];

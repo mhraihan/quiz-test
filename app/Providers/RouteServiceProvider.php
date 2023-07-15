@@ -31,7 +31,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('admin/teachers/{teacher}', User::class);
         $this->configureRateLimiting();
 
-        $this->routes(function () {
+        $this->routes(static function () {
             Route::middleware('api')
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));

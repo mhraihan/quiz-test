@@ -20,6 +20,7 @@ class User extends Authenticatable
     use SoftDeletes;
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
+
     /**
      * The attributes that are mass assignable.
      *
@@ -72,8 +73,9 @@ class User extends Authenticatable
 
     public function isSuperAdmin(): bool
     {
-        return  app('userRole') === UserEnum::SUPER_ADMIN->value;
+        return app('userRole') === UserEnum::SUPER_ADMIN->value;
     }
+
     public function isAdmin(): bool
     {
         $role = app('userRole');
@@ -94,7 +96,7 @@ class User extends Authenticatable
     {
         return match ($this->roles()->pluck('name')->first()) {
             UserEnum::SUPER_ADMIN->value, UserEnum::ADMIN->value => 'dashboard',
-            UserEnum::TEACHER->value => 'results.index',
+            UserEnum::TEACHER->value => 'teacher.index',
             UserEnum::STUDENT->value => 'results.index',
         };
     }
@@ -146,6 +148,7 @@ class User extends Authenticatable
         return $this->belongsTo(School::class);
     }
 
+
     public function teachers(): BelongsToMany
     {
         return $this->belongsToMany(__CLASS__, 'teacher_user', 'user_id', 'teacher_id');
@@ -154,5 +157,18 @@ class User extends Authenticatable
     public function students(): BelongsToMany
     {
         return $this->belongsToMany(__CLASS__, 'teacher_user', 'teacher_id', 'user_id');
+    }
+
+    /**
+     * Mutators
+     */
+    public function isTeacherStudent(): bool
+    {
+        return $this->teachers()->exists();
+    }
+
+    public function belongsToTeacher($teacherId): bool
+    {
+        return $this->teachers()->where('teacher_id', $teacherId)->exists();
     }
 }

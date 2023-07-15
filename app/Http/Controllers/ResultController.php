@@ -43,10 +43,12 @@ class ResultController extends Controller
 
     public function show(Result $result): Response
     {
+        $this->authorize('view', $result);
         ['questions' => $questions] = $result->getDataFromQuestions($result->questions_answered);
         return inertia('Result/Show', [
             'result' => $result,
-            'questions' => $questions
+            'questions' => $questions,
+            'name' =>$result->user->name(),
         ]);
     }
 
