@@ -112,4 +112,10 @@ export default [
         label: "Dashboard",
         roles: [UserEnum.TEACHER],
     },
+    {
+        route: "teacher.student",
+        icon: mdiTableQuestion,
+        label: "Students",
+        roles: [UserEnum.TEACHER],
+    },
 ];
