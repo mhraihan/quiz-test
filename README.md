@@ -1,64 +1,94 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Quiz Test - Laravel Quiz App
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Quiz Test is a quiz application built with Laravel, allowing users to take quizzes and receive instant feedback on their answers. The application is designed to be easy to set up and customize, making it suitable for various quiz-based projects.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- User registration and authentication system
+- Quiz creation with multiple-choice questions
+- Dynamic quiz scoring and immediate feedback
+- Admin panel for managing quizzes and users
+- Responsive design for seamless user experience on different devices
+- Flexible and customizable codebase
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. Clone the repository to your local machine:
 
-## Learning Laravel
+   ```shell
+   git clone https://github.com/mhraihan/quiz-test.git
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2. Navigate to the project directory:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+   ```shell
+   cd quiz-test
+   ```
 
-## Laravel Sponsors
+3. Install the dependencies using Composer:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+   ```shell
+   composer install
+   ```
 
-### Premium Partners
+4. Create a copy of the `.env.example` file and rename it to `.env`. Update the necessary configuration values in the `.env` file, such as database credentials.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+5. Generate an application key:
+
+   ```shell
+   php artisan key:generate
+   ```
+
+6. Run the database migrations and seed the database:
+
+   ```shell
+   php artisan migrate --seed
+   ```
+
+7. Start the local development server:
+
+   ```shell
+   php artisan serve
+   ```
+
+   You can now access the application by visiting `http://localhost:8000` in your web browser.
+
+## Usage
+
+- Register a new user account or log in with existing credentials.
+- Navigate to the "Quizzes" section to view and attempt available quizzes.
+- Click on a quiz to start taking it. Answer the questions and submit your answers.
+- After submitting, you will receive instant feedback on your quiz performance.
+- As an admin user, you can create new quizzes, manage existing quizzes, and view user results in the admin panel.
+
+## Customization
+
+- To customize the application, you can modify the views, styles, and scripts located in the `resources` directory.
+- The routes, controllers, and models can be adjusted to fit your specific requirements in the `app` directory.
+- For more advanced customization, refer to the official Laravel documentation at [https://laravel.com/docs](https://laravel.com/docs).
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Contributions are welcome! If you find any issues or have suggestions for improvement, please submit an issue or create a pull request. Make sure to follow the existing coding style and conventions.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-source and available under the [MIT License](https://opensource.org/licenses/MIT). Feel free to use, modify, and distribute the code as needed.
+
+## Acknowledgements
+
+- The Laravel framework: [https://laravel.com](https://laravel.com)
+
+## Contact
+
+For any inquiries or support, please contact the project maintainer:
+
+MH Raihan
+
+Email: me@mhraihan.com
+
+GitHub: [https://github.com/mhraihan](https://github.com/mhraihan)
+
+---
+
+Feel free to customize the README file according to your specific project details and requirements. Remember to update the installation instructions, usage guidelines, and any other relevant information.
