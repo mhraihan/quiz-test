@@ -1,7 +1,7 @@
 <style src="@vueform/multiselect/themes/default.css"></style>
 <script setup>
 import Multiselect from '@vueform/multiselect'
-import {computed, reactive} from "vue";
+import {computed, reactive, watch} from "vue";
 import {useMainStore} from "@/Stores/main";
 import {
     mdiAccount,
@@ -25,6 +25,8 @@ import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.
 import useValidatedForm from "@/useValidatorForm";
 import {isRequired} from "intus/rules";
 const mainStore = useMainStore();
+
+import {isStudent, isTeacher} from "@/config";
 const props = defineProps({
     Schools: {
         type: Object,
@@ -56,14 +58,15 @@ const passwordForm = reactive({
     password: "",
     password_confirmation: "",
 });
-const roles = computed(() => usePage().props.value.auth.roles);
+
 const disabled = computed(() => props.how_many_students > 0);
 const schools = useValidatedForm({
     school_id: [props.current_school ?? null,[isRequired()]],
-    teacher_id: [props.current_teacher ?? null,[isRequired()]],
+    teacher_id: [props.current_teacher ?? null,isTeacher() ?[] : [isRequired()]],
 })
+
 const handleSchoolChange = (selectedOptions) => {
-    if (roles.value === 'teacher') return;
+    if (isTeacher()) return;
     Inertia.visit(route('user.profile'), {
         method: 'get',
         data: {
@@ -89,11 +92,12 @@ const submitProfile = () => {
     mainStore.setUser(profileForm);
 };
 
+
 const updateSchool = () => {
-    useMainStore().update(schools, 'user.profile.school', 'POST');
+    useMainStore().update( schools, 'user.profile.school', 'POST');
 };
 const submitPass = () => {
-    //
+
 };
 
 
@@ -185,7 +189,8 @@ const submitPass = () => {
                     </template>
                 </CardBox>
             </div>
-            <div v-if="roles === 'teacher' || roles === 'student'" id="update-school" class="grid grid-cols-1 mt-6">
+
+            <div v-if="isTeacher() || isStudent()" id="update-school" class="grid grid-cols-1 mt-6">
                 <CardBox is-form @submit.prevent="updateSchool">
                     <SectionTitleLineWithButton
                         :icon="mdiAccountEdit"
@@ -212,14 +217,14 @@ const submitPass = () => {
                     </FormField>
 
                     <FormField
-                        v-if="roles === 'student'"
+                        v-if="isStudent()"
                         label="Choose a Teacher"
                         help="Required. Please select the Teacher"
                         :error="schools.errors.teacher_id"
 
                     >
                         <Multiselect
-                            :key="schools.school_id"
+                            :key="schools.teacher_id"
                             :uppercase="'capitalize'"
                             v-model="schools.teacher_id"
                             name="teacher"
