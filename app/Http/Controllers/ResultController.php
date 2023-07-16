@@ -7,7 +7,7 @@ use App\Traits\ResultTraits;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Inertia\Response;
-use App\Models\{Result, Question, User};
+use App\Models\{Result};
 
 class ResultController extends Controller
 {
@@ -30,12 +30,11 @@ class ResultController extends Controller
             [
                 'correct_answered' => $correct_answered
             ] = $result->getDataFromQuestions($request->input('questions_answered'));
+
             $result = $request->user()->results()->create(
-                $request->validated() + [
-                    'correct_answered' => $correct_answered
-                ]);
-            ray($result);
-            return response()->json(['result' => $result], 201);
+                $request->validated() + compact('correct_answered')
+            );
+            return response()->json(compact('result'), 201);
         } catch (Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
@@ -48,7 +47,7 @@ class ResultController extends Controller
         return inertia('Result/Show', [
             'result' => $result,
             'questions' => $questions,
-            'name' =>$result->user->name(),
+            'name' => $result->user->name(),
         ]);
     }
 

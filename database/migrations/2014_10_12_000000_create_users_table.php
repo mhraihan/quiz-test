@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('postcode')->nullable();
             $table->boolean('active')->nullable();
+            $table->timestamp('recent_exam')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
