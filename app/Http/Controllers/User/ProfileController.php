@@ -8,9 +8,11 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Inertia\Response;
 use Inertia\ResponseFactory;
+use Illuminate\Validation\Rules;
 
 class ProfileController extends Controller
 {
@@ -58,8 +60,6 @@ class ProfileController extends Controller
     }
 
 
-
-
     public function updateSchool(Request $request): RedirectResponse
     {
         try {
@@ -101,6 +101,43 @@ class ProfileController extends Controller
             // Catch other exceptions and return the error message
             return redirect()->back()->with('error', $e->getMessage());
         }
+    }
+
+    public function updatePassword(Request $request)
+    {
+        try {
+            $user = auth()->user();
+            ray($request->all());
+            $request->validate([
+                'current_password' => ['required', static function ($attribute, $value, $fail) use ($user) {
+                    if (!Hash::check($value, $user->password)) {
+                        $fail(__('The current password is incorrect.'));
+                    }
+                }],
+                'new_password' => ['required', 'confirmed', Rules\Password::defaults()],
+            ]);
+
+            $user->update([
+                'password' => Hash::make($request->input('new_password')),
+            ]);
+            ray($request->input('password'));
+            return redirect()->back()->with('success', 'Password has been updated');
+        } catch (ValidationException $e) {
+            $errors = $e->errors();
+            $firstError = reset($errors); // Get the first element of the $errors array
+
+            if (is_array($firstError) && count($firstError) > 0) {
+                $firstErrorMessage = $firstError[0];
+                return redirect()->back()->with('error', $firstErrorMessage);
+            } else {
+               return redirect()->back()->with('error', 'something went wrong');
+            }
+            return redirect()->back()->with('error', $errors);
+        } catch (Exception $e) {
+            // Catch other exceptions and return the error message
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
     }
 
 }

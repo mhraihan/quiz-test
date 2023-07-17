@@ -31,6 +31,8 @@ Route::group(['middleware' => ['auth', 'check_roles']], static function () {
     Route::withoutMiddleware(['check_roles'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile');
         Route::post('/profile/school', [ProfileController::class, 'updateSchool'])->name('user.profile.school');
+        Route::post('/update-password', [ProfileController::class, 'updatePassword'])->name('user.profile.password');
+
     });
 
     /**

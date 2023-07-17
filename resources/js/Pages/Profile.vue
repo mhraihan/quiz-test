@@ -10,8 +10,8 @@ import {
     mdiFormTextboxPassword,
     mdiAccountEdit
 } from "@mdi/js";
-import { usePage } from "@inertiajs/inertia-vue3";
-import { Inertia } from '@inertiajs/inertia'
+import {usePage} from "@inertiajs/inertia-vue3";
+import {Inertia} from '@inertiajs/inertia'
 import SectionMain from "@/Components/SectionMain.vue";
 import CardBox from "@/Components/CardBox.vue";
 import BaseDivider from "@/Components/BaseDivider.vue";
@@ -24,9 +24,11 @@ import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 import useValidatedForm from "@/useValidatorForm";
 import {isRequired} from "intus/rules";
+
 const mainStore = useMainStore();
 
 import {isStudent, isTeacher} from "@/config";
+
 const props = defineProps({
     Schools: {
         type: Object,
@@ -53,16 +55,16 @@ const profileForm = reactive({
     name: usePage().props.value.auth.user.name || mainStore.userName,
     email: usePage().props.value.auth.user.email || mainStore.userEmail,
 });
-const passwordForm = reactive({
-    password_current: "",
-    password: "",
-    password_confirmation: "",
-});
 
+const passwordForm = useValidatedForm({
+    current_password: [null, [isRequired()]],
+    new_password: [null, [isRequired()]],
+    new_password_confirmation: [null, [isRequired()]],
+})
 const disabled = computed(() => props.how_many_students > 0);
 const schools = useValidatedForm({
-    school_id: [props.current_school ?? null,[isRequired()]],
-    teacher_id: [props.current_teacher ?? null,isTeacher() ?[] : [isRequired()]],
+    school_id: [props.current_school ?? null, [isRequired()]],
+    teacher_id: [props.current_teacher ?? null, isTeacher() ? [] : [isRequired()]],
 })
 
 const handleSchoolChange = (selectedOptions) => {
@@ -76,12 +78,13 @@ const handleSchoolChange = (selectedOptions) => {
         replace: false,
         preserveState: true,
         preserveScroll: true,
-        only: ['Teachers','current_teacher'],
+        only: ['Teachers', 'current_teacher'],
         onSuccess: () => {
             schools.school_id = selectedOptions;
             schools.teacher_id = null;
         },
-        onError: () => {},
+        onError: () => {
+        },
         onFinish: () => {
             history.pushState(null, null, window.location.pathname);
         },
@@ -94,9 +97,10 @@ const submitProfile = () => {
 
 
 const updateSchool = () => {
-    useMainStore().update( schools, 'user.profile.school', 'POST');
+    useMainStore().update(schools, 'user.profile.school', 'POST');
 };
 const submitPass = () => {
+    useMainStore().update(passwordForm, 'user.profile.password', 'POST');
 
 };
 
@@ -144,41 +148,43 @@ const submitPass = () => {
                     <FormField
                         label="Current password"
                         help="Required. Your current password"
+                        :error="passwordForm.errors.current_password"
                     >
                         <FormControl
-                            v-model="passwordForm.password_current"
+                            v-model="passwordForm.current_password"
                             :icon="mdiAsterisk"
-                            name="password_current"
+                            name="current_password"
                             type="password"
-                            required
                             autocomplete="current-password"
+                            :error="passwordForm.errors.current_password"
                         />
                     </FormField>
 
                     <BaseDivider/>
 
-                    <FormField label="New password" help="Required. New password">
+                    <FormField label="New password" help="Required. New password" :error="passwordForm.errors.password">
                         <FormControl
-                            v-model="passwordForm.password"
+                            v-model="passwordForm.new_password"
                             :icon="mdiFormTextboxPassword"
-                            name="password"
+                            name="new_password"
                             type="password"
-                            required
                             autocomplete="new-password"
+                            :error="passwordForm.errors.new_password"
                         />
                     </FormField>
 
                     <FormField
                         label="Confirm password"
                         help="Required. New password one more time"
+                        :error="passwordForm.errors.new_password_confirmation"
                     >
                         <FormControl
-                            v-model="passwordForm.password_confirmation"
+                            v-model="passwordForm.new_password_confirmation"
                             :icon="mdiFormTextboxPassword"
-                            name="password_confirmation"
+                            name="new_password_confirmation"
                             type="password"
-                            required
                             autocomplete="new-password"
+                            :error="passwordForm.errors.new_password_confirmation"
                         />
                     </FormField>
 
