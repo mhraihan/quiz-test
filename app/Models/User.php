@@ -42,6 +42,7 @@ class User extends Authenticatable
         'address',
         'postcode',
         'active',
+        'recent_exam'
 
     ];
 
@@ -62,7 +63,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'birthday' => 'datetime',
+        'birthday' => 'date:Y-m-d',
         'active' => 'boolean',
     ];
 
@@ -164,11 +165,20 @@ class User extends Authenticatable
      */
     public function isTeacherStudent(): bool
     {
-        return $this->teachers()->exists();
+        $cacheKey = 'isTeacherStudent:' . $this->id;
+
+        return cache()->remember($cacheKey,  config('quiz.cache'), function () {
+            return $this->teachers()->exists();
+        });
     }
 
     public function belongsToTeacher($teacherId): bool
     {
-        return $this->teachers()->where('teacher_id', $teacherId)->exists();
+        $cacheKey = 'belongsToTeacher:' . $this->id . ':' . $teacherId;
+
+        return cache()->remember($cacheKey,  config('quiz.cache'), function () use ($teacherId) {
+            return $this->teachers()->where('teacher_id', $teacherId)->exists();
+        });
     }
+
 }

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\School;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -18,6 +19,8 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        $birthday = fake()->dateTimeInInterval('-30 years ago', '-30 years + 905 days');
+        $formattedBirthday = Carbon::instance($birthday)->format('Y-m-d');
         return [
             'school_id' => School::inRandomOrder()->first()->id, // Assign a random school_id
             'first_name' => fake()->firstName(),
@@ -27,7 +30,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
-            'birthday' => fake()->dateTimeInInterval('-30 years ago, -30 years + 3905 days'),
+            'birthday' => $formattedBirthday,
             'country' => fake()->randomElement(['HK', 'CN']),
             'state' => fake()->state(),
             'city' => fake()->city(),

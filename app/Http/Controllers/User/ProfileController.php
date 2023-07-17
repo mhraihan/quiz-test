@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\UpdateUserRequest;
 use App\Models\School;
 use App\Models\User;
 use Exception;
@@ -51,6 +52,7 @@ class ProfileController extends Controller
         }
 
         return inertia('Profile', [
+            'User' => fn() => $user,
             'Schools' => fn() => $schools,
             'Teachers' => fn() => $teachers,
             'current_school' => $current_school,
@@ -107,7 +109,6 @@ class ProfileController extends Controller
     {
         try {
             $user = auth()->user();
-            ray($request->all());
             $request->validate([
                 'current_password' => ['required', static function ($attribute, $value, $fail) use ($user) {
                     if (!Hash::check($value, $user->password)) {
@@ -120,7 +121,6 @@ class ProfileController extends Controller
             $user->update([
                 'password' => Hash::make($request->input('new_password')),
             ]);
-            ray($request->input('password'));
             return redirect()->back()->with('success', 'Password has been updated');
         } catch (ValidationException $e) {
             $errors = $e->errors();
@@ -130,7 +130,7 @@ class ProfileController extends Controller
                 $firstErrorMessage = $firstError[0];
                 return redirect()->back()->with('error', $firstErrorMessage);
             } else {
-               return redirect()->back()->with('error', 'something went wrong');
+                return redirect()->back()->with('error', 'something went wrong');
             }
             return redirect()->back()->with('error', $errors);
         } catch (Exception $e) {
@@ -139,5 +139,29 @@ class ProfileController extends Controller
         }
 
     }
+
+    public function updateProfile(UpdateUserRequest $request): RedirectResponse
+    {
+        try {
+            $authenticatedUser = auth()->user();
+
+            // Make sure the authenticated user is the same as the one being updated
+            if ($authenticatedUser->id === $request->id) {
+                $data = $request->validated();
+
+                // Remove the 'id' field from the data array to avoid updating it
+                unset($data['id']);
+
+                $authenticatedUser->update($data);
+                return redirect()->back()->withSuccess('Profile has been updated');
+            }
+
+            return redirect()->back()->withErrors('Unauthorized');
+
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
 
 }
