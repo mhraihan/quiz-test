@@ -126,7 +126,7 @@ const submit = (questions) => {
     <LayoutAuthenticated>
         <SectionMain>
             <SectionTitleLineWithButton :icon="mdiTableBorder" :title="title" main/>
-            <Loader v-if="loading"/>
+            <Loader v-if="loading" class="mt-48"/>
             <CardBox v-if="!loading && !quiz.questions && !quiz.result" @submit.prevent="getQuiz" is-form
                      class="max-w-2xl mx-auto">
                 <FormField
