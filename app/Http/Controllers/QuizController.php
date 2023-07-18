@@ -14,9 +14,15 @@ class QuizController extends Controller
      */
     public function index()
     {
+        $topics = cache()->remember('topics', now()->addHour(24), function () {
+            return Topic::query()->select('title as label', 'id as value')->get();
+        });
+        $categories = cache()->remember('categories', now()->addHour(24), function () {
+            return Category::query()->select('title as label', 'id as value')->get();
+        });
         return inertia('Quiz/Index', [
-            'Categories' => Category::query()->select('title as label', 'id as value')->get(),
-            'Topics' => Topic::query()->select('title as label', 'id as value')->get()
+            'Categories' => $categories,
+            'Topics' => $topics
         ]);
     }
 
@@ -24,7 +30,7 @@ class QuizController extends Controller
     {
 
         $request->validate([
-            'category_id' => ['required', 'numeric','between:1,4'],
+            'category_id' => ['required', 'numeric', 'between:1,4'],
             'topic_id' => ['nullable', 'array'],
             'topic_id.*' => ['nullable', 'numeric'],
             'howManyQuestions' => ['required', 'numeric', 'between:1,20'],
@@ -39,7 +45,7 @@ class QuizController extends Controller
             ->where('category_id', request()->input('category_id'))
             ->inRandomOrder()
             ->limit($request->input('howManyQuestions'))
-            ->select(['id', 'title', 'details','options', 'image'])
+            ->select(['id', 'title', 'details', 'options', 'image'])
             ->get()
             ->shuffle()
             ->map(fn($quiz) => [
