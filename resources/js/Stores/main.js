@@ -25,6 +25,23 @@ const showNotification = notification => {
     }
     history.pushState(null, null, window.location.pathname);
 }
+const handleRequest = (data, url, method, successCallback, errorCallback) => {
+    data[method.toLowerCase()](route(url, data.id), {
+        onSuccess: (response) => {
+            successCallback(response);
+            showNotification(response?.props?.flash);
+            // console.log(response)
+        },
+        onError: (errorResponse) => {
+            // console.log(errorResponse)
+
+            errorCallback(errorResponse);
+            const errorMessage = errorResponse?.response?.data?.message || 'Something went wrong';
+            const updatedError = { ...error, text: errorMessage };
+            notify(updatedError, 4000);
+        }
+    });
+};
 export const useMainStore = defineStore("main", {
     state: () => ({
         /* User */
@@ -40,61 +57,60 @@ export const useMainStore = defineStore("main", {
         history: [],
     }),
     actions: {
-        setUser(payload) {
-            if (payload.name) {
-                this.userName = payload.name;
-            }
-            if (payload.email) {
-                this.userEmail = payload.email;
-            }
-            if (payload.avatar) {
-                this.userAvatar = payload.avatar;
-            }
-        },
-        create(data, url) {
-            data
-                .post(route(url), {
-                    onSuccess: (data) => {
-                        showNotification(data?.props?.flash)
-                    },
-                    onError: () => {
-                        notify(error, 4000)
-                    }
-                });
-        },
-        update(data, url, method = 'POST') {
-            data[method.toLowerCase()](route(url, data.id), {
-                onSuccess: (data) => {
-                    showNotification(data?.props?.flash)
-                },
-                onError: () => {
-                    notify(error, 4000)
-                }
-            })
-            ;
-        },
-        destroy(data, url) {
-            data
-                .delete(route(url, data.id), {
-                    onSuccess: (response) => {
-                        data.deleted_at = data.deleted_at || new Date();
-                        showNotification(response?.props?.flash)
-                    },
-                    onError: () => {
-                        notify(error, 4000)
-                    }
-                });
-        },
-        restore(data, url) {
-            data.put(route(url, data.id), {
-                onSuccess: (response) => {
-                    data.deleted_at = null;
-                    showNotification(response?.props?.flash)
-                },
-                onError: () => {
-                    notify(error, 4000)
-                }
-            })
+    setUser(payload) {
+        if (payload.name) {
+            this.userName = payload.name;
+        }
+        if (payload.email) {
+            this.userEmail = payload.email;
+        }
+        if (payload.avatar) {
+            this.userAvatar = payload.avatar;
         }
     },
+    create(data, url) {
+        handleRequest(data, url, 'POST', () => {}, () => {});
+    },
+    createSync(data, url) {
+        return new Promise((resolve, reject) => {
+            handleRequest(data, url, 'POST', resolve, reject);
+        });
+    },
+    update(data, url, method = 'POST') {
+        handleRequest(data, url, method, () => {}, () => {});
+    },
+    updateSync(data, url, method = 'POST') {
+        return new Promise((resolve, reject) => {
+            handleRequest(data, url, method, resolve, reject);
+        });
+    },
+    destroy(data, url) {
+        handleRequest(data, url, 'DELETE', () => {
+            data.deleted_at = data.deleted_at || new Date();
+        }, () => {});
+    },
+    destroySync(data, url) {
+        return new Promise((resolve, reject) => {
+            handleRequest(data, url, 'DELETE', (response) => {
+                data.deleted_at = data.deleted_at || new Date();
+                resolve(response);
+            }, reject);
+        });
+    },
+    restore(data, url) {
+        handleRequest(data, url, 'PUT', () => {
+            data.deleted_at = null;
+        }, () => {});
+    },
+    restoreSync(data, url) {
+        return new Promise((resolve, reject) => {
+            handleRequest(data, url, 'PUT', (response) => {
+                data.deleted_at = null;
+                resolve(response);
+            }, reject);
+        });
+    }
+},
+
+
 });

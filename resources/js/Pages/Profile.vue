@@ -1,11 +1,10 @@
 <style src="@vueform/multiselect/themes/default.css"></style>
 <script setup>
 import Multiselect from '@vueform/multiselect'
-import {computed, reactive, watch} from "vue";
+import {computed} from "vue";
 import {useMainStore} from "@/Stores/main";
 import {
     mdiAccount,
-    mdiMail,
     mdiAsterisk,
     mdiFormTextboxPassword,
     mdiAccountEdit,
@@ -76,19 +75,19 @@ const User = useValidatedForm({
 });
 const gender = [
     {
-        "label" : "Male",
+        "label": "Male",
         "value": "male"
-    }  ,
+    },
     {
-        "label" : "Female",
+        "label": "Female",
         "value": "female"
     }
 ];
 
 const passwordForm = useValidatedForm({
     current_password: [null, [isRequired()]],
-    new_password: [null, [isRequired()]],
-    new_password_confirmation: [null, [isRequired()]],
+    new_password: [null, [isRequired(), isMin(8)]],
+    new_password_confirmation: [null, [isRequired(), isSame('new_password')]],
 })
 const disabled = computed(() => props.how_many_students > 0);
 const schools = useValidatedForm({
@@ -121,16 +120,33 @@ const handleSchoolChange = (selectedOptions) => {
 
 }
 const submitProfile = () => {
-   useMainStore().update(User, 'user.profile.update');
+    useMainStore().updateSync(User, 'user.profile.update');
 };
 
 
 const updateSchool = () => {
-    useMainStore().update(schools, 'user.profile.school', 'POST');
+    useMainStore().updateSync(schools, 'user.profile.school', 'POST');
 };
-const submitPass = () => {
-    useMainStore().update(passwordForm, 'user.profile.password', 'POST');
+const submitPass = async () => {
+    try {
+        await useMainStore().updateSync(passwordForm, 'user.profile.password', 'POST').then(() => {
+            // Request was successful
+            passwordForm.clearErrors();
+            passwordForm.reset();
+            passwordForm.current_password = null;
+            passwordForm.new_password = null;
+            passwordForm.new_password_confirmation = null;
 
+        })
+            .catch((error) => {
+                // Request encountered an error
+                // Handle the error as needed
+                console.error(error);
+            });
+
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 
