@@ -65,7 +65,7 @@ class SchoolController extends Controller
             return redirect()->route('admin.schools.index')->with('success', "School restored Successfully");
         }
         $school->update($request->safe()->all());
-        return redirect()->back()->with('success', 'School Created Successfully');
+        return redirect()->back()->with('success', 'School Updated Successfully');
     }
 
     public function destroy(School $school):  RedirectResponse
