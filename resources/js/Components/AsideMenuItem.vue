@@ -69,7 +69,6 @@ const showMenu =computed(() => {
       :is="item.route ? Link : 'a'"
       :href="itemHref"
       preserve-state
-      preserve-scroll
       :target="item.target ?? null"
       class="flex cursor-pointer items-center"
       :class="componentClass"
