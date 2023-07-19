@@ -3,83 +3,72 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Topic\StoreTopicRequest;
+use App\Http\Requests\Topic\UpdateTopicRequest;
+use App\Models\Topic;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Response;
+use Inertia\ResponseFactory;
 
 class TopicController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    public function index(): Response|ResponseFactory
     {
-        //
+        $topics = Topic::query()
+            ->select('id', 'title', 'deleted_at')
+            ->filter(request()->only('search', 'trashed', 'column', 'direction'))
+            ->paginate()
+            ->withQueryString();
+
+        return inertia('Topic/Index', [
+            'Topics' => $topics,
+            'title' => 'All Topics',
+            'filters' => request()->all('search', 'trashed', 'column', 'direction'),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function create(): Response|ResponseFactory
     {
-        //
+        return inertia('Topic/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StoreTopicRequest $request): RedirectResponse
     {
-        //
+        Topic::create($request->safe()->all());
+        return redirect()->route('admin.topics.index')->with('success', 'Topic Created Successfully');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit(Topic $topic): Response|ResponseFactory
     {
-        //
+        return inertia('Topic/Edit', [
+            'Topic' => $topic
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(UpdateTopicRequest $request, Topic $topic)
     {
-        //
+        if ($topic->deleted_at) {
+            $topic->restore();
+            return redirect()->route('admin.topics.index')->with('success', "Topic restored Successfully");
+        }
+        $topic->update($request->safe()->all());
+        return redirect()->back()->with('success', 'Topic Updated Successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+  public function destroy(Topic $topic):  RedirectResponse
     {
-        //
+        if ($topic->deleted_at) {
+            $topic->forceDelete();
+            return redirect()->route('admin.topics.index')->with('success', "Topic permanently deleted Successfully");
+        }
+        $topic->delete();
+        return redirect()->back()->with('success', "Topic deleted Successfully");
     }
 }

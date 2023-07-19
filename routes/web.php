@@ -69,7 +69,7 @@ Route::group(['middleware' => ['auth', 'verified', 'is_admin']], static function
         /**
          * Topics Controller
          */
-        Route::resource("topics", TopicController::class);
+        Route::resource("topics", TopicController::class)->withTrashed(['index', 'show', 'edit', 'update', 'destroy']);
 
         /**
          * School Management Controller

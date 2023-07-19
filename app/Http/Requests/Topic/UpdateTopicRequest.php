@@ -7,7 +7,7 @@ use App\Rules\Trimmed;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreTopicRequest extends FormRequest
+class UpdateTopicRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,8 +31,8 @@ class StoreTopicRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-               new Trimmed(),
-                Rule::unique(Topic::class), // Ensures the title is unique in the 'topics' table
+                new Trimmed(),
+                Rule::unique(Topic::class)->ignore(request()->id), // Ensures the title is unique in the 'topics' table
             ]
         ];
     }

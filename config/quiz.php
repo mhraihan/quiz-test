@@ -2,5 +2,5 @@
 return [
     'limit' => 10,
     'pagination' => 15,
-    'cache' => now()->addMinute(2)
+    'cache' => now()->addMinute(2),
 ];
