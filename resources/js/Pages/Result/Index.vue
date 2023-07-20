@@ -11,11 +11,16 @@ import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.
 import CardBoxComponentEmpty from "@/Components/CardBoxComponentEmpty.vue";
 import ResultTable from "@/Pages/Result/ResultTable.vue";
 import {ref, computed} from "vue";
+import Placeholder from "@/Components/Placeholder.vue";
 
 
 const props = defineProps({
     results: Object,
     exam: Object,
+    loading: {
+        type: Boolean,
+        default: true,
+    }
 });
 const title = ref("Exam Results");
 const total_questions = computed(() => parseInt(props.exam.results_sum_total_questions));
@@ -27,7 +32,10 @@ const score = parseFloat(((correct_answered.value/total_questions.value) * 100).
 <template>
     <Head :title="title" />
     <LayoutAuthenticated>
-        <SectionMain>
+         <SectionMain v-if="props?.loading">
+            <Placeholder/>
+        </SectionMain>
+        <SectionMain v-else>
             <SectionTitleLineWithButton  :icon="mdiTableBorder" :title="title" main />
             <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3">
                 <CardBoxWidget

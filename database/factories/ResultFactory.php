@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Question;
 use App\Models\Result;
 use App\Models\User;
+use App\Services\ResultService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -12,29 +13,39 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ResultFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     * @throws \Exception
-     */
+    protected $model = Result::class;
+
     public function definition()
     {
-        $result = new Result();
-        $questions = random_int(10,20);
-        $answer = ['a','b','c','d'];
-        $questions_answered =  Question::take($questions)->pluck('id')->map(fn($item, $key) => ['id' => $item, "answer" => $answer[random_int(0,3)]])->all();
+        $resultService = new ResultService();
+        $questions = $this->generateRandomQuestions();
         [
             'correct_answered' => $correct_answered
-        ] = $result->getDataFromQuestions($questions_answered);
+        ] = $resultService->processResultData($questions);
+
         return [
-            'user_id' => random_int(1,User::query()->count()),
-            'complete' => random_int(0, 1),
-            'total_questions' => $questions,
+            'user_id' => User::inRandomOrder()->first()->id,
+            'complete' => $this->faker->boolean(),
+            'total_questions' => count($questions),
             'correct_answered' => $correct_answered,
             'start_time' => now(),
-            'stop_time' => now()->addMinutes(random_int(1,140)),
-            'questions_answered' => $questions_answered,
+            'stop_time' => now()->addMinutes($this->faker->numberBetween(1, 140)),
+            'questions_answered' => $questions,
         ];
+    }
+
+    private function generateRandomQuestions(): array
+    {
+        $questionsCount = $this->faker->numberBetween(10, 20);
+        $answerOptions = ['a', 'b', 'c', 'd'];
+
+        return Question::inRandomOrder()
+            ->take($questionsCount)
+            ->pluck('id')
+            ->map(static fn($item) => [
+                'id' => $item,
+                'answer' => $answerOptions[array_rand($answerOptions)],
+            ])
+            ->all();
     }
 }

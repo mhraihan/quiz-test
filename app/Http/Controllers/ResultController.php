@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Inertia\Response;
 use App\Models\{Result};
+use App\Services\ResultService;
 
 class ResultController extends Controller
 {
@@ -16,25 +17,27 @@ class ResultController extends Controller
     public function index(): Response
     {
         $user = auth()->user();
+        $pageNumber = 'page=' . request()->input('page', 1);
+        $cacheKey = 'users:' . $user->id . '-results:' . md5($pageNumber);
+        $userResults = cache()->remember($cacheKey, config('quiz.cache'), fn() => $this->results($user));
+        $userExam = cache()->remember($user->id . '-exam', config('quiz.cache'), fn() => $this->exam($user)->only(['results_sum_total_questions', 'results_sum_correct_answered']));
+
         return inertia('Result/Index', [
-                'results' => fn() => $this->results($user),
-                'exam' => fn() => $this->exam($user)->only(['results_sum_total_questions', 'results_sum_correct_answered']),
+                'results' => static fn() => $userResults,
+                'exam' => static fn() => $userExam,
+                'loading' => false,
             ]
         );
     }
 
-    public function store(StoreResultRequest $request): JsonResponse
+    public function store(StoreResultRequest $request, ResultService $resultService): JsonResponse
     {
         try {
-            $result = new Result();
-            [
-                'correct_answered' => $correct_answered
-            ] = $result->getDataFromQuestions($request->input('questions_answered'));
-
-            $result = $request->user()->results()->create(
-                $request->validated() + compact('correct_answered')
-            );
+            $resultData = $resultService->processResultData($request->input('questions_answered'));
+            $result = $request->user()->results()->create($request->validated() + $resultData);
             return response()->json(compact('result'), 201);
+        } catch (ValidationException $e) {
+            return response()->json(['status' => 'error', 'message' => $e->errors()], 422);
         } catch (Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
