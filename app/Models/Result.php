@@ -64,26 +64,6 @@ class Result extends Model
         );
     }
 
-    public function getDataFromQuestions($query)
-    {
-        $ids = array_column($query, 'id');
-        $answers = array_column($query, 'answer');
-        $questions = Question::query()->whereIn('id', $ids)->select('title', 'details', 'correct_answer', 'explain', 'options')->get();
-        $answered = collect($questions)->pluck('correct_answer')->map(function ($item, $key) use ($answers, $questions) {
-            $answer = $item === $answers[$key];
-            $questions[$key]['answer'] = $answers[$key];
-            return $answer;
-        });
-        $correct_answered = count($answered->filter());
-
-        return [
-            'questions' => $questions,
-            'answered' => $answered->all(),
-            'correct_answered' => $correct_answered,
-        ];
-    }
-
-//    protected $with = ['users'];
 
     /**
      *Relations

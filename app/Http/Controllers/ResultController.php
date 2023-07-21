@@ -43,15 +43,19 @@ class ResultController extends Controller
         }
     }
 
-    public function show(Result $result): Response
+    public function show(Result $result, ResultService $resultService): Response
     {
-        $this->authorize('view', $result);
-        ['questions' => $questions] = $result->getDataFromQuestions($result->questions_answered);
-        return inertia('Result/Show', [
-            'result' => $result,
-            'questions' => $questions,
-            'name' => $result->user->name(),
-        ]);
+        try {
+            $this->authorize('view', $result);
+            ['questions' => $questions] = $resultService->getDataFromQuestions($result->questions_answered);
+            return inertia('Result/Show', [
+                'result' => $result,
+                'questions' => $questions,
+                'name' => $result->user->name(),
+            ]);
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors([$e->getMessage()]);
+        }
     }
 
 }
