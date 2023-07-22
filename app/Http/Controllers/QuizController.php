@@ -2,27 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Topic, Category, Question};
+use App\Models\{Question};
 use Illuminate\Http\Request;
-
+use App\Traits\CachesCategoriesAndTopics;
 class QuizController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     *
-     * @return \Inertia\Response|\Inertia\ResponseFactory
-     */
+
+    use CachesCategoriesAndTopics;
     public function index()
     {
-        $topics = cache()->remember('topics', now()->addHour(24), function () {
-            return Topic::query()->select('title as label', 'id as value')->get();
-        });
-        $categories = cache()->remember('categories', now()->addHour(24), function () {
-            return Category::query()->select('title as label', 'id as value')->get();
-        });
+
         return inertia('Quiz/Index', [
-            'Categories' => $categories,
-            'Topics' => $topics
+            'Categories' => $this->categoriesCache(true),
+            'Topics' => $this->topicsCache(true)
         ]);
     }
 

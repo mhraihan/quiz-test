@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Category;
 use App\Models\Question;
-use App\Models\Topic;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Question\StoreQuestionRequest;
 use Inertia\Response;
 use Inertia\ResponseFactory;
+use PHPUnit\Exception;
 use QCod\ImageUp\Exceptions\InvalidUploadFieldException;
-
+use App\Traits\CachesCategoriesAndTopics;
 class QuestionController extends Controller
 {
 
+    use CachesCategoriesAndTopics;
     public function index(): Response|ResponseFactory
     {
 
@@ -38,21 +38,26 @@ class QuestionController extends Controller
     {
         $this->authorize('create', Question::class);
         return inertia('Question/Create', [
-            'Categories' => Category::all(),
-            'Topics' => Topic::all(),
+            'Categories' => $this->categoriesCache(),
+            'Topics' => $this->topicsCache(),
         ]);
     }
 
     public function store(StoreQuestionRequest $request): RedirectResponse
     {
-        $this->authorize('create', Question::class);
-        $request->user()->questions()->create($request->validated());
-        return redirect()->route('admin.questions.index')->with('success', 'Question Created Successfully');
+        try {
+            $this->authorize('create', Question::class);
+            $request->user()->questions()->create($request->validated());
+            return redirect()->route('admin.questions.index')->with('success', 'Question Created Successfully');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
     }
 
     public function show(): void
     {
-       abort(404);
+        abort(404);
     }
 
     public function edit(Question $question): Response|ResponseFactory|RedirectResponse
@@ -60,8 +65,8 @@ class QuestionController extends Controller
         $this->authorize('view', Question::class);
         try {
             return inertia('Question/Edit', [
-                'Categories' => Category::all(),
-                'Topics' => Topic::all(),
+                'Categories' => $this->categoriesCache(),
+                'Topics' => $this->topicsCache(),
                 'Question' => $question,
                 'image' => $question->image ? $question->imageUrl() : null,
             ]);
