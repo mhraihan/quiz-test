@@ -11,7 +11,6 @@ use Inertia\ResponseFactory;
 use PHPUnit\Exception;
 use QCod\ImageUp\Exceptions\InvalidUploadFieldException;
 use App\Traits\CachesCategoriesAndTopics;
-use Illuminate\Support\Arr;
 
 class QuestionController extends Controller
 {
@@ -77,7 +76,7 @@ class QuestionController extends Controller
                 'image' => $question->image ? $question->imageUrl() : null,
             ]);
         } catch (InvalidUploadFieldException $e) {
-            return redirect()->back()->withErrors([
+            return redirect()->back()->withError([
                 'error' => 'ups, there was an error' . $e
             ]);
         }

@@ -156,7 +156,7 @@ class ProfileController extends Controller
                 return redirect()->back()->withSuccess('Profile has been updated');
             }
 
-            return redirect()->back()->withErrors('Unauthorized');
+            return redirect()->back()->withError('Unauthorized');
 
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
