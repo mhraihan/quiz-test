@@ -10,7 +10,7 @@ import {notify} from "notiwind"
 import Form from "./Form.vue";
 import { ref, watch} from "vue";
 import {handleQuestionSubmit} from "@/Pages/Question/useQuestionValidator";
-import {getQuestionOptions, optionsPlaceholder} from "@/Pages/Question/optionsUtils";
+import {createFormData, getQuestionOptions} from "@/Pages/Question/optionsUtils";
 
 const props = defineProps({
     Categories: Object,
@@ -20,22 +20,7 @@ const hasTable = true;
 
 
 
-const questions = useForm({
-    title: "",
-    details: "",
-    explain: "",
-    options: {...optionsPlaceholder},
-    title_two: "",
-    details_two: "",
-    explain_two: "",
-    options_two: {...optionsPlaceholder},
-    correct_answer: "a",
-    is_active: true,
-    image: null,
-    category_id: props?.Categories[0]?.id || null,
-    topic_id: props?.Topics[0]?.id || null,
-    question_options: "4"
-});
+const questions = useForm(createFormData(props));;
 const removeQuestionImage = ref(false);
 const image = ref(null);
 
@@ -55,6 +40,8 @@ const removeImage = () => {
     questions.image = null;
 };
 const createQuestion = () => {
+    console.log(questions)
+
     questions.clearErrors();
     handleQuestionSubmit(
         questions,

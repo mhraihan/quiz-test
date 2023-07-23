@@ -10,7 +10,7 @@ import Form from "./Form.vue";
 import Breadcrumbs from "@/Components/Breadcrumbs.vue";
 import {computed, ref, watch} from "vue";
 import {notify} from "notiwind"
-import {getQuestionOptions, optionsPlaceholder} from "@/Pages/Question/optionsUtils";
+import {createFormData, getQuestionOptions} from "@/Pages/Question/optionsUtils";
 import {handleQuestionSubmit} from "@/Pages/Question/useQuestionValidator";
 
 const props = defineProps({
@@ -22,25 +22,8 @@ const props = defineProps({
 
 const options = props.Question.options;
 const hasTable = true;
-const questions = useForm({
-    id: props.Question.id,
-    title: props.Question.title,
-    details: props.Question.details,
-    explain: props.Question.explain,
-    options,
-    title_two: props.Question.title_two,
-    details_two: props.Question.details_two,
-    explain_two: props.Question.explain_two,
-    options_two: props.Question.options_two,
-    correct_answer: props.Question.correct_answer,
-    is_active: props.Question.is_active,
-    image: null,
-    deleted_at: props.Question.deleted_at,
-    category_id: props.Question.category_id || null,
-    topic_id: props.Question.topic_id || null,
-    question_options: "4",
-    _method: "put",
-});
+const questions = useForm(createFormData(props));
+
 // Computed property for question_options
 const questionOptionsValue = computed(() => {
     return Object.keys(questions.options).length.toString();
