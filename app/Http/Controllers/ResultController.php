@@ -54,7 +54,7 @@ class ResultController extends Controller
                 'name' => $result->user->name(),
             ]);
         } catch (Exception $e) {
-            return redirect()->back()->withErrors([$e->getMessage()]);
+            abort(403);
         }
     }
 

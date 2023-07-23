@@ -168,7 +168,7 @@ class PermissionSeeder extends Seeder
             'read exam record',
             'update exam record',
             'delete exam record',
-
+            'check result',
         ]);
 
         //assign permissions to teacher
