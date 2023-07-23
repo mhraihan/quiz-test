@@ -27,7 +27,7 @@ trait CachesCategoriesAndTopics
         });
 
         if ($rename) {
-            $topics->map(static fn($topic) => [
+          return  $topics->map(static fn($topic) => [
                 "label" => $topic->title,
                 "value" => $topic->id
             ])->all();
