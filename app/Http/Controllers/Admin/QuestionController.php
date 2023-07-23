@@ -11,10 +11,13 @@ use Inertia\ResponseFactory;
 use PHPUnit\Exception;
 use QCod\ImageUp\Exceptions\InvalidUploadFieldException;
 use App\Traits\CachesCategoriesAndTopics;
+use Illuminate\Support\Arr;
+
 class QuestionController extends Controller
 {
 
     use CachesCategoriesAndTopics;
+
     public function index(): Response|ResponseFactory
     {
 
@@ -43,17 +46,20 @@ class QuestionController extends Controller
         ]);
     }
 
+
     public function store(StoreQuestionRequest $request): RedirectResponse
     {
         try {
             $this->authorize('create', Question::class);
-            $request->user()->questions()->create($request->validated());
+            $request->user()->questions()->create($request->safe()->all());
             return redirect()->route('admin.questions.index')->with('success', 'Question Created Successfully');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
+        } catch (\JsonException $e) {
+              return redirect()->back()->with('error', $e->getMessage());
         }
-
     }
+
 
     public function show(): void
     {

@@ -18,13 +18,20 @@ class Question extends Model
 
     protected $casts = [
         'options' => 'array',
+        'options_two' => 'array',
         'is_active' => 'boolean',
     ];
 
     protected $fillable = [
         'title',
+        'title_two',
         'details',
+        'details_two',
         'explain',
+        'explain_two',
+        'options',
+        'options_two',
+        'is_active',
         'image',
         'options',
         'correct_answer',

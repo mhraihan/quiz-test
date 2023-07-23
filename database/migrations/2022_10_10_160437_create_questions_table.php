@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -21,8 +20,12 @@ return new class extends Migration
             $table->text('title');
             $table->longText('details');
             $table->binary('explain')->nullable();
-            $table->string('image')->nullable();
             $table->longText('options');
+            $table->text('title_two');
+            $table->longText('details_two');
+            $table->binary('explain_two')->nullable();
+            $table->longText('options_two');
+            $table->string('image')->nullable();
             $table->enum('correct_answer', ['a', 'b', 'c', 'd']);
             $table->boolean('is_active')->nullable()->default(true);
             $table->softDeletes();

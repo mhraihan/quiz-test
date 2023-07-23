@@ -8,11 +8,12 @@ import BaseButton from "@/Components/BaseButton.vue";
 import BaseButtons from "@/Components/BaseButtons.vue";
 import FormCheckRadioGroup from "@/Components/FormCheckRadioGroup.vue";
 import ValidationError from "@/Components/ValidationError.vue";
-import { QuillEditor } from "@vueup/vue-quill";
+import {QuillEditor} from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import TrashedMessage from '@/Components/TrashedMessage.vue'
 import CardBoxModal from "@/Components/CardBoxModal.vue";
-import {ref} from "vue";
+import {ref} from "vue"
+import SectionMain from "@/Components/SectionMain.vue";
 
 const props = defineProps({
     Categories: Object,
@@ -24,10 +25,10 @@ const props = defineProps({
         default: "Create Question",
     }
 });
-const emit = defineEmits(["destroy","restore",'removeImage']);
+
+const emit = defineEmits(["destroy", "restore", 'removeImage']);
 const isModalDangerActive = ref(false);
 const destroyModal = () => {
-    console.log('destroy');
     emit('destroy');
 }
 
@@ -45,53 +46,30 @@ const destroyModal = () => {
         >
             <p>Are you sure you want to Delete the question?</p>
         </CardBoxModal>
-        <trashed-message v-if="questions.deleted_at" @restore="$emit('restore')" class="mb-6" > This Question has been deleted. </trashed-message>
-        <ValidationError />
-        <FormField
-            label="Question Name"
-            help="Required. Question Name"
-            :error="questions.errors.title"
-        >
-            <FormControl
-                v-model="questions.title"
-                name="title"
-                :error="questions.errors.title"
-            />
-        </FormField>
-
-        <FormField
-            label="Question Details"
-            help="Required. Question Details"
-            :error="questions.errors.details"
-        >
-            <div class="flex flex-col min-height">
-                <QuillEditor
-                    toolbar="essential"
-                    contentType="html"
-                    theme="snow"
-                    v-model:content="questions.details"
-                    name="details"
-                />
-            </div>
-        </FormField>
-        <BaseDivider />
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <trashed-message v-if="questions.deleted_at" @restore="$emit('restore')" class="mb-6"> This Question has been
+            deleted.
+        </trashed-message>
+        <ValidationError/>
+        <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
             <FormField
-                v-for="option in Object.keys(questions.options)"
-                :label="`Option ${option.toUpperCase()}`"
-                :help="`Required. Question option ${option}`"
-                :error="questions.errors[`options.${option.toLowerCase()}`]"
+                label="How many Options?"
+                label-for="question_options"
+                help="Required. Number of options"
+                :error="questions.errors.que"
             >
-                <FormControl
-                    v-model="questions.options[option]"
-                    :name="option"
-                    :error="questions.errors[`options.${option.toLowerCase()}`]"
+                <FormCheckRadioGroup
+                    v-model="questions.question_options"
+                    id="question_options"
+                    type="radio"
+                    name="question_options"
+                    :error="questions.errors.question_options"
+                    :value="questions.question_options"
+                    :options="{
+                            '2': 'Option 2',
+                            '4': 'Option 4'
+                        }"
                 />
             </FormField>
-        </div>
-        <BaseDivider />
-
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
             <FormField
                 label="Question topic"
                 help="Required. Question topic"
@@ -140,48 +118,165 @@ const destroyModal = () => {
                     :error="questions.errors.correct_answer"
                 />
             </FormField>
+
         </div>
 
-        <BaseDivider />
+        <BaseDivider/>
+
+        <div class="grid grid-cols-1 gap-10 lg:grid-cols-2">
+            <SectionMain class="!p-0">
+                <h2 class="my-3 font-bold text-2xl uppercase">Question (English)</h2>
+
+                <FormField
+                    label="Question Name"
+                    help="Required. Question Name"
+                    :error="questions.errors.title"
+                >
+                    <FormControl
+                        v-model="questions.title"
+                        name="title"
+                        :error="questions.errors.title"
+                    />
+                </FormField>
+
+                <FormField
+                    label="Question Details"
+                    help="Required. Question Details"
+                    :error="questions.errors.details"
+                >
+                    <div class="flex flex-col min-height">
+                        <QuillEditor
+                            toolbar="essential"
+                            contentType="html"
+                            theme="snow"
+                            v-model:content="questions.details"
+                            name="details"
+                        />
+                    </div>
+                </FormField>
+                <BaseDivider/>
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-1">
+                    <FormField
+                        v-for="option in Object.keys(questions.options)"
+                        :label="`Option ${option.toUpperCase()}`"
+                        :help="`Required. Question option ${option}`"
+                        :error="questions.errors[`options.${option.toLowerCase()}`]"
+                    >
+                        <FormControl
+                            v-model="questions.options[option]"
+                            :name="option"
+                            :error="questions.errors[`options.${option.toLowerCase()}`]"
+                        />
+                    </FormField>
+                </div>
+                <BaseDivider/>
+
+                <FormField
+                    label="Question Explaination (optional)"
+                    help="Please explain about the question"
+                    :error="questions.errors.explain"
+                >
+                    <div class="flex flex-col">
+                        <QuillEditor
+                            toolbar="full"
+                            contentType="html"
+                            theme="snow"
+                            v-model:content="questions.explain"
+                            name="explain"
+                        />
+                    </div>
+                </FormField>
+            </SectionMain>
+            <SectionMain class="!p-0">
+                <h2 class="my-3 font-bold text-2xl uppercase">Question (Chinese )</h2>
+
+                <FormField
+                    label="Question Name"
+                    help="Required. Question Name"
+                    :error="questions.errors.title_two"
+                >
+                    <FormControl
+                        v-model="questions.title_two"
+                        name="title_two"
+                        :error="questions.errors.title_two"
+                    />
+                </FormField>
+
+                <FormField
+                    label="Question Details"
+                    help="Required. Question Details"
+                    :error="questions.errors.details_two"
+                >
+                    <div class="flex flex-col min-height">
+                        <QuillEditor
+                            toolbar="essential"
+                            contentType="html"
+                            theme="snow"
+                            v-model:content="questions.details_two"
+                            name="details_two"
+                        />
+                    </div>
+                </FormField>
+                <BaseDivider/>
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-1">
+                    <FormField
+                        v-for="option in Object.keys(questions.options_two)"
+                        :label="`Option ${option.toUpperCase()}`"
+                        :help="`Required. Question option ${option}`"
+                        :error="questions.errors[`options.${option.toLowerCase()}`]"
+                    >
+                        <FormControl
+                            v-model="questions.options_two[option]"
+                            :name="option"
+                            :error="questions.errors[`options.${option.toLowerCase()}`]"
+                        />
+                    </FormField>
+                </div>
+                <BaseDivider/>
+
+                <FormField
+                    label="Question Explaination (optional)"
+                    help="Please explain about the question"
+                    :error="questions.errors.explain_two"
+                >
+                    <div class="flex flex-col">
+                        <QuillEditor
+                            toolbar="full"
+                            contentType="html"
+                            theme="snow"
+                            v-model:content="questions.explain_two"
+                            name="explain_two"
+                        />
+                    </div>
+                </FormField>
+            </SectionMain>
+        </div>
+        <BaseDivider/>
+
+
         <CardBox v-if="image" class="mb-2">
-           <div class="relative">
-               <img :src="image" alt="" srcset="" />
-               <BaseButtons class="absolute top-0 right-0">
-                   <BaseButton
-                       @click="$emit('removeImage')"
-                       color="danger"
-                       type="button"
-                       label="Remove"
-                   />
-               </BaseButtons>
-           </div>
+            <div class="relative">
+                <img :src="image" alt="" srcset=""/>
+                <BaseButtons class="absolute top-0 right-0">
+                    <BaseButton
+                        @click="$emit('removeImage')"
+                        color="danger"
+                        type="button"
+                        label="Remove"
+                    />
+                </BaseButtons>
+            </div>
 
         </CardBox>
         <progress v-if="questions.progress" :value="questions.progress.percentage" max="100">
             {{ questions.progress.percentage }}%
         </progress>
         <FormField label="Question Image (optional)" help="" :error="questions.errors.image">
-            <FormFilePicker v-model="questions.image" label="Upload" :error="questions.errors.image" />
+            <FormFilePicker v-model="questions.image" label="Upload" :error="questions.errors.image"/>
         </FormField>
-        <BaseDivider />
+        <BaseDivider/>
 
-        <FormField
-            label="Question Explaination (optional)"
-            help="Please explain about the question"
-            :error="questions.errors.explain"
-        >
-            <div class="flex flex-col">
-                <QuillEditor
-                    toolbar="full"
-                    contentType="html"
-                    theme="snow"
-                    v-model:content="questions.explain"
-                    name="explain"
-                />
-            </div>
-        </FormField>
-
-        <template #footer >
+        <template #footer>
             <div class="flex">
                 <BaseButtons class="mr-10" v-if="!questions.deleted_at">
                     <BaseButton

@@ -19,13 +19,17 @@ class QuestionFactory extends Factory
     {
         return [
             'title' => fake()->sentence(),
+            'title_two' => fake()->sentence(),
             'details' => fake()->paragraphs(random_int(1,6),true),
+            'details_two' => fake()->paragraphs(random_int(1,6),true),
             'explain' => fake()->paragraphs(random_int(0,6),true),
+            'explain_two' => fake()->paragraphs(random_int(0,6),true),
             'correct_answer' =>  fake()->randomElement(['a','b','c','d']),
             'category_id' => random_int(1,4),
             'user_id' => random_int(1,1),
             'topic_id' => random_int(1,3),
-            'options' => ["a" => fake()->word(), "b" => fake()->word(), "c" => fake()->word(),"d" => fake()->word()]
+            'options' => ["a" => fake()->word(), "b" => fake()->word(), "c" => fake()->word(),"d" => fake()->word()],
+            'options_two' => ["a" => fake()->word(), "b" => fake()->word(), "c" => fake()->word(),"d" => fake()->word()]
         ];
     }
 }

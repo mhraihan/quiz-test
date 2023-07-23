@@ -10,8 +10,8 @@ import Form from "./Form.vue";
 import Breadcrumbs from "@/Components/Breadcrumbs.vue";
 import {computed, ref, watch} from "vue";
 import {notify} from "notiwind"
-import intus from "intus";
-import {isBetween, isImage, isIn, isRequired} from "intus/rules";
+import {getQuestionOptions, optionsPlaceholder} from "@/Pages/Question/optionsUtils";
+import {handleQuestionSubmit} from "@/Pages/Question/useQuestionValidator";
 
 const props = defineProps({
     Categories: Object,
@@ -28,14 +28,30 @@ const questions = useForm({
     details: props.Question.details,
     explain: props.Question.explain,
     options,
+    title_two: props.Question.title_two,
+    details_two: props.Question.details_two,
+    explain_two: props.Question.explain_two,
+    options_two: props.Question.options_two,
     correct_answer: props.Question.correct_answer,
     is_active: props.Question.is_active,
     image: null,
     deleted_at: props.Question.deleted_at,
     category_id: props.Question.category_id || null,
     topic_id: props.Question.topic_id || null,
+    question_options: "4",
     _method: "put",
 });
+// Computed property for question_options
+const questionOptionsValue = computed(() => {
+    return Object.keys(questions.options).length.toString();
+});
+
+// Set the initial value of question_options based on options length
+questions.question_options = questionOptionsValue.value;
+watch(() => questions.question_options, (newValue) => {
+    questions.options = getQuestionOptions(questions.options, newValue);
+    questions.options_two = getQuestionOptions(questions.options_two, newValue);
+})
 const link = computed(() => questions.deleted_at ? 'admin.questions.trash' : 'admin.questions.index');
 
 const removeQuestionImage = ref(false);
@@ -56,82 +72,53 @@ const updateQuestion = () => {
         delete questions.image;
     }
     questions.clearErrors();
-    const validation = intus.validate(questions.data(), {
-        title: [isRequired()],
-        details: [isRequired()],
-        "options.*": [isRequired()],
-        correct_answer: [isRequired(), isIn("a", "b", "c", "d")],
-        category_id: [isRequired(), isBetween(1, 4)],
-        image: [isImage()]
-    }, {
-        'title.isRequired': 'Please, write the question name',
-        'details.isRequired': 'Please, Describe about the question',
-        'options.a.isRequired': "Option A can not be blank",
-        'options.b.isRequired': "Option B can not be blank",
-        'options.c.isRequired': "Option C can not be blank",
-        'options.d.isRequired': "Option C can not be blank",
-        'image.isImage': "Input file must be a valid image",
-    });
-    if (validation.passes()) {
-        questions
-            .transform((data) => ({
-                ...data,
-                details: data.details !== "<p><br></p>" ? data.details : null,
-                explain: data.explain !== "<p><br></p>" ? data.explain : null
-            }))
-            .post(route("admin.questions.update", props.Question.id), {
-                "onSuccess": () => {
-                    questions.image = null;
-                    notify({
-                        group: "notification",
-                        type: "success",
-                        title: "Success"
-                    }, 4000) // 4s
-                    removeQuestionImage.value = false;
-                },
-                onError: () => {
-                    notify({
-                        group: "notification",
-                        type: "error",
-                        title: "Error",
-                        text: 'Something went wrong'
-                    }, 4000) // 4s
-                }
-            });
-    } else {
-        notify({
-            group: "notification",
-            type: "error",
-            title: "Error",
-            text: 'Something went wrong'
-        }, 4000) // 4s
-        questions.setError(validation.errors());
-    }
+    handleQuestionSubmit(
+        questions,
+        route("admin.questions.update", props.Question.id),
+        {
+            onSuccess: () => {
+                questions.image = null;
+                notify({
+                    group: "notification",
+                    type: "success",
+                    title: "Success"
+                }, 4000); // 4s
+                removeQuestionImage.value = false;
+            },
+            onError: () => {
+                notify({
+                    group: "notification",
+                    type: "error",
+                    title: "Error",
+                    text: 'Something went wrong'
+                }, 4000); // 4s
+            }
+        }
+    );
 };
-
 
 const destroyQuestion = () => {
     questions['_method'] = "delete";
     questions
         .post(route('admin.questions.destroy', questions.id), {
-        onSuccess: () => {
-            questions.deleted_at = questions.deleted_at || new Date();
-            notify({
-                group: "notification",
-                type: "success",
-                title: "Success"
-            }, 4000) // 4s
-            questions.clearErrors();
-        },
-        onError: () => {
-            notify({
-                group: "notification",
-                type: "error",
-                title: "Error",
-                text: 'Something went wrong'
-            }, 4000) // 4s
-        }
-    });
+            onSuccess: () => {
+                questions.deleted_at = questions.deleted_at || new Date();
+                notify({
+                    group: "notification",
+                    type: "success",
+                    title: "Success"
+                }, 4000) // 4s
+                questions.clearErrors();
+            },
+            onError: () => {
+                notify({
+                    group: "notification",
+                    type: "error",
+                    title: "Error",
+                    text: 'Something went wrong'
+                }, 4000) // 4s
+            }
+        });
 }
 const restoreQuestion = () => {
     questions['_method'] = "put";

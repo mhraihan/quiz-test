@@ -24,19 +24,34 @@ class StoreQuestionRequest extends FormRequest
      */
     public function rules()
     {
+        $array_keys = 'required_array_keys:a,b,c,d';
+        if (request()->input('question_options') === '2'){
+              $array_keys = 'required_array_keys:a,b';
+        }
+
         return [
+            // Language 1
             'title' => ['required', 'string'],
             'details' => ['required', 'string'],
-            'explain' =>
-            ['nullable', 'string'],
-            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg|max:2048',
-            'options' => ['required', 'array', 'required_array_keys:a,b,c,d'],
+            'explain' => ['nullable', 'string'],
+            'options' => ['required', 'array', $array_keys],
             'options.*' => ['required', 'string'],
+
+            // Language 2
+            'title_two' => ['required', 'string'],
+            'details_two' => ['required', 'string'],
+            'explain_two' => ['nullable', 'string'],
+            'options_two' => ['required', 'array', $array_keys],
+            'options_two.*' => ['required', 'string'],
+
+            // Other fields
             'correct_answer' => ['required', 'string', Rule::in(['a', 'b', 'c', 'd'])],
-            'topic_id' => ['nullable', 'numeric','exists:topics,id'],
+            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg|max:2048',
+            'topic_id' => ['required', 'numeric', 'exists:topics,id'],
             'category_id' => ['required', 'numeric', 'exists:categories,id', 'between:1,4']
         ];
     }
+
     public function messages()
     {
         return [
