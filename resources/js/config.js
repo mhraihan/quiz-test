@@ -6,6 +6,17 @@ export const styleKey = "style";
 
 export const containerMaxW = "xl:max-w-6xl xl:mx-auto";
 
+export const languages = [
+    {
+        "label" : "English",
+        "value" : "en",
+    },
+    {
+        "label" : "Chinese",
+        "value" : "zh",
+    }
+]
+
 export const UserEnum = {
   "SUPER_ADMIN": 'super-admin',
   "ADMIN": 'admin',

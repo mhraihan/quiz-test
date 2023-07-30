@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('class_id')->index()->nullable();
+            $table->string('language')->index();
             $table->boolean('complete')->default(true);
             $table->unsignedInteger('total_questions');
             $table->unsignedInteger('correct_answered');

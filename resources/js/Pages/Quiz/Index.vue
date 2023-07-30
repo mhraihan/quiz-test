@@ -14,21 +14,23 @@ import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.
 import FormField from "@/Components/FormField.vue";
 import {notify} from "notiwind"
 import intus from "intus";
-import {isBetween, isRequired} from "intus/rules";
+import {isBetween, isIn, isRequired} from "intus/rules";
 import BaseButton from "@/Components/BaseButton.vue";
 import BaseButtons from "@/Components/BaseButtons.vue";
 import axios from "axios";
-import {computed, ref} from "vue";
+import {computed, reactive, ref} from "vue";
 import Loader from "@/Components/Loader.vue";
 import Question from "@/Pages/Quiz/Question.vue";
 import Summary from "@/Pages/Quiz/Summary.vue";
 import {range} from "lodash";
+import {languages} from "@/config";
 
 const props = defineProps({
     Categories: Object,
     Topics: Object,
 });
 
+const quiz_languages = reactive(languages)
 
 const topics = props.Topics.length > 1 ? [{label: 'Random', value: 0}, ...props.Topics] : props.Topics;
 
@@ -39,6 +41,7 @@ const quiz = useForm({
     questions: null,
     result: null,
     start_time: null,
+    language: quiz_languages[0].value
 });
 const title = computed(() => quiz.result ? 'Quiz Summary' : 'Get your Quiz');
 const backToQuiz = () => {
@@ -53,7 +56,7 @@ const howManyQuestions = computed(() => range(1, 21));
 const notification = ({
                           type = 'error',
                           title = 'Error',
-                          text = 'Please select Question Topics, Difficulty label and Question Interval'
+                          text = 'Please select Questions Language, Topics, Difficulty label and Question Interval'
                       } = {}) => {
     notify({
         group: "notification",
@@ -71,11 +74,13 @@ const getQuiz = () => {
     const validation = intus.validate(quiz.data(), {
         "topic_id": [isRequired()],
         "category_id": [isRequired(), isBetween(1, 4)],
-        "howManyQuestions": [isRequired(), isBetween(1, 20)]
+        "howManyQuestions": [isRequired(), isBetween(1, 20)],
+        "language": [isRequired(), isIn(languages[0].value,languages[1].value)],
     }, {
         'topic_id.isRequired': 'Please select the questions Topics',
         'category_id.isRequired': 'Please select the questions Category',
         'howManyQuestions.isRequired': 'Please select the number of questions',
+        'language.isRequired': 'Please select the language',
     });
     if (validation.passes()) {
         showLoader();
@@ -83,15 +88,26 @@ const getQuiz = () => {
             topic_id: quiz.topic_id,
             category_id: quiz.category_id,
             howManyQuestions: quiz.howManyQuestions,
+            language: quiz.language,
         }).then(res => {
             quiz.questions = res.data.questions;
             quiz.start_time = res.data.start_time;
             if (!quiz.questions.length) {
                 notification({text: 'No Question is available'});
             }
-        }).catch(() => {
-            location.reload();
-            notification({'text':'Session is expired'});
+        }).catch(({response}) => {
+            if (response.status === 422) {
+                const errors = response.data.errors;
+                Object.keys(errors).forEach(key => {
+                    errors[key].forEach(error => {
+                        notification({'text': error});
+                    })
+                });
+            } else {
+                location.reload();
+                notification({'text': 'Session is expired'});
+            }
+
         }).finally(() => showLoader());
     } else {
         notification();
@@ -99,9 +115,10 @@ const getQuiz = () => {
     }
 }
 const submit = (questions) => {
+    console.log(questions)
     showLoader();
-    if (!questions.questions_answered.length){
-        notification({text:  'Exam Postponed'});
+    if (!questions.questions_answered.length) {
+        notification({text: 'Exam Postponed'});
         showLoader();
         backToQuiz();
         return;
@@ -129,6 +146,20 @@ const submit = (questions) => {
             <Loader v-if="loading" class="mt-48"/>
             <CardBox v-if="!loading && !quiz.questions && !quiz.result" @submit.prevent="getQuiz" is-form
                      class="max-w-2xl mx-auto">
+                <FormField
+                    label="Question Language"
+                    help="Required. Please select the language"
+                    :error="quiz.errors.language"
+                >
+                    <Multiselect
+                        :uppercase="'capitalize'"
+                        v-model="quiz.language"
+                        name="language"
+                        type="select"
+                        placeholder="Please select the language"
+                        :options="quiz_languages"
+                    />
+                </FormField>
                 <FormField
                     label="Choose one or more Topics"
                     help="Required. Please select the questions Topics"
@@ -190,6 +221,7 @@ const submit = (questions) => {
             </CardBox>
             <Question v-if="!loading && quiz.questions && !quiz.result" :questions="quiz.questions"
                       :start_time="quiz.start_time"
+                      :language="quiz.language"
                       @backToQuiz="backToQuiz" @submit="submit"/>
             <Summary v-if="!loading && quiz.result" :result="quiz.result"
                      @backToQuiz="backToQuiz"/>

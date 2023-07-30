@@ -23,6 +23,7 @@ class ResultService
         $questions = Question::query()
             ->whereIn('id', $ids)
             ->select('title', 'details', 'correct_answer', 'explain', 'options')
+            ->orderByRaw("FIELD(id, " . implode(',', $ids) . ")")
             ->get();
 
         $answered = collect($questions)->pluck('correct_answer')->map(static function ($item, $key) use ($answers, $questions) {

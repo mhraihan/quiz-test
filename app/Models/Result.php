@@ -32,7 +32,8 @@ class Result extends Model
         'start_time',
         'stop_time',
         'questions_answered',
-        'total_questions'
+        'total_questions',
+        'language',
     ];
 
     public function resolveRouteBinding($value, $field = null): Model|Builder|null

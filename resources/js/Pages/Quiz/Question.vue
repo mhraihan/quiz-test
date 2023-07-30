@@ -15,6 +15,10 @@ const props = defineProps({
     questions: Object,
     start_time: String,
     exam: Object,
+    language: {
+        type: String,
+        required: true
+    }
 })
 const step = ref(0);
 const start_time = ref(new Date(props.start_time));
@@ -43,6 +47,7 @@ const submit = (complete = true) => {
     stop_time.value = new Date();
     emit('submit', {
         class_id: null,
+        language: props.language,
         start_time: start_time.value,
         stop_time: stop_time.value,
         total_questions: quiz.questions.length,

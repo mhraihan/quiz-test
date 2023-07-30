@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Result;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreResultRequest extends FormRequest
 {
@@ -32,6 +33,7 @@ class StoreResultRequest extends FormRequest
             'questions_answered.*.id' => ['required', 'numeric'],
             'questions_answered.*.answer' => ['required', 'string'],
             'total_questions' => ['required', 'numeric'],
+            'language' => ['required','string', Rule::in(array_column(config('quiz.languages'),"value"))],
         ];
     }
 }
