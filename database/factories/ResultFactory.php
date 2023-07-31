@@ -25,6 +25,7 @@ class ResultFactory extends Factory
 
         return [
             'user_id' => User::inRandomOrder()->first()->id,
+            "language" => collect(config('quiz.languages'))->pluck('value')->random(),
             'complete' => $this->faker->boolean(),
             'total_questions' => count($questions),
             'correct_answered' => $correct_answered,
