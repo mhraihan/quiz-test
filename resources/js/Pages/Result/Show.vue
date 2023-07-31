@@ -9,6 +9,7 @@ import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 import Overview from "@/Pages/Result/Overview.vue";
 import {computed} from "vue";
+import {languages} from "@/config";
 
 
 const props = defineProps({
@@ -20,6 +21,7 @@ const props = defineProps({
     }
 });
 
+const language = computed(() => languages.find( language => language.value === props.result.language)?.label)
 const quiz = (answer, correct_answer, key) => {
     if (answer === key) {
         return answer !== correct_answer ? 'bg-red-600 text-white' : 'bg-green-500 text-white';
@@ -48,6 +50,7 @@ const quiz = (answer, correct_answer, key) => {
                 </div>
                 <div class="border-t border-gray-300">
                     <dl>
+                        <Overview label="Exam Language" :value="language"/>
                         <Overview label="Exam Date" :value="props.result.exam.date"/>
                         <Overview label="Quiz Completion Status"
                                   :value="props.result.complete ? 'Completed' : 'Not Completed'"/>

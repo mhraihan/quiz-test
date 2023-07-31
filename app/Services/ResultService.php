@@ -16,13 +16,17 @@ class ResultService
         ];
     }
 
-    public function getDataFromQuestions(array $query): array
+    public function getDataFromQuestions(array $query, $language = 'en'): array
     {
         $ids = array_column($query, 'id');
         $answers = array_column($query, 'answer');
+        $selectedFields = ['title', 'details', 'correct_answer', 'explain', 'options'];
+         if ($language === config('quiz.languages')[1]['value']){
+                $selectedFields = ['correct_answer', 'title_two as title', 'details_two as details', 'options_two as options', 'explain_two as explain'];
+            }
         $questions = Question::query()
             ->whereIn('id', $ids)
-            ->select('title', 'details', 'correct_answer', 'explain', 'options')
+            ->select($selectedFields)
             ->orderByRaw("FIELD(id, " . implode(',', $ids) . ")")
             ->get();
 
