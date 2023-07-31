@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\UserEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 //use App\Providers\RouteServiceProvider;
@@ -39,7 +40,7 @@ class RegisteredUserController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'roles' => ['required', 'string', Rule::in('teacher','student')],
+            'roles' => ['required', 'string', Rule::in(UserEnum::TEACHER->value,UserEnum::STUDENT->value)],
         ]);
 
         $user = User::create([
