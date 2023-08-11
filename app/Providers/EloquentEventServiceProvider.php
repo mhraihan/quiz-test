@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Models\Category;
 use App\Models\Result;
+use App\Models\School;
 use App\Models\Topic;
 use App\Models\User;
 use App\Observers\CategoryObserver;
 use App\Observers\ResultObserver;
+use App\Observers\SchoolObserver;
 use App\Observers\TopicObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\ServiceProvider;
@@ -35,5 +37,6 @@ class EloquentEventServiceProvider extends ServiceProvider
         Category::observe(CategoryObserver::class);
         Result::observe(ResultObserver::class);
         Topic::Observe(TopicObserver::class);
+        School::Observe(SchoolObserver::class);
     }
 }

@@ -20,12 +20,14 @@ class ProfileController extends Controller
 
     public function index(Request $request): Response|ResponseFactory
     {
-        $schools = School::query()
+        $schools = cache()->remember('schools', now()->addHour(24), static function(){
+            return School::query()
             ->latest('created_at')
             ->orderBy('name')
             ->selectRaw("CONCAT(name, ' (', short_name, ')') AS label, id AS value")
             ->limit(50)
             ->get();
+        });
 
         $user = auth()->user();
         $current_school = $user?->school_id;
