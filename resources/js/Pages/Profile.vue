@@ -95,12 +95,12 @@ const schools = useValidatedForm({
     teacher_id: [props.current_teacher ?? null, isTeacher() ? [] : [isRequired()]],
 })
 
-const handleSchoolChange = (selectedOptions) => {
+const handleSchoolChange = (school_id) => {
     if (isTeacher()) return;
     Inertia.visit(route('user.profile'), {
         method: 'get',
         data: {
-            school_id: selectedOptions,
+            school_id: school_id,
             teacher_id: props.current_teacher
         },
         replace: false,
@@ -108,7 +108,7 @@ const handleSchoolChange = (selectedOptions) => {
         preserveScroll: true,
         only: ['Teachers', 'current_teacher'],
         onSuccess: () => {
-            schools.school_id = selectedOptions;
+            schools.school_id = school_id;
             schools.teacher_id = null;
         },
         onError: () => {
