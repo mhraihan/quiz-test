@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 class UserObserver
 {
 
-    public function saving(User $user): void
+    public function creating(User $user): void
     {
         if (request()->has('password')) {
             $user->password = Hash::make(request()->password);
