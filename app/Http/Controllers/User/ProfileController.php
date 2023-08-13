@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Models\School;
 use App\Models\User;
+use App\Services\SchoolService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,14 +21,7 @@ class ProfileController extends Controller
 
     public function index(Request $request): Response|ResponseFactory
     {
-        $schools = cache()->remember('schools', now()->addHour(24), static function(){
-            return School::query()
-            ->latest('created_at')
-            ->orderBy('name')
-            ->selectRaw("CONCAT(name, ' (', short_name, ')') AS label, id AS value")
-            ->limit(50)
-            ->get();
-        });
+        $schools = SchoolService::getSchools();
 
         $user = auth()->user();
         $current_school = $user?->school_id;
@@ -45,16 +39,11 @@ class ProfileController extends Controller
             if ($request->teacher_id && $request->teacher_id !== $current_teacher) {
                 $current_teacher = null;
             }
-            $teachers = User::where('school_id', $teacher_school_id)
-                ->role('teacher')
-                ->orderBy('first_name')
-                ->selectRaw("CONCAT(first_name, ' ', last_name) AS label, id AS value")
-                ->pluck('label', 'value')
-                ->take(50);
+            $teachers = SchoolService::getTeachers($teacher_school_id);
         }
 
         return inertia('Profile', [
-            'User' => fn() => $user,
+            'User' => static fn() => $user,
             'Schools' => fn() => $schools,
             'Teachers' => fn() => $teachers,
             'current_school' => $current_school,
