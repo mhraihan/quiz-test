@@ -65,6 +65,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'birthday' => 'date:Y-m-d',
         'active' => 'boolean',
+        'school_id' => "integer"
     ];
 
     public function name(): string
@@ -167,7 +168,7 @@ class User extends Authenticatable
     {
         $cacheKey = 'isTeacherStudent:' . $this->id;
 
-        return cache()->remember($cacheKey,  config('quiz.cache'), function () {
+        return cache()->remember($cacheKey, config('quiz.cache'), function () {
             return $this->teachers()->exists();
         });
     }
@@ -176,7 +177,7 @@ class User extends Authenticatable
     {
         $cacheKey = 'belongsToTeacher:' . $this->id . ':' . $teacherId;
 
-        return cache()->remember($cacheKey,  config('quiz.cache'), function () use ($teacherId) {
+        return cache()->remember($cacheKey, config('quiz.cache'), function () use ($teacherId) {
             return $this->teachers()->where('teacher_id', $teacherId)->exists();
         });
     }

@@ -30,7 +30,6 @@ const handleRequest = (data, url, method, successCallback, errorCallback) => {
         onSuccess: (response) => {
             successCallback(response);
             showNotification(response?.props?.flash);
-            // console.log(response)
         },
         onError: (errorResponse) => {
             // console.log(errorResponse)

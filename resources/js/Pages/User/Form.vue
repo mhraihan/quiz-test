@@ -6,7 +6,6 @@ import BaseDivider from "@/Components/BaseDivider.vue";
 import Grid from "@/Components/Grid.vue";
 import FormField from "@/Components/FormField.vue";
 import FormControl from "@/Components/FormControl.vue";
-// import FormFilePicker from "@/Components/FormFilePicker.vue";
 import BaseButton from "@/Components/BaseButton.vue";
 import BaseButtons from "@/Components/BaseButtons.vue";
 
@@ -14,28 +13,102 @@ import ValidationError from "@/Components/ValidationError.vue";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import TrashedMessage from '@/Components/TrashedMessage.vue'
 import CardBoxModal from "@/Components/CardBoxModal.vue";
-import {ref} from "vue";
-import {mdiAccount, mdiTimetable , mdiEmail, mdiFormTextboxPassword, mdiPhone, mdiCity, mdiStateMachine, mdiPost, mdiGenderMaleFemale, mdiHomeMapMarker} from "@mdi/js";
+import {computed, ref} from "vue";
+import {
+    mdiAccount,
+    mdiTimetable,
+    mdiEmail,
+    mdiFormTextboxPassword,
+    mdiPhone,
+    mdiCity,
+    mdiStateMachine,
+    mdiPost,
+    mdiGenderMaleFemale,
+    mdiHomeMapMarker, mdiAccountEdit
+} from "@mdi/js";
 import countries from "@/Components/Country/countries.json";
+import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
+import {Inertia} from "@inertiajs/inertia";
+import {UserEnum} from "@/config";
 
 const props = defineProps({
     Role: String,
     User: Object,
+    Schools: {
+        type: Object,
+        default: []
+    },
+    Teachers: {
+        type: Object,
+        default: []
+    },
+    current_school: {
+        type: Number,
+        default: null
+    },
+    current_teacher: {
+        type: Number,
+        default: null
+    },
+    how_many_students: {
+        type: Number,
+        default: 0
+    },
     buttonText: {
         type: String,
         default: "Create Student",
+    },
+    method: {
+        type: String,
+        default: "create"
     }
 });
 const gender = [
     {
-        "label" : "Male",
+        "label": "Male",
         "value": "male"
-    }  ,
+    },
     {
-        "label" : "Female",
+        "label": "Female",
         "value": "female"
     }
 ];
+
+const disabled = computed(() => props.how_many_students > 0);
+
+const handleLink = computed(() => {
+    if (props.Role === UserEnum.STUDENT && props.method === 'create') {
+        return route('admin.students.create')
+    }
+
+    if (props.Role === UserEnum.STUDENT && props.method === 'update') {
+        return route('admin.students.edit', props.User.id)
+    }
+});
+const handleSchoolChange = (school_id) => {
+    const href = window.location.href;
+    Inertia.visit(handleLink.value, {
+        method: 'get',
+        data: {
+            school_id: school_id,
+            teacher_id: props.current_teacher
+        },
+        replace: false,
+        preserveState: true,
+        preserveScroll: true,
+        only: ['Teachers'],
+        onSuccess: () => {
+            props.User.school_id =  parseInt(school_id,10);
+            props.User.teacher_id = null;
+        },
+        onError: () => {
+        },
+        onFinish: () => {
+            history.pushState(null, null, href);
+        },
+    })
+
+}
 const emit = defineEmits(["destroy", "restore",]);
 const isModalDangerActive = ref(false);
 const destroyModal = () => {
@@ -56,7 +129,9 @@ const destroyModal = () => {
         >
             <p>Are you sure you want to Delete the {{ props.Role }}?</p>
         </CardBoxModal>
-        <trashed-message v-if="User.deleted_at" @restore="$emit('restore')" class="mb-6" :restore="`Are you sure you want to restore this ${props.Role}?`"> This {{ props.Role }} has been
+        <trashed-message v-if="User.deleted_at" @restore="$emit('restore')" class="mb-6"
+                         :restore="`Are you sure you want to restore this ${props.Role}?`"> This {{ props.Role }} has
+            been
             deleted.
         </trashed-message>
         <ValidationError/>
@@ -278,6 +353,50 @@ const destroyModal = () => {
                 autocomplete="address"
             />
         </FormField>
+        <BaseDivider/>
+        <div id="update-school" class="grid grid-cols-1 mt-6">
+
+            <SectionTitleLineWithButton
+                :icon="mdiAccountEdit"
+                title="School Area"
+
+            />
+            <FormField
+                label="Choose a School"
+                help="Required. Please select the School"
+                :error="User.errors.school_id"
+
+            >
+                <Multiselect
+                    :disabled="disabled"
+                    @change="handleSchoolChange"
+                    :uppercase="'capitalize'"
+                    v-model="User.school_id"
+                    name="school"
+                    type="select"
+                    placeholder="Choose a school"
+                    :options="props.Schools"
+                />
+            </FormField>
+
+            <FormField
+                label="Choose a Teacher"
+                help="Required. Please select the Teacher"
+                :error="User.errors.teacher_id"
+
+            >
+                <Multiselect
+                    :key="User.teacher_id"
+                    :uppercase="'capitalize'"
+                    v-model="User.teacher_id"
+                    name="teacher"
+                    type="select"
+                    placeholder="Choose a teacher"
+                    :options="props.Teachers"
+                />
+            </FormField>
+
+        </div>
         <BaseDivider/>
         <template #footer>
             <div class="flex">

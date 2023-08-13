@@ -81,9 +81,9 @@ Route::group(['middleware' => ['auth', 'verified', 'is_admin']], static function
          */
         Route::put('users/{user}/restore', [UserController::class, 'restore'])
             ->name('users.restore')->withTrashed();
-        route::resource("users", UserController::class)->withTrashed(['index', 'show', 'edit', 'destroy']);
+        Route::resource("users", UserController::class)->withTrashed(['index', 'show', 'edit', 'destroy']);
 
-        route::resource("students", StudentController::class)->parameters([
+        Route::resource("students", StudentController::class)->parameters([
             'students' => 'user'
         ])->only(['index', 'create', 'show', 'edit'])->withTrashed(['index', 'show', 'edit']);
         Route::resource('teachers', TeacherController::class)->parameters([

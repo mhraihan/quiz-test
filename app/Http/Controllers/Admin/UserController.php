@@ -34,24 +34,26 @@ class UserController extends Controller
     public function store(StoreUserRequest $request): RedirectResponse
     {
         $property = UserEnum::from($request->roles)->getUserProperty();
-        User::create($request->safe()->all());
+        $user = User::create($request->safe()->all());
+        $user?->teachers()->sync($request->input('teacher_id'));
         return redirect()->route($property['url'])->with('success', $property['store']);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         //
     }
+
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -63,6 +65,7 @@ class UserController extends Controller
     {
         $property = UserEnum::from($request->roles)->getUserProperty();
         $user->update($request->safe()->all());
+        $user?->teachers()->sync($request->input('teacher_id'));
         return redirect()->back()->withSuccess($property['update']);
     }
 
@@ -71,8 +74,8 @@ class UserController extends Controller
     {
         $property = UserEnum::from($user->roles()->pluck('name')->first())->getUserProperty();
         if ($user->deleted_at) {
-             $user->forceDelete();
-            return redirect()->route($property['url'],request('query'))->with('success', $property['delete']);
+            $user->forceDelete();
+            return redirect()->route($property['url'], request('query'))->with('success', $property['delete']);
         }
         $user->delete();
         return redirect()->back()->with('success', $property['trash']);
