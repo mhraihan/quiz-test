@@ -22,9 +22,9 @@ const itemHref = computed(() =>
 
 // Add activeInactiveStyle
 const activeInactiveStyle = computed(() =>
-  props.item.route && route().current(props.item.route)
-    ? styleStore.asideMenuItemActiveStyle
-    : ""
+    props.item.route && route().current(props.item.route)
+        ? styleStore.asideMenuItemActiveStyle
+        : ""
 );
 
 const emit = defineEmits(["menu-click"]);
@@ -39,7 +39,7 @@ const asideMenuItemActiveStyle = computed(() =>
 
 const isDropdownActive = ref(false);
 
-const componentClass = computed(() => [props.item.route && route().current(props.item.route) ? 'pointer-events-none': '',
+const componentClass = computed(() => [props.item.route && route().current(props.item.route) ? 'pointer-events-auto': '',
   props.isDropdownList ? "py-3 px-6 text-sm" : "py-3",
   hasColor.value
     ? getButtonColor(props.item.color, false, true)
