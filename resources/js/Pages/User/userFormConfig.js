@@ -1,5 +1,5 @@
-import { UserEnum } from "@/config";
-import { isRequired, isIn, isMin, isEmail, isSame } from "intus/rules";
+import {UserEnum} from "@/config";
+import {isRequired, isIn, isMin, isEmail, isSame} from "intus/rules";
 
 export function generateUserFormConfig(props) {
     const commonFields = {
@@ -40,23 +40,23 @@ export function generateRouterConfigByRole(role) {
         return {
             title: 'Create New Teachers',
             route: 'admin.teachers.index',
-            create:'admin.teachers.create'
+            create: 'admin.teachers.create',
+            show: 'admin.teachers.show',
+            edit: 'admin.teachers.edit'
+
         };
     }
 
     return {
         title: 'Create New Student',
         route: 'admin.students.index',
-        create: 'admin.students.create'
+        create: 'admin.students.create',
+        show: 'admin.students.show',
+        edit: 'admin.students.edit'
+
     };
 }
 
 export function getUrlByRole(role) {
-    if (role.toLowerCase() === UserEnum.ADMIN) {
-        return 'admin.users.index';
-    } else if (role.toLowerCase() === UserEnum.TEACHER) {
-        return 'admin.teachers.index';
-    } else {
-        return 'admin.students.index';
-    }
+    return generateRouterConfigByRole(role)?.route;
 }

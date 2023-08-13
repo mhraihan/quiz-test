@@ -7,14 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\UserResource;
 use App\Models\User;
 use App\Services\SchoolService;
-use App\Traits\ResultTraits;
 use Illuminate\Http\Request;
 use Inertia\Response;
 use Inertia\ResponseFactory;
 
 class TeacherController extends Controller
 {
-     use ResultTraits;
 
     public function index(): Response|ResponseFactory
     {
@@ -43,6 +41,7 @@ class TeacherController extends Controller
 
     public function show(User $user): Response|ResponseFactory
     {
+        ray($user);
 //        if (!($user->roles()->pluck('name')->first() === UserEnum::TEACHER->value)) {
 //            abort(403, "User must be a Teachers");
 //        }

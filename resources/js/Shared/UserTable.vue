@@ -11,6 +11,7 @@ import {Link, useForm} from '@inertiajs/inertia-vue3'
 
 import {useMainStore} from "@/Stores/main";
 import {isAdmin, isTeacher, UserEnum} from "@/config";
+import {generateRouterConfigByRole} from "@/Pages/User/userFormConfig";
 
 const props = defineProps({
     Users: Object,
@@ -25,17 +26,9 @@ const props = defineProps({
 });
 const emit = defineEmits(['sort']);
 const id = ref(null);
-const url = computed(() => {
-    if (props.Role === 'User') return 'admin.users.edit';
-    if (props.Role === 'Teacher') return 'admin.teachers.edit';
-    if(isTeacher()) return 'teacher.student.profile';
-    return 'admin.students.edit';
-});
-const view = computed(() => {
-    if (props.Role === 'User') return 'admin.users.show';
-    if (props.Role === 'Teacher') return 'teacher.student.profile';
-     if(isTeacher()) return 'teacher.student.profile';
-    return 'admin.students.show';
+
+const routerConfig = computed(() => {
+    return generateRouterConfigByRole(props.Role);
 });
 const links = computed(() => props.Users.meta.links);
 const isModalDangerActive = ref(false);
@@ -58,7 +51,6 @@ const filter = (name) => {
     console.log(props.Query, name)
     emit('sort', name);
 }
-console.log(props.Query,props.Query.direction === "ASC" ? 'asc' : 'desc');
 
 </script>
 
@@ -112,7 +104,7 @@ console.log(props.Query,props.Query.direction === "ASC" ? 'asc' : 'desc');
             </td>
 
             <td data-label="Avatar">
-                <Link :href="route(url,user.id)"
+                <Link :href="route(routerConfig.edit,user.id)"
                       :data="{ prev_pages: props.Users.meta.current_page,...props.Query}" preserve-state>
                     <userAvatar :username="user.name" api="initials" class="w-12"/>
                 </Link>
@@ -141,7 +133,7 @@ console.log(props.Query,props.Query.direction === "ASC" ? 'asc' : 'desc');
                         small
                         :data="{ prev_pages: props.Users.meta.current_page,...props.Query}"
                         :routeParams="user.id"
-                        :routeName="view"
+                        :routeName="routerConfig.show"
                         title="View Profile"
                     />
                     <BaseButton
@@ -151,7 +143,7 @@ console.log(props.Query,props.Query.direction === "ASC" ? 'asc' : 'desc');
                         small
                         :data="{ prev_pages: props.Users.meta.current_page,...props.Query}"
                         :routeParams="user.id"
-                        :routeName="url"
+                        :routeName="routerConfig.edit"
                         title="Edit Profile"
                     />
                     <BaseButton
