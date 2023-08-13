@@ -2,84 +2,72 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\UserResource;
+use App\Models\User;
+use App\Services\SchoolService;
+use App\Traits\ResultTraits;
 use Illuminate\Http\Request;
+use Inertia\Response;
+use Inertia\ResponseFactory;
 
 class TeacherController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+     use ResultTraits;
+
+    public function index(): Response|ResponseFactory
     {
-        //
+        return inertia('User/Index', [
+            'Users' => UserResource::collection(
+                User::query()
+                    ->select('id', 'first_name', 'last_name', 'email', 'deleted_at')
+                    ->filter(request()->only('search', 'trashed', 'column', 'direction'))
+                    ->role(UserEnum::TEACHER->value)
+                    ->paginate()
+                    ->withQueryString())
+            ,
+            'title' => 'All Teacher',
+            'filters' => request()->all('search', 'trashed', 'column', 'direction'),
+            'Role' => ucfirst(UserEnum::TEACHER->value),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function create(): Response|ResponseFactory
     {
-        //
+        return inertia('User/Create', [
+            'Role' => UserEnum::TEACHER->value,
+            'Schools' => fn() => SchoolService::getSchools(),
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function show(User $user): Response|ResponseFactory
     {
-        //
+//        if (!($user->roles()->pluck('name')->first() === UserEnum::TEACHER->value)) {
+//            abort(403, "User must be a Teachers");
+//        }
+        return inertia('User/Teacher', [
+            'data' =>  SchoolService::getTeacherStudents($user->id),
+            'Role' => UserEnum::TEACHER->value,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function edit(Request $request, User $user): Response|ResponseFactory
     {
-        //
-    }
+        if (!($user->roles()->pluck('name')->first() === UserEnum::TEACHER->value)) {
+            abort(403, "User must be a Teachers");
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+        $current_school = $request?->school_id ?? $user?->school_id;
+        $how_many_students = $user?->students()->count();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return inertia('User/Edit', [
+            'Role' => UserEnum::TEACHER->value,
+            'User' => $user,
+            'Schools' => fn() => SchoolService::getSchools(),
+            'current_school' => (int)$current_school,
+             'how_many_students' => $how_many_students
+        ]);
     }
 }

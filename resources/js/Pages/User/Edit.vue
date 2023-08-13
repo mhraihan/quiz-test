@@ -7,10 +7,10 @@ import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 import {Head} from "@inertiajs/inertia-vue3";
 import useValidatedForm from "@/useValidatorForm";
-import {isRequired, isIn, isMin, isEmail, isSame} from "intus/rules";
 import Form from "./Form.vue";
 import {computed} from "vue";
 import {useMainStore} from "@/Stores/main.js";
+import {generateUserFormConfig, getUrlByRole} from "@/Pages/User/userFormConfig";
 import {UserEnum} from "@/config";
 
 const props = defineProps({
@@ -40,34 +40,12 @@ const props = defineProps({
 const hasTable = true;
 
 const User = useValidatedForm({
-        id: [props.User.id],
-        first_name: [props.User.first_name || null, [isRequired()]],
-        last_name: [props.User.last_name || null, [isRequired()]],
-        email: [props.User.email || null, [isRequired(), isEmail()]],
-        password: [null, [isMin(8)]],
-        password_confirmation: [null, [isSame('password')]],
-        photo_path: [null],
-        active: [true],
-        state: [props.User.state || null, [isRequired()]],
-        birthday: [new Date(props.User.birthday).toISOString().slice(0, 10) || null, [isRequired()]],
-        city: [props.User.city || null, [isRequired()]],
-        phone: [props.User.phone || null, [isRequired()]],
-        country: [props.User.country || "HK", [isRequired()]],
-        address: [props.User.address || null, [isRequired()]],
-        postcode: [props.User.postcode || null, [isRequired()]],
-        gender: [props.User.gender || "male", [isRequired(), isIn("male", "female")]],
-        deleted_at: [props.User.deleted_at || null],
-        roles: [props.Role.toLowerCase()],
-        ...(props.Role === UserEnum.STUDENT && {
-            school_id: [props.current_school ?? null, [isRequired()]],
-            teacher_id: [props.current_teacher ?? null, [isRequired()]],
-        }),
-        _method: ["put"],
-    });
+    id: [props.User.id],
+    ...generateUserFormConfig(props),
+    _method: ["put"],
+});
 const url = computed(() => {
-    if (props.Role === 'User') return 'admin.users.index';
-    if (props.Role === 'Teacher') return 'admin.teachers.index';
-    return 'admin.students.index';
+    return getUrlByRole(props.Role); // Use the utility function
 });
 const updateUser = () => {
     if (!User.password && !User.password_confirmation) {
@@ -88,7 +66,7 @@ const restoreUser = () => {
     <Head title="Create new Question"/>
     <LayoutAuthenticated>
         <SectionMain>
-            <Breadcrumbs :href="route(url)" :title="props.Role" :location="`Update ${props.Role}`"/>
+            <Breadcrumbs class="capitalize" :href="route(url)" :title="props.Role" :location="`Update ${props.Role}`"/>
             <SectionTitleLineWithButton
                 :icon="mdiPencilPlus"
                 :title="`Update ${props.Role}`"
@@ -104,6 +82,7 @@ const restoreUser = () => {
                     <Form :User="User" :Schools="props.Schools" :Teachers="props.Teachers"
                           :current_school="props.current_school"
                           :current_teacher="props.current_teacher" :Role="props.Role"
+                          :how_many_students="props.how_many_students"
                           @destroy="destroyUser"
                           @restore="restoreUser"
                           :buttonText="`Update ${props.Role}`"

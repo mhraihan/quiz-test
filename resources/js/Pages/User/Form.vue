@@ -75,39 +75,43 @@ const gender = [
 ];
 
 const disabled = computed(() => props.how_many_students > 0);
-
+const currentUrl = computed(() => {
+    if (props.Role === 'User') return 'admin.users.edit';
+    if (props.Role.toLowerCase() === UserEnum.TEACHER) return 'admin.teachers.edit';
+    return 'admin.students.edit';
+});
 const handleLink = computed(() => {
     if (props.Role === UserEnum.STUDENT && props.method === 'create') {
         return route('admin.students.create')
     }
-
     if (props.Role === UserEnum.STUDENT && props.method === 'update') {
         return route('admin.students.edit', props.User.id)
     }
 });
 const handleSchoolChange = (school_id) => {
-    const href = window.location.href;
-    Inertia.visit(handleLink.value, {
-        method: 'get',
-        data: {
-            school_id: school_id,
-            teacher_id: props.current_teacher
-        },
-        replace: false,
-        preserveState: true,
-        preserveScroll: true,
-        only: ['Teachers'],
-        onSuccess: () => {
-            props.User.school_id =  parseInt(school_id,10);
-            props.User.teacher_id = null;
-        },
-        onError: () => {
-        },
-        onFinish: () => {
-            history.pushState(null, null, href);
-        },
-    })
-
+    if (props.Role.toLowerCase() === UserEnum.STUDENT) {
+        const href = window.location.href;
+        Inertia.visit(handleLink.value, {
+            method: 'get',
+            data: {
+                school_id: school_id,
+                teacher_id: props.current_teacher
+            },
+            replace: false,
+            preserveState: true,
+            preserveScroll: true,
+            only: ['Teachers'],
+            onSuccess: () => {
+                props.User.school_id = parseInt(school_id, 10);
+                props.User.teacher_id = null;
+            },
+            onError: () => {
+            },
+            onFinish: () => {
+                history.pushState(null, null, href);
+            },
+        })
+    }
 }
 const emit = defineEmits(["destroy", "restore",]);
 const isModalDangerActive = ref(false);
@@ -354,7 +358,8 @@ const destroyModal = () => {
             />
         </FormField>
         <BaseDivider/>
-        <div id="update-school" class="grid grid-cols-1 mt-6">
+        <div v-if="props.Role.toLowerCase() === UserEnum.STUDENT || props.Role.toLowerCase() === UserEnum.TEACHER"
+             id="update-school" class="grid grid-cols-1 mt-6">
 
             <SectionTitleLineWithButton
                 :icon="mdiAccountEdit"
@@ -378,8 +383,11 @@ const destroyModal = () => {
                     :options="props.Schools"
                 />
             </FormField>
-
+            <div class="mt-2 text-sm text-red-500" v-if="props.how_many_students">
+                You have {{ props.how_many_students }} students. That why you cannot update the school.
+            </div>
             <FormField
+                v-if="props.Role.toLowerCase() === UserEnum.STUDENT"
                 label="Choose a Teacher"
                 help="Required. Please select the Teacher"
                 :error="User.errors.teacher_id"
@@ -405,12 +413,13 @@ const destroyModal = () => {
                         color="info"
                         type="submit"
                         :label="buttonText"
+                        class="capitalize"
                         :class="{ 'opacity-25': User.processing }"
                         :disabled="User.processing"
                     />
                 </BaseButtons>
 
-                <BaseButtons v-if="route().current('admin.students.edit')">
+                <BaseButtons v-if="route().current(currentUrl)">
                     <BaseButton
                         @click="isModalDangerActive = true;"
                         color="danger"

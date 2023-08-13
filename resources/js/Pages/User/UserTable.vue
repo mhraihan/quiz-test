@@ -135,7 +135,7 @@ console.log(props.Query,props.Query.direction === "ASC" ? 'asc' : 'desc');
             <td class="before:hidden lg:w-1 whitespace-nowrap">
                 <BaseButtons type="justify-start lg:justify-end" no-wrap>
                     <BaseButton
-                        v-if="props.Role.toLowerCase() === UserEnum.STUDENT"
+                        v-if="props.Role.toLowerCase() === UserEnum.STUDENT || props.Role.toLowerCase() === UserEnum.TEACHER"
                         color="info"
                         :icon="mdiEye"
                         small

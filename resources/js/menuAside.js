@@ -72,6 +72,23 @@ export default [
             },
         ],
     },
+        {
+        label: "Teachers",
+        icon: mdiViewList,
+        roles: userAdmin(),
+        menu: [
+            {
+                route: "admin.teachers.index",
+                icon: mdiTable,
+                label: "All Teachers",
+            },
+            {
+                route: "admin.teachers.create",
+                icon: mdiTable,
+                label: "Create Teachers",
+            },
+        ],
+    },
     {
         label: "Students",
         icon: mdiViewList,
@@ -87,11 +104,6 @@ export default [
                 icon: mdiTable,
                 label: "Create Student",
             },
-            // {
-            //     route: "admin.students.trash",
-            //     icon: mdiTrashCan,
-            //     label: "Trash",
-            // },
         ],
     },
     {

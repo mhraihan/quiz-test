@@ -17,6 +17,7 @@ import {Inertia} from "@inertiajs/inertia";
 import {debounce, pickBy} from "lodash";
 import UserTable from "@/Pages/User/UserTable.vue";
 import {isAdmin, isTeacher} from "@/config";
+import {generateRouterConfigByRole, getUrlByRole} from "@/Pages/User/userFormConfig";
 
 const props = defineProps({
     Users: Object,
@@ -42,10 +43,10 @@ const options = computed(() => [
     }
 ]);
 const url = computed(() => {
-    if (props.Role === 'User') return 'admin.users.index';
-    if (props.Role === 'Teacher') return 'admin.teachers.index';
-    if(isTeacher()) return 'teacher.student';
-    return 'admin.students.index';
+    return getUrlByRole(props.Role); // Use the utility function
+});
+const routerConfig = computed(() => {
+    return generateRouterConfigByRole(props.Role); // Use the utility function
 });
 
 const search = ref(props.filters?.search);
@@ -113,8 +114,9 @@ const reset = () => {
                         </button>
                     </div>
                 </div>
-                <BaseButton v-if="isAdmin() && route().current('admin.students.index')" color="info" label="Create a new Student"
-                            routeName="admin.students.create"/>
+                <BaseButton v-if="isAdmin() && route().current(routerConfig.route)" color="info" :label="routerConfig.title"
+                            :routeName="routerConfig.create"/>
+
             </div>
             <CardBox v-if="props.Users?.data?.length > 0" class="mb-6" has-table>
                 <UserTable :Users="props.Users" :Role="props.Role" @sort="sort"

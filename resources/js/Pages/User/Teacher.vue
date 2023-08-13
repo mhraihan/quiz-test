@@ -10,9 +10,7 @@ import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 import CardBoxComponentEmpty from "@/Components/CardBoxComponentEmpty.vue";
 import Placeholder from "@/Components/Placeholder.vue";
-import {Inertia} from "@inertiajs/inertia";
 import UserTable from "@/Pages/User/UserTable.vue";
-
 const props = defineProps({
     data: {
         type: Object,
@@ -24,12 +22,6 @@ const props = defineProps({
 });
 
 
-// mounted() in VueJS / useEffect() in React
-onMounted(() => {
-    Inertia.reload({
-        only: ['data']
-    });
-});
 
 
 </script>
