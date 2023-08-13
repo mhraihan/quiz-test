@@ -11,13 +11,14 @@ class UserObserver
 
     public function creating(User $user): void
     {
-        if (request()->has('password')) {
-            $user->password = Hash::make(request()->password);
-        }
-
         if ($user->roles->isEmpty() || !request()->has('roles')) {
             $user->assignRole(request()->roles ?? UserEnum::STUDENT->value);
         }
     }
-
+    public function saving(User $user): void
+    {
+        if (request()->has('password')) {
+            $user->password = Hash::make(request()->password);
+        }
+    }
 }
