@@ -23,12 +23,13 @@ class StudentController extends Controller
                 User::query()
                     ->select('id', 'first_name', 'last_name', 'email', 'deleted_at')
                     ->filter(request()->only('search', 'trashed', 'column', 'direction'))
-                    ->role('student')
+                    ->role(UserEnum::STUDENT->value)
                     ->paginate()
                     ->withQueryString())
             ,
             'title' => 'All Student',
             'filters' => request()->all('search', 'trashed', 'column', 'direction'),
+            'Role' => ucfirst(UserEnum::STUDENT->value),
         ]);
     }
 

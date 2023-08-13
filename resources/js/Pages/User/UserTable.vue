@@ -10,7 +10,7 @@ import BaseIcon from "@/Components/BaseIcon.vue";
 import {Link, useForm} from '@inertiajs/inertia-vue3'
 
 import {useMainStore} from "@/Stores/main";
-import {isAdmin, isTeacher} from "@/config";
+import {isAdmin, isTeacher, UserEnum} from "@/config";
 
 const props = defineProps({
     Users: Object,
@@ -135,6 +135,7 @@ console.log(props.Query,props.Query.direction === "ASC" ? 'asc' : 'desc');
             <td class="before:hidden lg:w-1 whitespace-nowrap">
                 <BaseButtons type="justify-start lg:justify-end" no-wrap>
                     <BaseButton
+                        v-if="props.Role.toLowerCase() === UserEnum.STUDENT"
                         color="info"
                         :icon="mdiEye"
                         small
