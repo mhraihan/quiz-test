@@ -3,7 +3,7 @@ import Breadcrumbs from "@/Components/Breadcrumbs.vue";
 import SectionMain from "@/Components/SectionMain.vue";
 import CardBox from "@/Components/CardBox.vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
-import {Head, useForm, usePage} from "@inertiajs/inertia-vue3";
+import {Head, useForm} from "@inertiajs/inertia-vue3";
 import Overview from "@/Pages/Result/Overview.vue";
 import CardBoxComponentEmpty from "@/Components/CardBoxComponentEmpty.vue";
 import ResultTable from "@/Pages/Result/ResultTable.vue";

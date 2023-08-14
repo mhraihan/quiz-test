@@ -34,11 +34,11 @@ class TeacherController extends Controller
 
     public function show(User $user): Response|ResponseFactory
     {
-        ray($user);
-//        if (!($user->roles()->pluck('name')->first() === UserEnum::TEACHER->value)) {
-//            abort(403, "User must be a Teachers");
-//        }
+        if (!($user->roles()->pluck('name')->first() === UserEnum::TEACHER->value)) {
+            abort(403, "User must be a Teachers");
+        }
         return inertia('User/Teacher', [
+            'User' => $user,
             'data' =>  SchoolService::getTeacherStudents($user->id),
             'Role' => UserEnum::TEACHER->value,
         ]);
