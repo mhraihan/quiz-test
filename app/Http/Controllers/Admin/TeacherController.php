@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\UserEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\UserResource;
 use App\Models\User;
 use App\Services\SchoolService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Inertia\Response;
 use Inertia\ResponseFactory;
@@ -17,14 +17,7 @@ class TeacherController extends Controller
     public function index(): Response|ResponseFactory
     {
         return inertia('User/Index', [
-            'Users' => UserResource::collection(
-                User::query()
-                    ->select('id', 'first_name', 'last_name', 'email', 'deleted_at')
-                    ->filter(request()->only('search', 'trashed', 'column', 'direction'))
-                    ->role(UserEnum::TEACHER->value)
-                    ->paginate()
-                    ->withQueryString())
-            ,
+            'Users' => UserService::getUsersByRole(UserEnum::TEACHER),
             'title' => 'All Teacher',
             'filters' => request()->all('search', 'trashed', 'column', 'direction'),
             'Role' => ucfirst(UserEnum::TEACHER->value),
