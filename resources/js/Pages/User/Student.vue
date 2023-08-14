@@ -48,7 +48,7 @@ const url = computed(() => {
 </script>
 
 <template>
-    <Head title="Create new Question"/>
+    <Head title="Student Profile's"/>
     <LayoutAuthenticated>
         <CardBoxModal
             v-if="isAdmin()"
