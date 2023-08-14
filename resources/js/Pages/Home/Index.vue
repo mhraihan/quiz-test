@@ -105,7 +105,6 @@ onMounted(() => {
                     <TitleWithButton
                         class="px-3"
                         :icon="mdiAccountMultiple"
-                        label="View All"
                         routeName="admin.students.index"
                         title="Recent Super Admin"
                     ></TitleWithButton>
@@ -115,14 +114,13 @@ onMounted(() => {
                     v-else
                     text="Sorry, No Super Admin found"
                     routeName="admin.students.create"
-                    label="Create new Super Admin"
                 />
                 <CardBox v-if="props?.data?.admin.data?.length" class="mb-6" has-table>
                     <TitleWithButton
                         class="px-3"
                         :icon="mdiAccountMultiple"
                         label="View All"
-                        routeName="admin.students.index"
+                        routeName="admin.users.index"
                         title="Recent Admin"
                     ></TitleWithButton>
                     <Table :Users="props?.data?.admin"/>
