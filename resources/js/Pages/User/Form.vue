@@ -357,9 +357,9 @@ const destroyModal = () => {
                 autocomplete="address"
             />
         </FormField>
-        <BaseDivider/>
         <div v-if="props.Role.toLowerCase() === UserEnum.STUDENT || props.Role.toLowerCase() === UserEnum.TEACHER"
              id="update-school" class="grid grid-cols-1 mt-6">
+            <BaseDivider/>
 
             <SectionTitleLineWithButton
                 :icon="mdiAccountEdit"

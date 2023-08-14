@@ -72,7 +72,24 @@ export default [
             },
         ],
     },
-        {
+    {
+        label: "Admin",
+        icon: mdiViewList,
+        roles: userAdmin(),
+        menu: [
+            {
+                route: "admin.users.index",
+                icon: mdiTable,
+                label: "All Admins",
+            },
+            {
+                route: "admin.users.create",
+                icon: mdiTable,
+                label: "Create Admins",
+            },
+        ],
+    },
+    {
         label: "Teachers",
         icon: mdiViewList,
         roles: userAdmin(),

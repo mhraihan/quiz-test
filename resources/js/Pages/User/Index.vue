@@ -16,7 +16,7 @@ import {ref, watch, computed} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import {debounce, pickBy} from "lodash";
 import UserTable from "@/Shared/UserTable.vue";
-import {isAdmin, isTeacher} from "@/config";
+import {isAdmin} from "@/config";
 import {generateRouterConfigByRole, getUrlByRole} from "@/Pages/User/userFormConfig";
 
 const props = defineProps({

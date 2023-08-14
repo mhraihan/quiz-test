@@ -36,6 +36,16 @@ export function generateUserFormConfig(props) {
 
 
 export function generateRouterConfigByRole(role) {
+    if (UserEnum.ADMIN === role.toLowerCase()) {
+        return {
+            title: 'Create New Admins',
+            route: 'admin.users.index',
+            create: 'admin.users.create',
+            show: 'admin.users.show',
+            edit: 'admin.users.edit'
+
+        };
+    }
     if (UserEnum.TEACHER === role.toLowerCase()) {
         return {
             title: 'Create New Teachers',
@@ -46,7 +56,6 @@ export function generateRouterConfigByRole(role) {
 
         };
     }
-
     return {
         title: 'Create New Student',
         route: 'admin.students.index',

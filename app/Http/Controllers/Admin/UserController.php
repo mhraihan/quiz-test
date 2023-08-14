@@ -7,65 +7,59 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
+use Inertia\Response;
+use Inertia\ResponseFactory;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(): Response|ResponseFactory
     {
-        //
+        return inertia('User/Index', [
+            'Users' => UserService::getUsersByRole(UserEnum::ADMIN),
+            'title' => 'All Admin',
+            'filters' => request()->all('search', 'trashed', 'column', 'direction'),
+            'Role' => ucfirst(UserEnum::ADMIN->value),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function create(): Response|ResponseFactory
     {
-        //
+        return inertia('User/Create', [
+            'Role' => UserEnum::ADMIN->value,
+        ]);
     }
+
 
     public function store(StoreUserRequest $request): RedirectResponse
     {
         $property = UserEnum::from($request->roles)->getUserProperty();
         $user = User::create($request->safe()->all());
-        $user?->teachers()->sync($request->input('teacher_id'));
+        if ($request?->has("teacher_id")) {
+            $user?->teachers()->sync($request->input('teacher_id'));
+        }
         return redirect()->route($property['url'])->with('success', $property['store']);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function edit(User $user): Response|ResponseFactory
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        if (!($user->roles()->pluck('name')->first() === UserEnum::ADMIN->value)) {
+            abort(403, "User must be a Administrator");
+        }
+        return inertia('User/Edit', [
+            'Role' => UserEnum::ADMIN->value,
+            'User' => $user,
+        ]);
     }
 
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
         $property = UserEnum::from($request->roles)->getUserProperty();
         $user->update($request->safe()->all());
-        $user?->teachers()->sync($request->input('teacher_id'));
+        if ($request?->has("teacher_id")) {
+            $user?->teachers()->sync($request->input('teacher_id'));
+        }
         return redirect()->back()->withSuccess($property['update']);
     }
 
@@ -83,7 +77,6 @@ class UserController extends Controller
 
     public function restore(User $user): RedirectResponse
     {
-//        $this->authorize('update');
         $property = UserEnum::from($user->roles()->pluck('name')->first())->getUserProperty();
         $user->restore();
         return redirect()->back()->with('success', $property['restore']);
