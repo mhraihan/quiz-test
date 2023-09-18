@@ -50,7 +50,7 @@ const destroyModal = () => {
             deleted.
         </trashed-message>
         <ValidationError/>
-        <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div class="grid grid-cols-2 gap-4 lg:grid-cols-2">
             <FormField
                 label="How many Options?"
                 label-for="question_options"
@@ -66,6 +66,7 @@ const destroyModal = () => {
                     :value="questions.question_options"
                     :options="{
                             '2': 'Option 2',
+                            '3': 'Option 3',
                             '4': 'Option 4'
                         }"
                 />

@@ -28,6 +28,9 @@ class StoreQuestionRequest extends FormRequest
         if (request()->input('question_options') === '2'){
               $array_keys = 'required_array_keys:a,b';
         }
+          if (request()->input('question_options') === '3'){
+              $array_keys = 'required_array_keys:a,b,c';
+        }
 
         return [
             // Language 1

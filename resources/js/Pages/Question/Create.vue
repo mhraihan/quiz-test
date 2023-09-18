@@ -40,8 +40,6 @@ const removeImage = () => {
     questions.image = null;
 };
 const createQuestion = () => {
-    console.log(questions)
-
     questions.clearErrors();
     handleQuestionSubmit(
         questions,
@@ -60,7 +58,7 @@ const createQuestion = () => {
                     group: "notification",
                     type: "error",
                     title: "Error",
-                    text: 'Something went wrong'
+                    text: 'Question create failed!'
                 }, 4000); // 4s
             }
         }

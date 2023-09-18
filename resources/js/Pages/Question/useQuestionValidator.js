@@ -18,7 +18,7 @@ export const questionValidateForm = (formData) => {
         ...answerRules,
         category_id: [isRequired(), isBetween(1, 4)],
         image: [isImage()],
-        question_options: [isRequired(), isIn("2", "4")],
+        question_options: [isRequired(), isIn("2","3","4")],
     }, {
         'title.isRequired': 'Please, write the question name',
         'details.isRequired': 'Please, Describe about the question',
