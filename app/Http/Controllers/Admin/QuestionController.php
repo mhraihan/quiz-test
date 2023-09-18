@@ -55,7 +55,7 @@ class QuestionController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         } catch (\JsonException $e) {
-              return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -89,7 +89,7 @@ class QuestionController extends Controller
         if (is_null($request->image) && !is_null($question->image)) {
             $question->deleteFile($question->image);
         }
-        $question->update($request->validated());
+        $question->update($request->safe()->all());
         return redirect()->back()->with('success', 'Question updated.');
     }
 

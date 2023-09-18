@@ -25,11 +25,11 @@ class StoreQuestionRequest extends FormRequest
     public function rules()
     {
         $array_keys = 'required_array_keys:a,b,c,d';
-        if (request()->input('question_options') === '2'){
-              $array_keys = 'required_array_keys:a,b';
+        if (request()->input('question_options') === '2') {
+            $array_keys = 'required_array_keys:a,b';
         }
-          if (request()->input('question_options') === '3'){
-              $array_keys = 'required_array_keys:a,b,c';
+        if (request()->input('question_options') === '3') {
+            $array_keys = 'required_array_keys:a,b,c';
         }
 
         return [
@@ -59,7 +59,6 @@ class StoreQuestionRequest extends FormRequest
     {
         return [
             'title' => 'Please, write the question name',
-            'details' => 'Please, Describe about the question',
             'options.a' => "Option A can not be blank",
             'options.b' => "Option B can not be blank",
             'options.c' => "Option C can not be blank",
