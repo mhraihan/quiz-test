@@ -15,7 +15,7 @@ export const questionValidateForm = (formData) => {
             // details: [isRequired()],
             "options.*": [isRequired()],
             title_two: [isRequired()],
-            details_two: [isRequired()],
+            // details_two: [isRequired()],
             "options_two.*": [isRequired()],
             ...answerRules,
             category_id: [isRequired(), isBetween(1, 4)],
