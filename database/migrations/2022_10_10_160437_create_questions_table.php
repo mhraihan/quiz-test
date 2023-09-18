@@ -18,11 +18,11 @@ return new class extends Migration {
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->foreignId('topic_id')->index()->nullable()->constrained()->onDelete('set null');
             $table->text('title');
-            $table->longText('details');
+            $table->longText('details')->nullable();
             $table->binary('explain')->nullable();
             $table->longText('options');
             $table->text('title_two');
-            $table->longText('details_two');
+            $table->longText('details_two')->nullable();
             $table->binary('explain_two')->nullable();
             $table->longText('options_two');
             $table->string('image')->nullable();

@@ -35,14 +35,14 @@ class StoreQuestionRequest extends FormRequest
         return [
             // Language 1
             'title' => ['required', 'string'],
-            'details' => ['required', 'string'],
+            'details' => ['nullable', 'string'],
             'explain' => ['nullable', 'string'],
             'options' => ['required', 'array', $array_keys],
             'options.*' => ['required', 'string'],
 
             // Language 2
             'title_two' => ['required', 'string'],
-            'details_two' => ['required', 'string'],
+            'details_two' => ['nullable', 'string'],
             'explain_two' => ['nullable', 'string'],
             'options_two' => ['required', 'array', $array_keys],
             'options_two.*' => ['required', 'string'],
