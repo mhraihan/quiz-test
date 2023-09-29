@@ -1,5 +1,5 @@
 <script setup>
-defineProps({
+const props = defineProps({
     question: {
         type: Object,
         required: true
@@ -22,35 +22,53 @@ const quiz = (answer, correct_answer, key) => {
 <template>
     <div class="px-4 py-5 sm:px-6">
         <div class="text-lg leading-6 mb-4 font-medium text-gray-900">
-            <h3><span v-if="!!key" class="mr-2 font-extrabold"> {{ key + 1 }}</span> {{ question.title }}</h3>
-            <details class="block text-xs mt-2" v-if="question.details">
-                <summary class="p-1 hover:cursor-pointer" :id="'questions-details' + key">
+            <h3><span v-if="!!props.key" class="mr-2 font-extrabold"> {{ props.key + 1 }}</span> {{
+                    props.question.title
+                }}</h3>
+            <details class="block text-xs mt-2" v-if="props.question.details">
+                <summary class="p-1 hover:cursor-pointer" :id="'questions-details' + props.key">
                                <span class="underline text-blue-500 hover:text-blue-700 focus:outline-none text-xs "
                                      type="button">
                                    Question Details
                                </span>
                 </summary>
-                <div class="block p-2 bg-green-100 text-xs leading-5 my-3" v-html="question.details"></div>
+                <div class="block p-2 bg-green-100 text-xs leading-5 my-3 question-details"
+                     v-html="props.question.details"></div>
 
 
             </details>
-            <details class="block text-xs mt-2" v-if="question.explain">
-                <summary class="p-1 hover:cursor-pointer" :id="'questions-explain' + key">
+            <details class="block text-xs mt-2" v-if="props.question.explain">
+                <summary class="p-1 hover:cursor-pointer" :id="'questions-explain' + props.key">
                                <span class="underline text-blue-500 hover:text-blue-700 focus:outline-none text-xs "
                                      type="button">
                                    Explanation
                                </span>
                 </summary>
-                <div class="block p-2 bg-green-100 text-xs leading-5 my-3" v-html="question.explain"></div>
+                <div class="block p-2 bg-green-100 text-xs leading-5 my-3" v-html="props.question.explain"></div>
             </details>
         </div>
-        <div v-for="(option,key) in question.options"
-             :class="quiz(question.answer,question.correct_answer,key)"
+        <div v-for="(option,key) in props.question.options"
+             :class="quiz(props.question.answer,props.question.correct_answer,key)"
              class="mt-1 max-w-auto text-sm px-2 rounded-lg  bg-none ">
             <span class="mr-2 font-extrabold">{{ key }} </span> {{ option }}
-            <span v-if="key === question.correct_answer && route().current() === 'results.show'" class="p-1 font-extrabold">(Correct Answer)</span>
-            <span v-if="key === question.answer && route().current() === 'results.show'" class="p-1 font-extrabold">(Your Answer)</span>
+            <span v-if="key === props.question.correct_answer && route().current() === 'results.show'"
+                  class="p-1 font-extrabold">(Correct Answer)</span>
+            <span v-if="key === props.question.answer && route().current() === 'results.show'"
+                  class="p-1 font-extrabold">(Your Answer)</span>
         </div>
 
     </div>
 </template>
+<style lang="scss" scoped>
+.question-details {
+    ul, ol {
+        list-style: 'lower-latin';
+        margin-left: 10px;
+
+        li {
+            list-style: 'lower-latin';
+            margin-left: 10px;
+        }
+    }
+}
+</style>
