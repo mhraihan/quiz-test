@@ -1,5 +1,5 @@
 <script setup>
-
+import {Head} from "@inertiajs/inertia-vue3";
 import CardBox from "@/Components/CardBox.vue";
 import {computed} from "vue";
 import QuestionDetails from "@/Shared/Question/QuestionDetails.vue";

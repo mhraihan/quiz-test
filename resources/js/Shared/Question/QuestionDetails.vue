@@ -59,16 +59,13 @@ const quiz = (answer, correct_answer, key) => {
 
     </div>
 </template>
-<style lang="scss" scoped>
-.question-details {
-    ul, ol {
-        list-style: 'lower-latin';
-        margin-left: 10px;
-
-        li {
-            list-style: 'lower-latin';
-            margin-left: 10px;
-        }
-    }
+<style >
+.question-details ol {
+    list-style: decimal;
+    margin-left: 10px;
+}
+.question-details ul {
+    list-style: disc;
+    margin-left: 10px;
 }
 </style>

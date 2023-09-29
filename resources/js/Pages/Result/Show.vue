@@ -1,6 +1,6 @@
 <script setup>
 
-import {Head, usePage} from "@inertiajs/inertia-vue3";
+import {Head} from "@inertiajs/inertia-vue3";
 import {mdiArrowLeft,} from "@mdi/js";
 import CardBox from "@/Components/CardBox.vue";
 
