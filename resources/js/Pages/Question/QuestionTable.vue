@@ -1,6 +1,6 @@
 <script setup>
 import {computed, ref} from "vue";
-import {mdiEye, mdiTrashCan} from "@mdi/js";
+import {mdiEye, mdiPencil, mdiTrashCan} from "@mdi/js";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
 import BaseLevel from "@/Components/BaseLevel.vue";
 import BaseButtons from "@/Components/BaseButtons.vue";
@@ -77,6 +77,13 @@ const destroyQuestion = () => {
                     <BaseButton
                         color="info"
                         :icon="mdiEye"
+                        small
+                        routeName="admin.questions.show"
+                        :routeParams="question.id"
+                    />
+                        <BaseButton
+                        color="info"
+                         :icon="mdiPencil"
                         small
                         routeName="admin.questions.edit"
                         :routeParams="question.id"

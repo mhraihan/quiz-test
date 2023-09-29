@@ -48,7 +48,6 @@ class ResultController extends Controller
     public function show(Result $result, ResultService $resultService): Response
     {
         try {
-            ray($result);
             $this->authorize('view', $result);
             ['questions' => $questions] = $resultService->getDataFromQuestions($result->questions_answered,$result->language);
             return inertia('Result/Show', [

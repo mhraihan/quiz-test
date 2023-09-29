@@ -8,6 +8,7 @@ import FormCheckRadioGroup from "@/Components/FormCheckRadioGroup.vue";
 import FormField from "@/Components/FormField.vue";
 import {ref, reactive} from "vue";
 import {notify} from "notiwind"
+import QuestionImage from "@/Shared/Question/QuestionImage.vue";
 
 const emit = defineEmits(["submit", "backToQuiz"]);
 
@@ -92,17 +93,15 @@ const submit = (complete = true) => {
                                 <div class="p-1" :id="'questions-details' + key">
                                     <details class="block text-xs mt-2" v-if="question.details" open>
                                         <summary class="p-1 hover:cursor-pointer" :id="'questions-details' + key">
-                                           <span class="underline text-blue-500 hover:text-blue-700 focus:outline-none text-xs "
-                                                 type="button">
+                                           <span
+                                               class="underline text-blue-500 hover:text-blue-700 focus:outline-none text-xs "
+                                               type="button">
                                                Question Details
                                            </span>
                                         </summary>
                                         <div class="block p-3 bg-green-100 text-xs leading-6 my-3"
                                              v-html="question.details"></div>
-                                        <div v-if="question.image" class="py-3">
-                                            <img :src="question.image" loading="lazy" :alt="question.title">
-                                        </div>
-
+                                        <QuestionImage :image="question.image" :title="question.title"/>
                                     </details>
                                 </div>
                             </div>

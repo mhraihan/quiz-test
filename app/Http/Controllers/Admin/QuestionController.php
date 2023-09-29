@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Question;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Question\StoreQuestionRequest;
@@ -36,6 +37,9 @@ class QuestionController extends Controller
         ]);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function create(): Response|ResponseFactory
     {
         $this->authorize('create', Question::class);
@@ -50,8 +54,8 @@ class QuestionController extends Controller
     {
         try {
             $this->authorize('create', Question::class);
-            $request->user()->questions()->create($request->safe()->all());
-            return redirect()->route('admin.questions.index')->with('success', 'Question Created Successfully');
+            $question = $request->user()->questions()->create($request->safe()->all());
+            return redirect()->route('admin.questions.show', $question->id)->with('success', 'Question Created Successfully');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         } catch (\JsonException $e) {
@@ -60,9 +64,18 @@ class QuestionController extends Controller
     }
 
 
-    public function show(): void
+    /**
+     * @throws AuthorizationException
+     */
+    public function show(Question $question): ResponseFactory|Response
     {
-        abort(404);
+        $this->authorize('view', Question::class);
+        return inertia('Question/Show', [
+            'Categories' => $this->categoriesCache(),
+            'Topics' => $this->topicsCache(),
+            'Question' => $question,
+            'image' => $question->image ? $question->imageUrl() : null,
+        ]);
     }
 
     public function edit(Question $question): Response|ResponseFactory|RedirectResponse

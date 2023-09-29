@@ -1,6 +1,7 @@
 <?php
 // ResultService.php
 namespace App\Services;
+
 use App\Models\Question;
 
 class ResultService
@@ -20,15 +21,23 @@ class ResultService
     {
         $ids = array_column($query, 'id');
         $answers = array_column($query, 'answer');
-        $selectedFields = ['title', 'details', 'correct_answer', 'explain', 'options'];
-         if ($language === config('quiz.languages')[1]['value']){
-                $selectedFields = ['correct_answer', 'title_two as title', 'details_two as details', 'options_two as options', 'explain_two as explain'];
-            }
+        $selectedFields = ['title', 'details', 'correct_answer', 'explain', 'options', 'image'];
+        if ($language === config('quiz.languages')[1]['value']) {
+            $selectedFields = ['correct_answer', 'title_two as title', 'details_two as details', 'options_two as options', 'explain_two as explain', 'image'];
+        }
+
         $questions = Question::query()
             ->whereIn('id', $ids)
             ->select($selectedFields)
             ->orderByRaw("FIELD(id, " . implode(',', $ids) . ")")
-            ->get();
+            ->get()
+            ->map(function ($question) {
+                if (!empty($question->image)) {
+                    // Assuming imageUrl() is the method to get the URL.
+                    $question['image'] = $question->imageUrl();
+                }
+                return $question;
+            });
 
         $answered = collect($questions)->pluck('correct_answer')->map(static function ($item, $key) use ($answers, $questions) {
             $answer = $item === $answers[$key];
