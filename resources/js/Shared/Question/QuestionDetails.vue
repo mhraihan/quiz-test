@@ -50,7 +50,7 @@ const quiz = (answer, correct_answer, key) => {
         <div v-for="(option,key) in props.question.options"
              :class="quiz(props.question.answer,props.question.correct_answer,key)"
              class="mt-1 max-w-auto text-sm px-2 rounded-lg  bg-none ">
-            <span class="mr-2 font-extrabold">{{ key }} </span> {{ option }}
+            <span class="mr-2 font-extrabold">{{ key }} </span> <span class="question-option" v-html="option"></span>
             <span v-if="key === props.question.correct_answer && route().current() === 'results.show'"
                   class="p-1 font-extrabold">(Correct Answer)</span>
             <span v-if="key === props.question.answer && route().current() === 'results.show'"
