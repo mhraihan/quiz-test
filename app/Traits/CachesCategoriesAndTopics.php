@@ -23,7 +23,7 @@ trait CachesCategoriesAndTopics
     public function topicsCache($rename = false)
     {
         $topics = cache()->remember('topics', now()->addHour(24), static function () {
-            return Topic::query()->select('title', 'id')->get();
+            return Topic::query()->select('title', 'id')->orderBy('title', 'asc')->get();
         });
 
         if ($rename) {
