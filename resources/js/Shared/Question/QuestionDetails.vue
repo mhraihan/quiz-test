@@ -22,9 +22,10 @@ const quiz = (answer, correct_answer, key) => {
 <template>
     <div class="px-4 py-5 sm:px-6">
         <div class="text-lg leading-6 mb-4 font-medium text-gray-900">
-            <h3><span v-if="!!props.key" class="mr-2 font-extrabold"> {{ props.key + 1 }}</span> {{
-                    props.question.title
-                }}</h3>
+            <h3>
+                <span v-if="!!props.key" class="mr-2 font-extrabold"> {{ props.key + 1 }}</span>
+                <span v-html="props.question.title"></span>
+            </h3>
             <details class="block text-xs mt-2" v-if="props.question.details" :open="route().current() === 'admin.questions.show'">
                 <summary class="p-1 hover:cursor-pointer" :id="'questions-details' + props.key">
                                <span class="underline text-blue-500 hover:text-blue-700 focus:outline-none text-xs "

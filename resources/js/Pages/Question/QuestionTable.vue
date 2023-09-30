@@ -69,7 +69,7 @@ const destroyQuestion = () => {
         <tr v-for="question in props.Questions.data" :key="question.id">
 
             <td data-label="Title">
-                <Link :href="route('admin.questions.edit',question.id)"> {{ question.title }}</Link>
+                <Link :href="route('admin.questions.show',question.id)" v-html="question.title"></Link>
             </td>
 
             <td class="before:hidden lg:w-1 whitespace-nowrap">
