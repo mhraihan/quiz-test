@@ -1,6 +1,7 @@
 import { notify } from "notiwind";
 import intus from "intus";
 import { isRequired, isIn, isBetween, isImage } from "intus/rules";
+import {removeHTMLTags} from "@/config";
 
 export const questionValidateForm = (formData) => {
     // Define the dynamic validation rules for correct_answer based on formData.question_options
@@ -50,6 +51,8 @@ export const handleQuestionSubmit = (formData, onSuccess, onError) => {
                 ...data,
                 details: data.details !== "<p><br></p>" ? data.details : null,
                 explain: data.explain !== "<p><br></p>" ? data.explain : null,
+                details_two: data.details_two !== "<p><br></p>" ? data.details_two : null,
+                explain_two: data.explain_two !== "<p><br></p>" ? data.explain_two : null,
                 image: data.image || null,
             }))
             .post(onSuccess, onError);

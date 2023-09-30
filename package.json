@@ -37,6 +37,7 @@
         "@vueform/multiselect": "^2.5.6",
         "@vueup/vue-quill": "^1.0.0-beta.10",
         "intus": "^0.0.2",
+        "katex": "^0.16.8",
         "notiwind": "^1.2.6",
         "vue-multiselect": "^3.0.0-alpha.2",
         "vue-toastification": "^2.0.0-rc.5"

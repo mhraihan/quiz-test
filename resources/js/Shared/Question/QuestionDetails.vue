@@ -69,4 +69,7 @@ const quiz = (answer, correct_answer, key) => {
     list-style: disc;
     margin-left: 10px;
 }
+.question-option p{
+  display: inline-block;
+}
 </style>

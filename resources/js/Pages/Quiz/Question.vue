@@ -9,6 +9,7 @@ import FormField from "@/Components/FormField.vue";
 import {ref, reactive} from "vue";
 import {notify} from "notiwind"
 import QuestionImage from "@/Shared/Question/QuestionImage.vue";
+import {removeHTMLTags} from "@/config";
 
 const emit = defineEmits(["submit", "backToQuiz"]);
 
@@ -84,9 +85,9 @@ const submit = (complete = true) => {
                 <div v-for="(question,key) in quiz.questions" :key="question.id">
                     <div class="px-4 py-5 sm:px-6" v-if="step===key">
                         <div class="text-lg leading-6 mb-2 font-medium text-gray-900">
-                            <h3>
+                            <h3 class="flex flex-wrap">
                                 <span class="mr-2 font-extrabold"> {{ key + 1 }}</span>
-                                <span>{{ question.title }}</span>
+                                <span v-html="removeHTMLTags(question.title)"></span>
                             </h3>
 
                             <div class="block text-xs">
@@ -99,7 +100,7 @@ const submit = (complete = true) => {
                                                Question Details
                                            </span>
                                         </summary>
-                                        <div class="block p-3 bg-green-100 text-xs leading-6 my-3"
+                                        <div class="block p-3 bg-green-100 text-xs leading-6 my-3 question-details"
                                              v-html="question.details"></div>
                                         <QuestionImage :image="question.image" :title="question.title"/>
                                     </details>
@@ -175,3 +176,16 @@ const submit = (complete = true) => {
 </template>
 
 
+<style >
+.question-details ol {
+    list-style: decimal;
+    margin-left: 10px;
+}
+.question-details ul {
+    list-style: disc;
+    margin-left: 10px;
+}
+.question-option p{
+  display: inline-block;
+}
+</style>

@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from "vue";
+import {removeHTMLTags} from "@/config";
 
 const props = defineProps({
   name: {
@@ -48,6 +49,6 @@ const inputType = computed(() =>
       :value="inputValue"
     />
     <span class="check" />
-    <span class="pl-2">{{ label }}</span>
+    <span class="pl-2" v-html="removeHTMLTags(label)"></span>
   </label>
 </template>

@@ -4,4 +4,10 @@
 .ql-editor {
     overflow-y: scroll;
     min-height: 150px;
+    .ql-title &{
+        min-height: 60px;
+    }
+    .ql-options &{
+        min-height: 40px;
+    }
 }

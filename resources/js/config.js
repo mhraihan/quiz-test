@@ -82,3 +82,7 @@ export const isStudent = () => {
     const role = getRole();
     return role === UserEnum.STUDENT;
 }
+
+export const removeHTMLTags  = (input) => {
+   return input.replace(/^<p>(.*?)<\/p>/, '$1');
+}

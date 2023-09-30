@@ -25,7 +25,17 @@ const props = defineProps({
         default: "Create Question",
     }
 });
-
+  const editorOptions = ref({
+      modules: {
+        toolbar: [
+          [{'script': 'sub'}, {'script': 'super'}],
+          ['formula']
+        ],
+          // formula: true,
+      },
+      theme: 'snow',
+      // katex: katex,
+    });
 const emit = defineEmits(["destroy", "restore", 'removeImage']);
 const isModalDangerActive = ref(false);
 const destroyModal = () => {
@@ -133,11 +143,14 @@ const destroyModal = () => {
                     help="Required. Question Name"
                     :error="questions.errors.title"
                 >
-                    <FormControl
-                        v-model="questions.title"
-                        name="title"
-                        :error="questions.errors.title"
-                    />
+                    <div class="flex flex-col ql-title">
+                        <QuillEditor
+                            :options="editorOptions"
+                            contentType="html"
+                            v-model:content="questions.title"
+                            name="title"
+                        />
+                    </div>
                 </FormField>
 
                 <FormField
@@ -156,17 +169,18 @@ const destroyModal = () => {
                     </div>
                 </FormField>
                 <BaseDivider/>
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-1">
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-1 ql-options">
                     <FormField
                         v-for="option in Object.keys(questions.options)"
                         :label="`Option ${option.toUpperCase()}`"
                         :help="`Required. Question option ${option}`"
                         :error="questions.errors[`options.${option.toLowerCase()}`]"
                     >
-                        <FormControl
-                            v-model="questions.options[option]"
+                      <QuillEditor
+                            :options="editorOptions"
+                            contentType="html"
+                            v-model:content="questions.options[option]"
                             :name="option"
-                            :error="questions.errors[`options.${option.toLowerCase()}`]"
                         />
                     </FormField>
                 </div>
@@ -196,11 +210,14 @@ const destroyModal = () => {
                     help="Required. Question Name"
                     :error="questions.errors.title_two"
                 >
-                    <FormControl
-                        v-model="questions.title_two"
-                        name="title_two"
-                        :error="questions.errors.title_two"
-                    />
+                    <div class="flex flex-col ql-title">
+                        <QuillEditor
+                            contentType="html"
+                            :options="editorOptions"
+                            v-model:content="questions.title_two"
+                            name="title_two"
+                        />
+                    </div>
                 </FormField>
 
                 <FormField
@@ -219,17 +236,18 @@ const destroyModal = () => {
                     </div>
                 </FormField>
                 <BaseDivider/>
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-1">
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-1 ql-options">
                     <FormField
                         v-for="option in Object.keys(questions.options_two)"
                         :label="`Option ${option.toUpperCase()}`"
                         :help="`Required. Question option ${option}`"
                         :error="questions.errors[`options.${option.toLowerCase()}`]"
                     >
-                        <FormControl
-                            v-model="questions.options_two[option]"
+                           <QuillEditor
+                            :options="editorOptions"
+                            contentType="html"
+                            v-model:content="questions.options_two[option]"
                             :name="option"
-                            :error="questions.errors[`options.${option.toLowerCase()}`]"
                         />
                     </FormField>
                 </div>
