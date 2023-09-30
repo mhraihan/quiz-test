@@ -147,7 +147,7 @@ const destroyModal = () => {
                 >
                     <div class="flex flex-col min-height">
                         <QuillEditor
-                            toolbar="essential"
+                            toolbar="full"
                             contentType="html"
                             theme="snow"
                             v-model:content="questions.details"
@@ -210,7 +210,7 @@ const destroyModal = () => {
                 >
                     <div class="flex flex-col min-height">
                         <QuillEditor
-                            toolbar="essential"
+                            toolbar="full"
                             contentType="html"
                             theme="snow"
                             v-model:content="questions.details_two"
