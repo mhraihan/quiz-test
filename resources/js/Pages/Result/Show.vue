@@ -8,8 +8,8 @@ import SectionMain from "@/Components/SectionMain.vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 import Overview from "@/Pages/Result/Overview.vue";
-import {computed} from "vue";
-import {languages} from "@/config";
+import {computed, onMounted} from "vue";
+import {languages, renderMath} from "@/config";
 import QuestionDetails from "@/Shared/Question/QuestionDetails.vue";
 import QuestionImage from "@/Shared/Question/QuestionImage.vue";
 
@@ -23,8 +23,10 @@ const props = defineProps({
     }
 });
 
-const language = computed(() => languages.find( language => language.value === props.result.language)?.label)
-
+const language = computed(() => languages.find(language => language.value === props.result.language)?.label)
+onMounted(() => {
+    renderMath();
+});
 </script>
 
 <template>
@@ -36,7 +38,7 @@ const language = computed(() => languages.find( language => language.value === p
             <CardBox class=" overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6">
                     <h1 class="text-sm leading-6 font-medium text-gray-900">
-                        Quiz Information <span>({{  props.name }})</span>
+                        Quiz Information <span>({{ props.name }})</span>
                     </h1>
                     <p class="mt-1 max-w-2xl text-sm text-gray-700">
                         You took this quiz {{ props.result.exam.how_long }} on <span

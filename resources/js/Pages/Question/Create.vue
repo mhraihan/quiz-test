@@ -8,7 +8,7 @@ import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.
 import {Head, useForm} from "@inertiajs/inertia-vue3";
 import {notify} from "notiwind"
 import Form from "./Form.vue";
-import { ref, watch} from "vue";
+import {ref, watch} from "vue";
 import {handleQuestionSubmit} from "@/Pages/Question/useQuestionValidator";
 import {createFormData, getQuestionOptions} from "@/Pages/Question/optionsUtils";
 
@@ -19,8 +19,8 @@ const props = defineProps({
 const hasTable = true;
 
 
-
-const questions = useForm(createFormData(props));;
+const questions = useForm(createFormData(props));
+;
 const removeQuestionImage = ref(false);
 const image = ref(null);
 
@@ -31,8 +31,8 @@ watch(() => questions.image, () => {
 })
 
 watch(() => questions.question_options, (newValue) => {
-   questions.options = getQuestionOptions(questions.options , newValue);
-   questions.options_two = getQuestionOptions(questions.options_two , newValue);
+    questions.options = getQuestionOptions(questions.options, newValue);
+    questions.options_two = getQuestionOptions(questions.options_two, newValue);
 })
 const removeImage = () => {
     image.value = null;

@@ -25,23 +25,23 @@ const form = useForm({
 
 const destroyQuestion = () => {
     form.post(route('admin.questions.destroy', id.value), {
-            onSuccess: () => {
-                notify({
-                    group: "notification",
-                    type: "success",
-                    title: "Success",
-                    text: usePage().props.flash?.success || 'Question Moved to Trash Successfully'
-                }, 4000) // 4s
-            },
-            onError: () => {
-                notify({
-                    group: "notification",
-                    type: "error",
-                    title: "Error",
-                    text: usePage().props.flash?.error || 'Something went wrong'
-                }, 4000) // 4s
-            }
-        });
+        onSuccess: () => {
+            notify({
+                group: "notification",
+                type: "success",
+                title: "Success",
+                text: usePage().props.flash?.success || 'Question Moved to Trash Successfully'
+            }, 4000) // 4s
+        },
+        onError: () => {
+            notify({
+                group: "notification",
+                type: "error",
+                title: "Error",
+                text: usePage().props.flash?.error || 'Something went wrong'
+            }, 4000) // 4s
+        }
+    });
 }
 </script>
 
@@ -81,9 +81,9 @@ const destroyQuestion = () => {
                         routeName="admin.questions.show"
                         :routeParams="question.id"
                     />
-                        <BaseButton
+                    <BaseButton
                         color="info"
-                         :icon="mdiPencil"
+                        :icon="mdiPencil"
                         small
                         routeName="admin.questions.edit"
                         :routeParams="question.id"

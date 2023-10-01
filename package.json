@@ -1,10 +1,7 @@
 {
     "name": "quizapp",
     "description": "this is quiz application",
-    "version": "1.0.1",
-    "engines": {
-        "node": "16.17.0"
-    },
+    "version": "1.0.2",
     "private": true,
     "scripts": {
         "dev": "vite",

@@ -25,17 +25,17 @@ const props = defineProps({
         default: "Create Question",
     }
 });
-  const editorOptions = ref({
-      modules: {
+const editorOptions = ref({
+    modules: {
         toolbar: [
-          [{'script': 'sub'}, {'script': 'super'}],
-          ['formula']
+            [{'script': 'sub'}, {'script': 'super'}],
+            ['formula']
         ],
-          // formula: true,
-      },
-      theme: 'snow',
-      // katex: katex,
-    });
+        // formula: true,
+    },
+    theme: 'snow',
+    // katex: katex,
+});
 const emit = defineEmits(["destroy", "restore", 'removeImage']);
 const isModalDangerActive = ref(false);
 const destroyModal = () => {
@@ -176,7 +176,7 @@ const destroyModal = () => {
                         :help="`Required. Question option ${option}`"
                         :error="questions.errors[`options.${option.toLowerCase()}`]"
                     >
-                      <QuillEditor
+                        <QuillEditor
                             :options="editorOptions"
                             contentType="html"
                             v-model:content="questions.options[option]"
@@ -243,7 +243,7 @@ const destroyModal = () => {
                         :help="`Required. Question option ${option}`"
                         :error="questions.errors[`options.${option.toLowerCase()}`]"
                     >
-                           <QuillEditor
+                        <QuillEditor
                             :options="editorOptions"
                             contentType="html"
                             v-model:content="questions.options_two[option]"

@@ -26,7 +26,8 @@ const quiz = (answer, correct_answer, key) => {
                 <span v-if="!!props.key" class="mr-2 font-extrabold"> {{ props.key + 1 }}</span>
                 <span v-html="props.question.title"></span>
             </h3>
-            <details class="block text-xs mt-2" v-if="props.question.details" :open="route().current() === 'admin.questions.show'">
+            <details class="block text-xs mt-2" v-if="props.question.details"
+                     :open="route().current() === 'admin.questions.show'">
                 <summary class="p-1 hover:cursor-pointer" :id="'questions-details' + props.key">
                                <span class="underline text-blue-500 hover:text-blue-700 focus:outline-none text-xs "
                                      type="button">
@@ -38,7 +39,8 @@ const quiz = (answer, correct_answer, key) => {
 
 
             </details>
-            <details class="block text-xs mt-2" v-if="props.question.explain" :open="route().current() === 'admin.questions.show'">
+            <details class="block text-xs mt-2" v-if="props.question.explain"
+                     :open="route().current() === 'admin.questions.show'">
                 <summary class="p-1 hover:cursor-pointer" :id="'questions-explain' + props.key">
                                <span class="underline text-blue-500 hover:text-blue-700 focus:outline-none text-xs "
                                      type="button">
@@ -60,16 +62,18 @@ const quiz = (answer, correct_answer, key) => {
 
     </div>
 </template>
-<style >
+<style>
 .question-details ol {
     list-style: decimal;
     margin-left: 10px;
 }
+
 .question-details ul {
     list-style: disc;
     margin-left: 10px;
 }
-.question-option p{
-  display: inline-block;
+
+.question-option p {
+    display: inline-block;
 }
 </style>

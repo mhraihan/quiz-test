@@ -1,20 +1,20 @@
 <script setup>
-import { mdiPencilPlus } from "@mdi/js";
+import {mdiPencilPlus} from "@mdi/js";
 import SectionMain from "@/Components/SectionMain.vue";
 import CardBox from "@/Components/CardBox.vue";
 
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
-import { Head, useForm } from "@inertiajs/inertia-vue3";
+import {Head, useForm} from "@inertiajs/inertia-vue3";
 import Form from "./Form.vue";
 import Breadcrumbs from "@/Components/Breadcrumbs.vue";
-import { computed, ref, watch } from "vue";
-import { notify } from "notiwind";
+import {computed, ref, watch} from "vue";
+import {notify} from "notiwind";
 import {
     createFormData,
     getQuestionOptions,
 } from "@/Pages/Question/optionsUtils";
-import { handleQuestionSubmit } from "@/Pages/Question/useQuestionValidator";
+import {handleQuestionSubmit} from "@/Pages/Question/useQuestionValidator";
 
 const props = defineProps({
     Categories: Object,
@@ -158,7 +158,7 @@ const restoreQuestion = () => {
 
 <template>
     <Head
-        ><title>Edit Question - {{ questions.title }}</title></Head
+    ><title>Edit Question - {{ questions.title }}</title></Head
     >
     <LayoutAuthenticated>
         <SectionMain>

@@ -6,10 +6,11 @@ import BaseButton from "@/Components/BaseButton.vue";
 import BaseButtons from "@/Components/BaseButtons.vue";
 import FormCheckRadioGroup from "@/Components/FormCheckRadioGroup.vue";
 import FormField from "@/Components/FormField.vue";
-import {ref, reactive} from "vue";
+import {ref, reactive, onMounted} from "vue";
 import {notify} from "notiwind"
 import QuestionImage from "@/Shared/Question/QuestionImage.vue";
-import {removeHTMLTags} from "@/config";
+import {removeHTMLTags, renderMath} from "@/config";
+import Loader from "@/Components/Loader.vue";
 
 const emit = defineEmits(["submit", "backToQuiz"]);
 
@@ -32,6 +33,7 @@ const quiz = reactive({
 
 
 const next = (key) => {
+    loading.value = true;
     if (!quiz.questions[key].answer) {
         notify({
             group: "notification",
@@ -44,6 +46,10 @@ const next = (key) => {
     if (step.value < quiz.questions.length - 1) {
         step.value++;
     }
+    setTimeout(() => {
+        window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, document.getElementById('mh-math')]);
+        loading.value = false;
+    }, 100);
 }
 const submit = (complete = true) => {
     stop_time.value = new Date();
@@ -62,6 +68,11 @@ const submit = (complete = true) => {
         )).filter(q => q.answer)
     })
 }
+const loading = ref(false);
+
+onMounted(() => {
+    renderMath();
+});
 </script>
 
 <template>
@@ -81,7 +92,8 @@ const submit = (complete = true) => {
             </div>
         </div>
         <div class="bg-white shadow overflow-hidden sm:rounded-lg mt-6">
-            <CardBox is-form class="max-w-2xl mx-auto">
+            <Loader v-if="loading"/>
+            <CardBox v-show="!loading" is-form class="max-w-2xl mx-auto">
                 <div v-for="(question,key) in quiz.questions" :key="question.id">
                     <div class="px-4 py-5 sm:px-6" v-if="step===key">
                         <div class="text-lg leading-6 mb-2 font-medium text-gray-900">
@@ -100,7 +112,7 @@ const submit = (complete = true) => {
                                                Question Details
                                            </span>
                                         </summary>
-                                        <div class="block p-3 bg-green-100 text-xs leading-6 my-3 question-details"
+                                        <div class="block p-3 bg-green-100 text-xs leading-6 my-3 questionnp-details"
                                              v-html="question.details"></div>
                                         <QuestionImage :image="question.image" :title="question.title"/>
                                     </details>
@@ -176,16 +188,18 @@ const submit = (complete = true) => {
 </template>
 
 
-<style >
+<style>
 .question-details ol {
     list-style: decimal;
     margin-left: 10px;
 }
+
 .question-details ul {
     list-style: disc;
     margin-left: 10px;
 }
-.question-option p{
-  display: inline-block;
+
+.question-option p {
+    display: inline-block;
 }
 </style>

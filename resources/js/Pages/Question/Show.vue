@@ -1,7 +1,7 @@
 <script setup>
 import {Head} from "@inertiajs/inertia-vue3";
 import CardBox from "@/Components/CardBox.vue";
-import {computed} from "vue";
+import {computed, onMounted} from "vue";
 import QuestionDetails from "@/Shared/Question/QuestionDetails.vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionMain from "@/Components/SectionMain.vue";
@@ -10,6 +10,7 @@ import {mdiArrowLeft} from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
 import Overview from "@/Pages/Result/Overview.vue";
 import QuestionImage from "@/Shared/Question/QuestionImage.vue";
+import {renderMath} from "@/config";
 
 const props = defineProps({
     Categories: Object,
@@ -37,6 +38,12 @@ const questionChinese = computed(() => {
 })
 const category = computed(() => props.Categories.find(c => props.Question.category_id === c.id));
 const topic = computed(() => props.Topics.find(t => props.Question.topic_id === t.id));
+
+onMounted(() => {
+    renderMath();
+});
+
+
 </script>
 
 <template>
@@ -46,9 +53,11 @@ const topic = computed(() => props.Topics.find(t => props.Question.topic_id === 
         <SectionMain>
             <SectionTitleLineWithButton link="admin.questions.index" :icon="mdiArrowLeft" title="Question Details"
                                         main/>
+
             <div class="flex flex-wrap items-center justify-between mb-6 sm:flex-row flex-col">
                 <BaseButton color="info" label="Create a new Question" routeName="admin.questions.create"/>
-                <BaseButton color="info" label="Edit Question" routeName="admin.questions.edit" :routeParams="props.Question.id"/>
+                <BaseButton color="info" label="Edit Question" routeName="admin.questions.edit"
+                            :routeParams="props.Question.id"/>
             </div>
             <CardBox class=" overflow-hidden sm:rounded-lg mb-4">
                 <div class="border-t border-gray-300 ">

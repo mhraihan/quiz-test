@@ -1,14 +1,14 @@
-import { notify } from "notiwind";
+import {notify} from "notiwind";
 import intus from "intus";
-import { isRequired, isIn, isBetween, isImage } from "intus/rules";
+import {isRequired, isIn, isBetween, isImage} from "intus/rules";
 import {removeHTMLTags} from "@/config";
 
 export const questionValidateForm = (formData) => {
     // Define the dynamic validation rules for correct_answer based on formData.question_options
     const answerRules =
         formData.question_options === "2"
-            ? { correct_answer: [isRequired(), isIn("a", "b")] }
-            : { correct_answer: [isRequired(), isIn("a", "b", "c", "d")] };
+            ? {correct_answer: [isRequired(), isIn("a", "b")]}
+            : {correct_answer: [isRequired(), isIn("a", "b", "c", "d")]};
     const validation = intus.validate(
         formData,
         {
