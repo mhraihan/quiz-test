@@ -1,7 +1,6 @@
 import {notify} from "notiwind";
 import intus from "intus";
-import {isRequired, isIn, isBetween, isImage} from "intus/rules";
-import {removeHTMLTags} from "@/config";
+import {isBetween, isImage, isIn, isRequired} from "intus/rules";
 
 export const questionValidateForm = (formData) => {
     // Define the dynamic validation rules for correct_answer based on formData.question_options
@@ -43,12 +42,32 @@ export const questionValidateForm = (formData) => {
     return validation;
 };
 
+export const cleanHtml = (html) => {
+    return html.replace(/<p>(<br\s*\/?>|\s*)<\/p>/g, '').replace(/[\n\r]/g, '');
+}
+
+export const cleanOptions = (options) => {
+    const cleanedOptions = {};
+
+    for (const key in options) {
+        if (options.hasOwnProperty(key)) {
+            // Remove <p> </p> with optional spaces
+            cleanedOptions[key] = cleanHtml(options[key]);
+        }
+    }
+
+    return cleanedOptions;
+}
 export const handleQuestionSubmit = (formData, onSuccess, onError) => {
     const validation = questionValidateForm(formData);
     if (validation.passes()) {
         formData
             .transform((data) => ({
                 ...data,
+                title: cleanHtml(data.title),
+                title_two: cleanHtml(data.title_two),
+                options: cleanOptions(data.options),
+                options_two: cleanOptions(data.options_two),
                 details: data.details !== "<p><br></p>" ? data.details : null,
                 explain: data.explain !== "<p><br></p>" ? data.explain : null,
                 details_two: data.details_two !== "<p><br></p>" ? data.details_two : null,

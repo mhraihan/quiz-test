@@ -29,13 +29,26 @@ const editorOptions = ref({
     modules: {
         toolbar: [
             [{'script': 'sub'}, {'script': 'super'}],
-            ['formula']
         ],
-        // formula: true,
     },
     theme: 'snow',
     // katex: katex,
 });
+const handlePaste = (fieldName, event, option = null) => {
+  event.preventDefault(); // Prevent default paste behavior
+  // Get the plain text from the clipboard
+  const text = (event.clipboardData || window.clipboardData).getData('text/plain');
+
+  // Append the filtered plain text to the existing content
+  if (option) {
+    props.questions[option][fieldName] += text;
+  } else {
+    props.questions[fieldName] += text;
+  }
+};
+
+
+
 const emit = defineEmits(["destroy", "restore", 'removeImage']);
 const isModalDangerActive = ref(false);
 const destroyModal = () => {
@@ -145,6 +158,7 @@ const destroyModal = () => {
                 >
                     <div class="flex flex-col ql-title">
                         <QuillEditor
+                            @paste="handlePaste('title',$event)"
                             :options="editorOptions"
                             contentType="html"
                             v-model:content="questions.title"
@@ -177,6 +191,7 @@ const destroyModal = () => {
                         :error="questions.errors[`options.${option.toLowerCase()}`]"
                     >
                         <QuillEditor
+                            @paste="handlePaste(option,$event,'options')"
                             :options="editorOptions"
                             contentType="html"
                             v-model:content="questions.options[option]"
@@ -216,6 +231,7 @@ const destroyModal = () => {
                             :options="editorOptions"
                             v-model:content="questions.title_two"
                             name="title_two"
+                            @paste="handlePaste('title_two',$event)"
                         />
                     </div>
                 </FormField>
@@ -244,6 +260,7 @@ const destroyModal = () => {
                         :error="questions.errors[`options.${option.toLowerCase()}`]"
                     >
                         <QuillEditor
+                            @paste="handlePaste(option,$event,'options_two')"
                             :options="editorOptions"
                             contentType="html"
                             v-model:content="questions.options_two[option]"
