@@ -73,7 +73,7 @@ const getQuiz = () => {
     quiz.clearErrors();
     const validation = intus.validate(quiz.data(), {
         "topic_id": [isRequired()],
-        "category_id": [isRequired(), isBetween(1, 4)],
+        "category_id": [isRequired(), isBetween(0, 4)],
         "howManyQuestions": [isRequired(), isBetween(1, 20)],
         "language": [isRequired(), isIn(languages[0].value,languages[1].value)],
     }, {

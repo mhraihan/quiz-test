@@ -49,7 +49,7 @@ const next = (key) => {
     setTimeout(() => {
         window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, document.getElementById('mh-math')]);
         loading.value = false;
-    }, 100);
+    }, 500);
 }
 const submit = (complete = true) => {
     stop_time.value = new Date();

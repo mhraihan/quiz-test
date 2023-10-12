@@ -33,9 +33,7 @@ class ResultController extends Controller
     public function store(StoreResultRequest $request, ResultService $resultService): JsonResponse
     {
         try {
-            ray($request->safe()->all());
             $resultData = $resultService->processResultData($request->input('questions_answered'));
-            ray($request->safe()->all() + $resultData);
             $result = $request->user()->results()->create($request->safe()->all() + $resultData);
             return response()->json(compact('result'), 201);
         } catch (ValidationException $e) {
