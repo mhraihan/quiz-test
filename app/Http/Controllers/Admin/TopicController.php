@@ -17,6 +17,7 @@ class TopicController extends Controller
     {
         $topics = Topic::query()
             ->select('id', 'title', 'deleted_at')
+            ->orderBy('title')
             ->filter(request()->only('search', 'trashed', 'column', 'direction'))
             ->withCount('questions') // Eager load the question count
             ->paginate(30)
