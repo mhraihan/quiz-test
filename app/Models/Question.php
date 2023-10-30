@@ -64,7 +64,10 @@ class Question extends Model
             ->withQueryString()
             ->through(fn ($question) => [
                 'id' => $question->id,
-                'title' => $question->title
+                'title' => $question->title,
+                'topic_id' => $question->topic_id,
+                'topic' => $question->topic->title,
+                'category' => $question->category->title
             ]);
     }
 

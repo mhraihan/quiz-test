@@ -62,6 +62,8 @@ const destroyQuestion = () => {
         <thead>
         <tr>
             <th>Question Name</th>
+            <th>Topic</th>
+            <th>Category</th>
             <th/>
         </tr>
         </thead>
@@ -70,6 +72,12 @@ const destroyQuestion = () => {
 
             <td data-label="Title">
                 <Link :href="route('admin.questions.show',question.id)" v-html="question.title"></Link>
+            </td>
+              <td data-label="Topic">
+                <Link :href="route('admin.topics.show',question.topic_id)" v-html="question.topic"></Link>
+            </td>
+              <td data-label="Title">
+                {{ question.category }}
             </td>
 
             <td class="before:hidden lg:w-1 whitespace-nowrap">

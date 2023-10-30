@@ -18,6 +18,9 @@ class QuestionController extends Controller
 
     use CachesCategoriesAndTopics;
 
+    /**
+     * @throws AuthorizationException
+     */
     public function index(): Response|ResponseFactory
     {
 
