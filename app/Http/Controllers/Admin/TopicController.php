@@ -18,8 +18,15 @@ class TopicController extends Controller
         $topics = Topic::query()
             ->select('id', 'title', 'deleted_at')
             ->filter(request()->only('search', 'trashed', 'column', 'direction'))
-            ->paginate()
-            ->withQueryString();
+            ->withCount('questions') // Eager load the question count
+            ->paginate(30)
+            ->withQueryString()
+            ->through(fn($topic) => [
+                'id' => $topic->id,
+                'title' => $topic->title,
+                'count' => $topic->questions_count, // Access the eager-loaded count
+                'deleted_at' => $topic->deleted_at
+            ]);
 
         return inertia('Topic/Index', [
             'Topics' => $topics,
@@ -40,9 +47,13 @@ class TopicController extends Controller
     }
 
 
-    public function show($id)
+    public function show(Topic $topic)
     {
-        //
+        $questions = $topic->questions()->index();
+        return inertia('Topic/Show', [
+            'Topic' => $topic,
+            'Questions' => $questions
+        ]);
     }
 
     public function edit(Topic $topic): Response|ResponseFactory
@@ -62,7 +73,7 @@ class TopicController extends Controller
         return redirect()->back()->with('success', 'Topic Updated Successfully');
     }
 
-  public function destroy(Topic $topic):  RedirectResponse
+    public function destroy(Topic $topic): RedirectResponse
     {
         if ($topic->deleted_at) {
             $topic->forceDelete();

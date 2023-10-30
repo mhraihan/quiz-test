@@ -60,7 +60,7 @@ class Question extends Model
     {
        return $query->latest()
             ->filter(request()->only('search'),$trash)
-            ->paginate(20)
+            ->paginate(30)
             ->withQueryString()
             ->through(fn ($question) => [
                 'id' => $question->id,

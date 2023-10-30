@@ -74,6 +74,9 @@ const filter = (name) => {
                     <BaseIcon class="ml-1" v-if="props.Query.column === 'title' && props.Query.direction === 'DESC' " small :path="mdiSortDescending"/>
                 </div>
             </th>
+            <th>
+                Number Of Questions
+            </th>
             <th/>
         </tr>
         </thead>
@@ -85,13 +88,23 @@ const filter = (name) => {
 
             <td data-label="Name">
                 <div class="flex h-full items-center justify-start">
-                    {{ topic.title }}
+                      <Link :href="route('admin.topics.show',topic.id)" v-html="topic.title"></Link>
                     <BaseIcon class="text-red-500" v-if="topic.deleted_at" :path="mdiTrashCan" small/>
                 </div>
+            </td>
+            <td data-label="count">
+                {{ topic.count }}
             </td>
 
             <td class="before:hidden lg:w-1 whitespace-nowrap">
                 <BaseButtons type="justify-start lg:justify-end" no-wrap>
+                        <BaseButton
+                        color="info"
+                        :icon="mdiEye"
+                        small
+                        routeName="admin.topics.show"
+                        :routeParams="topic.id"
+                    />
                     <BaseButton
                         color="info"
                         :icon="mdiPencil"
@@ -99,7 +112,7 @@ const filter = (name) => {
                         :data="{ prev_pages: props.Topics?.meta?.current_page,...props.Query}"
                         :routeParams="topic.id"
                         :routeName="url"
-                        title="Edit School"
+                        title="Edit Topic"
                     />
                     <BaseButton
                         color="danger"

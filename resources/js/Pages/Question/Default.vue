@@ -10,7 +10,7 @@ import CardBox from "@/Components/CardBox.vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 import CardBoxComponentEmpty from "@/Components/CardBoxComponentEmpty.vue";
-import QuestionTable from "@/Pages/Question/QuestionTable.vue";
+import QuestionTable from "@/Shared/Question/QuestionTable.vue";
 import {ref,watch} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import {debounce} from "lodash";
