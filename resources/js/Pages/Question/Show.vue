@@ -1,5 +1,5 @@
 <script setup>
-import {Head} from "@inertiajs/inertia-vue3";
+import {Head, usePage} from "@inertiajs/inertia-vue3";
 import CardBox from "@/Components/CardBox.vue";
 import {computed, onMounted} from "vue";
 import QuestionDetails from "@/Shared/Question/QuestionDetails.vue";
@@ -43,7 +43,7 @@ onMounted(() => {
     renderMath();
 });
 
-
+const userName = computed(() => usePage().props.value.auth.user.name);
 </script>
 
 <template>
@@ -65,6 +65,7 @@ onMounted(() => {
                         <Overview label="Category" :value="category.title"/>
                         <Overview label="Topics" class="uppercase" :value="topic.title"/>
                         <Overview label="Correct Answer" class="uppercase" :value="props.Question.correct_answer"/>
+                        <Overview label="Created By" class="uppercase" :value="userName"/>
                     </dl>
                 </div>
             </CardBox>
