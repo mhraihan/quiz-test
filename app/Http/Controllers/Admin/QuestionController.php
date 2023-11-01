@@ -77,6 +77,7 @@ class QuestionController extends Controller
             'Categories' => $this->categoriesCache(),
             'Topics' => $this->topicsCache(),
             'Question' => $question,
+            'User' => $question->user->name(),
             'image' => $question->image ? $question->imageUrl() : null,
         ]);
     }

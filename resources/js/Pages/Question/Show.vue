@@ -1,5 +1,5 @@
 <script setup>
-import {Head, usePage} from "@inertiajs/inertia-vue3";
+import {Head} from "@inertiajs/inertia-vue3";
 import CardBox from "@/Components/CardBox.vue";
 import {computed, onMounted} from "vue";
 import QuestionDetails from "@/Shared/Question/QuestionDetails.vue";
@@ -17,6 +17,7 @@ const props = defineProps({
     Topics: Object,
     Question: Object,
     image: String,
+    User: String,
 });
 const questionEnglish = computed(() => {
     return {
@@ -34,6 +35,7 @@ const questionChinese = computed(() => {
         explain: props.Question.explain_two,
         options: props.Question.options_two,
         image: props.image,
+        
     }
 })
 const category = computed(() => props.Categories.find(c => props.Question.category_id === c.id));
@@ -43,7 +45,6 @@ onMounted(() => {
     renderMath();
 });
 
-const userName = computed(() => usePage().props.value.auth.user.name);
 </script>
 
 <template>
@@ -65,7 +66,7 @@ const userName = computed(() => usePage().props.value.auth.user.name);
                         <Overview label="Category" :value="category.title"/>
                         <Overview label="Topics" class="uppercase" :value="topic.title"/>
                         <Overview label="Correct Answer" class="uppercase" :value="props.Question.correct_answer"/>
-                        <Overview label="Created By" class="uppercase" :value="userName"/>
+                        <Overview label="Created By" class="uppercase" :value="props.User"/>
                     </dl>
                 </div>
             </CardBox>
