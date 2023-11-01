@@ -20,6 +20,7 @@ class Question extends Model
         'options' => 'array',
         'options_two' => 'array',
         'is_active' => 'boolean',
+        'created_at' => 'datetime:d F, Y',
     ];
 
     protected $fillable = [

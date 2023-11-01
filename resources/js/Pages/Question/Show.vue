@@ -1,5 +1,5 @@
 <script setup>
-import {Head} from "@inertiajs/inertia-vue3";
+import {Head,Link} from "@inertiajs/inertia-vue3";
 import CardBox from "@/Components/CardBox.vue";
 import {computed, onMounted} from "vue";
 import QuestionDetails from "@/Shared/Question/QuestionDetails.vue";
@@ -35,7 +35,7 @@ const questionChinese = computed(() => {
         explain: props.Question.explain_two,
         options: props.Question.options_two,
         image: props.image,
-        
+
     }
 })
 const category = computed(() => props.Categories.find(c => props.Question.category_id === c.id));
@@ -64,9 +64,12 @@ onMounted(() => {
                 <div class="border-t border-gray-300 ">
                     <dl>
                         <Overview label="Category" :value="category.title"/>
-                        <Overview label="Topics" class="uppercase" :value="topic.title"/>
+                        <Link :href="route('admin.topics.show', props.Question.topic_id)">
+                            <Overview label="Topics" class="uppercase" :value="topic.title"/>
+                        </Link>
                         <Overview label="Correct Answer" class="uppercase" :value="props.Question.correct_answer"/>
-                        <Overview label="Created By" class="uppercase" :value="props.User"/>
+                        <Overview label="Added By" class="uppercase" :value="props.User"/>
+                        <Overview label="Added At" class="uppercase" :value="props.Question.created_at"/>
                     </dl>
                 </div>
             </CardBox>
