@@ -57,9 +57,10 @@ class Question extends Model
         });
     }
 
-    public function scopeIndex($query, $trash = false): mixed
+    public function scopeIndex($query, $trash = false, $orderBy = 'desc'): mixed
     {
-       return $query->latest()
+       return $query
+           ->orderBy('created_at', $orderBy)
             ->filter(request()->only('search'),$trash)
             ->paginate(30)
             ->withQueryString()

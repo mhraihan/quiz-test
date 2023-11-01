@@ -17,6 +17,7 @@ const links = computed(() => props.Questions.links);
 
 const isModalDangerActive = ref(false);
 const currentPage = ref(props.Questions.current_page);
+const perPage = ref(props.Questions.per_page);
 const numPages = computed(() => props.Questions.last_page);
 const currentPageHuman = computed(() => currentPage.value);
 const form = useForm({
@@ -61,6 +62,7 @@ const destroyQuestion = () => {
     <table>
         <thead>
         <tr>
+             <th>#</th>
             <th>Question Name</th>
             <th>Topic</th>
             <th>Category</th>
@@ -68,8 +70,10 @@ const destroyQuestion = () => {
         </tr>
         </thead>
         <tbody>
-        <tr v-for="question in props.Questions.data" :key="question.id">
-
+        <tr v-for="(question,key) in props.Questions.data" :key="question.id">
+            <td data-label="id">
+                {{ (currentPageHuman - 1) * perPage + key + 1 }}
+            </td>
             <td data-label="Title">
                 <Link :href="route('admin.questions.show',question.id)" v-html="question.title"></Link>
             </td>

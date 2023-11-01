@@ -50,7 +50,7 @@ class TopicController extends Controller
 
     public function show(Topic $topic)
     {
-        $questions = $topic->questions()->index();
+        $questions = $topic->questions()->index(false,'asc');
         return inertia('Topic/Show', [
             'Topic' => $topic,
             'Questions' => $questions
