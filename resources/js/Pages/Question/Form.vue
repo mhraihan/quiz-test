@@ -28,7 +28,7 @@ const props = defineProps({
 const editorOptions = ref({
   modules: {
     toolbar: [
-      [{'script': 'sub'}, {'script': 'super'}],
+      ['bold',{'script': 'sub'}, {'script': 'super'}],
     ],
   },
   theme: 'snow',
