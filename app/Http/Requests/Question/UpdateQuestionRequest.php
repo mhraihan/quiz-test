@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests\Question;
 
+namespace App\Http\Requests\Question;
+
+use App\Rules\QuestionRules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateQuestionRequest extends FormRequest
@@ -13,18 +16,21 @@ class UpdateQuestionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->user()->isAdmin();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, mixed>
-     */
-    public function rules()
+    public function rules(): array
     {
-        return [
-            //
-        ];
+        $array_keys = QuestionRules::getArrayKeys();
+        return array_merge(
+           QuestionRules::commonRules(),
+            QuestionRules::optionsRules($array_keys),
+            QuestionRules::imageRules()
+        );
+    }
+
+    public function messages(): array
+    {
+        return QuestionRules::validationMessages();;
     }
 }

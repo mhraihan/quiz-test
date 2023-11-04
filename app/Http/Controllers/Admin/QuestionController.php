@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\Question\UpdateQuestionRequest;
 use App\Models\Question;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Question\StoreQuestionRequest;
+use Illuminate\Support\Facades\File;
 use Inertia\Response;
 use Inertia\ResponseFactory;
 use PHPUnit\Exception;
@@ -99,14 +101,20 @@ class QuestionController extends Controller
         }
     }
 
-    public function update(StoreQuestionRequest $request, Question $question): RedirectResponse
+    public function update(UpdateQuestionRequest $request, Question $question): RedirectResponse
     {
         $this->authorize('update', Question::class);
+
+        if ($request->input('_duplicate')) {
+            return $this->duplicateQuestion($question);
+        }
 
         if (is_null($request->image) && !is_null($question->image)) {
             $question->deleteFile($question->image);
         }
+
         $question->update($request->safe()->all());
+
         return redirect()->back()->with('success', 'Question updated.');
     }
 
@@ -138,5 +146,34 @@ class QuestionController extends Controller
         }
         $question->forceDelete();
         return redirect()->route('admin.questions.trash')->with('success', 'Question Delete Successfully');
+    }
+
+    public function duplicateQuestion(Question $question): RedirectResponse
+    {
+        try {
+            $newQuestion = new Question($question->toArray());
+
+            $newQuestion->id = null; // Set the ID to null to create a new record.
+            $newQuestion->user_id = $question->user_id;
+            $newQuestion->save();
+
+            if (!empty($question->image)) {
+                $sourceImagePath = storage_path("app/public/{$question->image}");
+                $imageInfo = pathinfo($question->image);
+                $newImageName = uniqid('', true) . "." . $imageInfo['extension'];
+                $newImagePath = "questions/" . $newImageName;
+
+                if (File::copy($sourceImagePath, storage_path("app/public/{$newImagePath}"))) {
+                    // Update the image path in the duplicated question.
+                    $newQuestion->image = $newImagePath;
+                    $newQuestion->save();
+                }
+            }
+            return redirect()->route('admin.questions.show', $newQuestion->id)->with('success', 'Duplicated Question Created Successfully');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        } catch (\JsonException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }

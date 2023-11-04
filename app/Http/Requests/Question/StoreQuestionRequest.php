@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Question;
 
-use Illuminate\Validation\Rule;
+use App\Rules\QuestionRules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreQuestionRequest extends FormRequest
@@ -14,7 +14,7 @@ class StoreQuestionRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->user()->isAdmin();
     }
 
     /**
@@ -22,48 +22,20 @@ class StoreQuestionRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
-        $array_keys = 'required_array_keys:a,b,c,d';
-        if (request()->input('question_options') === '2') {
-            $array_keys = 'required_array_keys:a,b';
-        }
-        if (request()->input('question_options') === '3') {
-            $array_keys = 'required_array_keys:a,b,c';
-        }
+        $array_keys = QuestionRules::getArrayKeys();
+        dd($array_keys);
 
-        return [
-            // Language 1
-            'title' => ['required', 'string'],
-            'details' => ['nullable', 'string'],
-            'explain' => ['nullable', 'string'],
-            'options' => ['required', 'array', $array_keys],
-            'options.*' => ['required', 'string'],
-
-            // Language 2
-            'title_two' => ['required', 'string'],
-            'details_two' => ['nullable', 'string'],
-            'explain_two' => ['nullable', 'string'],
-            'options_two' => ['required', 'array', $array_keys],
-            'options_two.*' => ['required', 'string'],
-
-            // Other fields
-            'correct_answer' => ['required', 'string', Rule::in(['a', 'b', 'c', 'd'])],
-            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg|max:2048',
-            'topic_id' => ['required', 'numeric', 'exists:topics,id'],
-            'category_id' => ['required', 'numeric', 'exists:categories,id', 'between:1,4']
-        ];
+        return array_merge(
+            QuestionRules::commonRules(),
+            QuestionRules::optionsRules($array_keys),
+            QuestionRules::imageRules()
+        );
     }
 
-    public function messages()
+    public function messages(): array
     {
-        return [
-            'title' => 'Please, write the question name',
-            'options.a' => "Option A can not be blank",
-            'options.b' => "Option B can not be blank",
-            'options.c' => "Option C can not be blank",
-            'options.d' => "Option C can not be blank",
-            'image' => "Input file must be a valid image"
-        ];
+        return QuestionRules::validationMessages();
     }
 }

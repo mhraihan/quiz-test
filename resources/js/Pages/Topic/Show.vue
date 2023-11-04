@@ -25,8 +25,8 @@ const props = defineProps({
             <SectionTitleLineWithButton link="admin.topics.index" :icon="mdiArrowLeft" title="Topic Details"
                                         main/>
             <div class="flex flex-wrap items-center justify-between mb-6 sm:flex-row flex-col">
-                <BaseButton color="info" label="Create a new Topic" routeName="admin.topics.create"/>
-                <BaseButton color="info" label="Edit Topic" routeName="admin.topics.edit"
+                <BaseButton class="w-full md:w-auto mb-3 md:mb-0" color="info" label="Create a new Topic" routeName="admin.topics.create"/>
+                <BaseButton class="w-full md:w-auto" color="info" label="Edit Topic" routeName="admin.topics.edit"
                             :routeParams="props.Topic.id"/>
             </div>
             <CardBox class=" overflow-hidden sm:rounded-lg mb-4">

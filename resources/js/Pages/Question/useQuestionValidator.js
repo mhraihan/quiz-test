@@ -61,6 +61,7 @@ export const cleanOptions = (options) => {
 export const handleQuestionSubmit = (formData, onSuccess, onError) => {
     const validation = questionValidateForm(formData);
     if (validation.passes()) {
+        console.log(formData)
         formData
             .transform((data) => ({
                 ...data,
@@ -73,6 +74,10 @@ export const handleQuestionSubmit = (formData, onSuccess, onError) => {
                 details_two: data.details_two !== "<p><br></p>" ? data.details_two : null,
                 explain_two: data.explain_two !== "<p><br></p>" ? data.explain_two : null,
                 image: data.image || null,
+                ...(formData['_duplicate'] === true && {
+                    _duplicate: true
+                })
+
             }))
             .post(onSuccess, onError);
     } else {

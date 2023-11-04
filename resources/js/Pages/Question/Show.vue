@@ -56,8 +56,8 @@ onMounted(() => {
                                         main/>
 
             <div class="flex flex-wrap items-center justify-between mb-6 sm:flex-row flex-col">
-                <BaseButton color="info" label="Create a new Question" routeName="admin.questions.create"/>
-                <BaseButton color="info" label="Edit Question" routeName="admin.questions.edit"
+                <BaseButton class="w-full md:w-auto mb-3 md:mb-0" color="info" label="Create a new Question" routeName="admin.questions.create"/>
+                <BaseButton class="w-full md:w-auto" color="info" label="Edit Question" routeName="admin.questions.edit"
                             :routeParams="props.Question.id"/>
             </div>
             <CardBox class=" overflow-hidden sm:rounded-lg mb-4">
