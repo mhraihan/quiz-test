@@ -25,9 +25,7 @@ class StoreQuestionRequest extends FormRequest
     public function rules(): array
     {
         $array_keys = QuestionRules::getArrayKeys();
-        dd($array_keys);
-
-        return array_merge(
+          return array_merge(
             QuestionRules::commonRules(),
             QuestionRules::optionsRules($array_keys),
             QuestionRules::imageRules()
