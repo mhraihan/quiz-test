@@ -1,6 +1,5 @@
 <script setup>
-import {useForm, usePage, Head} from "@inertiajs/inertia-vue3";
-import {computed} from "vue";
+import {useForm,  Head} from "@inertiajs/inertia-vue3";
 import {mdiAccount, mdiEmail, mdiFormTextboxPassword} from "@mdi/js";
 import LayoutGuest from "@/Layouts/LayoutGuest.vue";
 import SectionFullScreen from "@/Components/SectionFullScreen.vue";
@@ -12,7 +11,13 @@ import BaseButton from "@/Components/BaseButton.vue";
 import BaseButtons from "@/Components/BaseButtons.vue";
 import FormValidationErrors from "@/Components/FormValidationErrors.vue";
 import Expired from "@/Components/Expired.vue";
-
+import {UserEnum} from "@/config";
+const { Role } = defineProps({
+    Role: {
+        type: String,
+        default: UserEnum.STUDENT
+    }
+});
 const form = useForm({
     first_name: "",
     last_name: "",
@@ -20,11 +25,9 @@ const form = useForm({
     password: "",
     password_confirmation: "",
     terms: [],
-    roles: "student",
+    roles: Role,
 });
-const hasTermsAndPrivacyPolicyFeature = computed(
-    () => usePage().props.value?.jetstream?.hasTermsAndPrivacyPolicyFeature
-);
+
 const submit = () => {
     form
         .transform((data) => ({

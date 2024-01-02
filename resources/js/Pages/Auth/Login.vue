@@ -108,7 +108,7 @@ const submit = () => {
 <!--              outline-->
 <!--              label="Remind"-->
 <!--            />-->
-<!--          </BaseButtons>-->
+          </BaseButtons>
           <Link :href="route('register')"> Register </Link>
         </BaseLevel>
       </CardBox>

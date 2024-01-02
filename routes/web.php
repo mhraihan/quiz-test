@@ -9,24 +9,26 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\TeacherDashboardController;
+use App\Http\Controllers\TeacherRegister;
 use App\Http\Controllers\TeacherStudentController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Middleware\TeacherRedirectIfAuthenticated;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\QuestionController;
 
-
+Route::get('/teacher/register', TeacherRegister::class)->name('teacher.register')->middleware(TeacherRedirectIfAuthenticated::class);
 Route::group(['middleware' => ['auth', 'check_roles']], static function () {
 
     Route::get('/', static fn() => redirect()->route(auth()->user()?->getRedirectRoute()))->name('index');
     Route::get('/dashboard', HomeController::class)->middleware('is_admin')->name('dashboard');
-
-    /**
-     * Teacher Controller
-     */
-    Route::get('/teacher', TeacherDashboardController::class)->name('teacher.index');
-    route::get("/teacher/student", [TeacherStudentController::class, 'index'])->name('teacher.student');
-    route::get("/teacher/student/{user}", [TeacherStudentController::class, 'profile'])->name('teacher.student.profile')->withTrashed();
-
+    Route::group(['middleware' => ['is_admin_or_teacher']], static function () {
+        /**
+         * Teacher Controller
+         */
+        Route::get('/teacher', TeacherDashboardController::class)->name('teacher.index');
+        route::get("/teacher/student", [TeacherStudentController::class, 'index'])->name('teacher.student');
+        route::get("/teacher/student/{user}", [TeacherStudentController::class, 'profile'])->name('teacher.student.profile')->withTrashed();
+    });
     // This route is not protected by the 'check_roles' middleware
     Route::withoutMiddleware(['check_roles'])->group(static function () {
         Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile');
