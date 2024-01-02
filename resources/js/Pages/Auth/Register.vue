@@ -11,7 +11,6 @@ import BaseDivider from "@/Components/BaseDivider.vue";
 import BaseButton from "@/Components/BaseButton.vue";
 import BaseButtons from "@/Components/BaseButtons.vue";
 import FormValidationErrors from "@/Components/FormValidationErrors.vue";
-import FormCheckRadioGroup from "@/Components/FormCheckRadioGroup.vue";
 import Expired from "@/Components/Expired.vue";
 
 const form = useForm({
@@ -111,28 +110,6 @@ const submit = () => {
                         required
                     />
                 </FormField>
-                <FormField
-                    label="What is your role?"
-                    label-for="roles"
-                >
-                    <FormCheckRadioGroup
-                        v-model="form.roles"
-                        id="roles"
-                        type="radio"
-                        name="roles"
-                        :value="form.roles"
-                        :options="{
-                            'teacher': 'Teacher',
-                            'student': 'Student'
-                        }"
-                    />
-                </FormField>
-                <FormCheckRadioGroup
-                    v-if="hasTermsAndPrivacyPolicyFeature"
-                    v-model="form.terms"
-                    name="remember"
-                    :options="{ agree: 'I agree to the Terms' }"
-                />
                 <BaseDivider/>
                 <BaseButtons>
                     <BaseButton

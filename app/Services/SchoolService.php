@@ -15,7 +15,7 @@ class SchoolService
             return School::query()
                 ->latest('created_at')
                 ->orderBy('name')
-                ->selectRaw("CONCAT(name, ' (', short_name, ')') AS label, id AS value")
+                ->selectRaw("CONCAT(name, ' (', short_name, ')') AS label, id AS value, short_name")
                 ->limit(50)
                 ->get();
         });

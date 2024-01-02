@@ -28,6 +28,7 @@ const emit = defineEmits(['sort']);
 const id = ref(null);
 
 const routerConfig = computed(() => {
+  console.log(generateRouterConfigByRole(props.Role))
     return generateRouterConfigByRole(props.Role);
 });
 const links = computed(() => props.Users.meta.links);
@@ -72,7 +73,7 @@ const filter = (name) => {
         <thead>
         <tr>
             <th>#</th>
-            <th>Avatar</th>
+
             <th @click="filter('first_name')">
                 <div class="flex items-center cursor-pointer">
                     First Name
@@ -103,12 +104,6 @@ const filter = (name) => {
                 {{ (currentPageHuman - 1) * 15 + key + 1 }}
             </td>
 
-            <td data-label="Avatar">
-                <Link :href="route(routerConfig.edit,user.id)"
-                      :data="{ prev_pages: props.Users.meta.current_page,...props.Query}" preserve-state>
-                    <userAvatar :username="user.name" api="initials" class="w-12"/>
-                </Link>
-            </td>
             <td data-label="First Name">
                 <div class="flex h-full items-center justify-start">
                     {{ user.first_name }}
