@@ -28,7 +28,7 @@ class StudentController extends Controller
 
     public function create(Request $request): Response|ResponseFactory
     {
-         $current_school = $request?->school_id ?? null;
+        $current_school = $request?->school_id ?? null;
         return inertia('User/Create', [
             'Role' => UserEnum::STUDENT->value,
             'Schools' => fn() => SchoolService::getSchools(),
@@ -39,15 +39,28 @@ class StudentController extends Controller
 
     public function show(User $user): Response|ResponseFactory
     {
-        if (!($user->roles()->pluck('name')->first() === UserEnum::STUDENT->value)) {
+        $authUser = auth()->user();
+        $teacherId = auth()->id();
+
+        if (!$authUser || !($authUser->isAdmin() || $authUser->isTeacher())) {
+            abort(403);
+        }
+
+        if ($user->roles()->pluck('name')->first() !== UserEnum::STUDENT->value) {
             abort(403, "User must be a student");
         }
+
+        if ($authUser->isTeacher() && !$user->belongsToTeacher($teacherId)) {
+            abort(403, "Student does not belong to the given teacher");
+        }
+
         return inertia('User/Student', [
             'User' => fn() => $this->exam($user),
             'results' => fn() => $this->results($user),
             'Role' => UserEnum::STUDENT->value,
         ]);
     }
+
 
     public function edit(Request $request, User $user): Response|ResponseFactory
     {

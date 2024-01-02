@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\CheckUserRole;
 use App\Http\Middleware\isAdminMiddleware;
+use App\Http\Middleware\isAdminOrTeacher;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -70,6 +71,7 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         'is_admin' => isAdminMiddleware::class,
+        'is_admin_or_teacher' => isAdminOrTeacher::class,
         'check_roles' => CheckUserRole::class,
     ];
 }

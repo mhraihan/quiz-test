@@ -48,7 +48,7 @@ Route::group(['middleware' => ['auth', 'check_roles']], static function () {
 
     route::resource("results", ResultController::class)->only(['index', 'show', 'store']);
 });
-Route::group(['middleware' => ['auth', 'verified', 'is_admin']], static function () {
+Route::group(['middleware' => ['auth', 'verified']], static function () {
     /**
      * Admin Group Controller
      *
@@ -56,39 +56,50 @@ Route::group(['middleware' => ['auth', 'verified', 'is_admin']], static function
 
     Route::group(['prefix' => 'admin', 'as' => 'admin.'], static function () {
 
-        /**
-         * Question Controller
-         */
-        Route::get('questions/trash', [QuestionController::class, 'trash'])
-            ->name('questions.trash')->withTrashed();
-        Route::put('questions/{question}/restore', [QuestionController::class, 'restore'])
-            ->name('questions.restore')->withTrashed();
-        Route::delete('questions/{question}', [QuestionController::class, 'forceDelete'])
-            ->name('questions.delete')->withTrashed();
-        Route::resource("questions", QuestionController::class)->withTrashed(['index', 'show', 'edit', 'destroy']);
-        /**
-         * Topics Controller
-         */
-        Route::resource("topics", TopicController::class)->withTrashed(['index', 'show', 'edit', 'update', 'destroy']);
+        Route::group(['middleware' => ['auth', 'verified', 'is_admin']], static function () {
+            /**
+             * Question Controller
+             */
+            Route::get('questions/trash', [QuestionController::class, 'trash'])
+                ->name('questions.trash')->withTrashed();
+            Route::put('questions/{question}/restore', [QuestionController::class, 'restore'])
+                ->name('questions.restore')->withTrashed();
+            Route::delete('questions/{question}', [QuestionController::class, 'forceDelete'])
+                ->name('questions.delete')->withTrashed();
+            Route::resource("questions", QuestionController::class)->withTrashed(['index', 'show', 'edit', 'destroy']);
+            /**
+             * Topics Controller
+             */
+            Route::resource("topics", TopicController::class)->withTrashed(['index', 'show', 'edit', 'update', 'destroy']);
 
-        /**
-         * School Management Controller
-         */
-        route::resource("schools", SchoolController::class)->withTrashed(['index', 'show', 'edit', 'update', 'destroy']);
+            /**
+             * School Management Controller
+             */
+            route::resource("schools", SchoolController::class)->withTrashed(['index', 'show', 'edit', 'update', 'destroy']);
+            /**
+             * User Management Controller
+             */
+            Route::put('users/{user}/restore', [UserController::class, 'restore'])
+                ->name('users.restore')->withTrashed();
+            Route::resource("users", UserController::class)->withTrashed(['index', 'show', 'edit', 'destroy']);
+            Route::resource('teachers', TeacherController::class)->parameters([
+                'teachers' => 'user'
+            ])->only(['index', 'create', 'show', 'edit'])->withTrashed(['index', 'show', 'edit']);
 
-        /**
-         * User Management Controller
-         */
-        Route::put('users/{user}/restore', [UserController::class, 'restore'])
-            ->name('users.restore')->withTrashed();
-        Route::resource("users", UserController::class)->withTrashed(['index', 'show', 'edit', 'destroy']);
+        });
 
-        Route::resource("students", StudentController::class)->parameters([
-            'students' => 'user'
-        ])->only(['index', 'create', 'show', 'edit'])->withTrashed(['index', 'show', 'edit']);
-        Route::resource('teachers', TeacherController::class)->parameters([
-            'teachers' => 'user'
-        ])->only(['index', 'create', 'show', 'edit'])->withTrashed(['index', 'show', 'edit']);
+
+        Route::resource("students", StudentController::class)
+            ->parameters(['students' => 'user'])
+            ->only(['index', 'create', 'edit'])
+            ->withTrashed(['index', 'show', 'edit'])
+            ->middleware(['is_admin']);
+
+        // Show route with specific middleware
+        Route::get("students/{user}", [StudentController::class, 'show'])
+            ->name('students.show')
+            ->middleware(['is_admin_or_teacher']);
+
     });
 });
 
