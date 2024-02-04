@@ -62,7 +62,9 @@ export function getUserProperty(user) {
 export const userAdmin = () => {
     return [UserEnum.SUPER_ADMIN, UserEnum.ADMIN];
 }
-
+export const userAdminOrTeacher = () => {
+    return [UserEnum.SUPER_ADMIN, UserEnum.ADMIN, UserEnum.TEACHER];
+}
 export const userAdminStudent = () => {
     return [...userAdmin(), UserEnum.STUDENT];
 }
@@ -78,7 +80,10 @@ export const isTeacher = () => {
     const role = getRole();
     return role === UserEnum.TEACHER;
 }
-
+export const isAdminOrTeacher = () => {
+    const role = getRole();
+    return isAdmin() || isTeacher();
+}
 export const isStudent = () => {
     const role = getRole();
     return role === UserEnum.STUDENT;

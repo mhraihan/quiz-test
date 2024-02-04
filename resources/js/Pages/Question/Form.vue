@@ -14,6 +14,7 @@ import TrashedMessage from '@/Components/TrashedMessage.vue'
 import CardBoxModal from "@/Components/CardBoxModal.vue";
 import {ref} from "vue"
 import SectionMain from "@/Components/SectionMain.vue";
+import {isAdminOrTeacher} from "@/config";
 
 const props = defineProps({
   Categories: Object,
@@ -82,7 +83,7 @@ const duplicateQuestionModal = () => {
     >
       <p>Are you sure you want to Duplicate the question?</p>
     </CardBoxModal>
-    <trashed-message v-if="questions.deleted_at" @restore="$emit('restore')" class="mb-6"> This Question has been
+    <trashed-message v-if="questions.deleted_at" @restore="$emit('restore')" :role="isAdminOrTeacher" class="mb-6"> This Question has been
       deleted.
     </trashed-message>
     <ValidationError/>

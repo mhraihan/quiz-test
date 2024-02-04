@@ -57,8 +57,7 @@ Route::group(['middleware' => ['auth', 'verified']], static function () {
      */
 
     Route::group(['prefix' => 'admin', 'as' => 'admin.'], static function () {
-
-        Route::group(['middleware' => ['auth', 'verified', 'is_admin']], static function () {
+        Route::group(['middleware' => 'is_admin_or_teacher'], static function () {
             /**
              * Question Controller
              */
@@ -73,6 +72,9 @@ Route::group(['middleware' => ['auth', 'verified']], static function () {
              * Topics Controller
              */
             Route::resource("topics", TopicController::class)->withTrashed(['index', 'show', 'edit', 'update', 'destroy']);
+        });
+
+        Route::group(['middleware' => ['auth', 'verified', 'is_admin']], static function () {
 
             /**
              * School Management Controller

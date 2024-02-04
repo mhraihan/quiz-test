@@ -19,7 +19,7 @@ class QuestionPolicy
      */
     public function view(User $user)
     {
-        return $user->can('read question');
+        return $user->can('read question') || $user->isTeacher();
     }
 
     /**
@@ -30,7 +30,7 @@ class QuestionPolicy
      */
     public function create(User $user)
     {
-        return $user->can('create question');
+        return $user->can('create question') || $user->isTeacher();
     }
 
     /**
@@ -41,7 +41,7 @@ class QuestionPolicy
      */
     public function update(User $user)
     {
-        return $user->can('update question');
+        return $user->can('update question') || $user->isTeacher();
     }
 
     /**
@@ -52,7 +52,7 @@ class QuestionPolicy
      */
     public function delete(User $user)
     {
-        return $user->can('delete question');
+        return $user->can('delete question') || $user->isTeacher();
     }
 
     /**
@@ -63,7 +63,7 @@ class QuestionPolicy
      */
     public function restore(User $user, Question $question)
     {
-        return $user->can('update question');
+        return $user->can('update question') || $user->isTeacher();
     }
 
     /**

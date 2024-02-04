@@ -10,6 +10,10 @@ const props = defineProps({
     restore: {
         type: String,
         default: "Are you sure you want to restore this Question?"
+    },
+    role: {
+        type: Function,
+        default: isAdmin
     }
 })
 const isModalRestoreActive = ref(false);
@@ -27,9 +31,9 @@ const restoreModal = () => {
                     <slot />
                 </div>
             </div>
-            <button v-if="isAdmin()" class="text-yellow-800 hover:underline text-sm" @click="isModalRestoreActive=true" tabindex="-1" type="button">Restore</button>
+            <button v-if="role()" class="text-yellow-800 hover:underline text-sm" @click="isModalRestoreActive=true" tabindex="-1" type="button">Restore</button>
             <CardBoxModal
-                v-if="isAdmin()"
+                v-if="role()"
                 v-model="isModalRestoreActive"
                 title="Please confirm"
                 button="danger"

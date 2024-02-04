@@ -7,7 +7,7 @@ import {
     mdiBookHeartOutline,
     mdiTableQuestion,
 } from "@mdi/js";
-import {userAdmin, userAdminStudent, UserEnum} from "@/config";
+import {userAdmin, userAdminOrTeacher, userAdminStudent, UserEnum} from "@/config";
 
 export default [
     {
@@ -15,6 +15,12 @@ export default [
         icon: mdiMonitor,
         label: "Dashboard",
         roles: userAdmin(),
+    },
+    {
+        route: "teacher.index",
+        icon: mdiTableQuestion,
+        label: "Dashboard",
+        roles: [UserEnum.TEACHER],
     },
     {
         icon: mdiTable,
@@ -36,7 +42,7 @@ export default [
     {
         label: "Questions",
         icon: mdiViewList,
-        roles: userAdmin(),
+        roles: userAdminOrTeacher(),
         menu: [
             {
                 route: "admin.questions.index",
@@ -135,12 +141,7 @@ export default [
         label: "Result",
         roles: userAdminStudent(),
     },
-    {
-        route: "teacher.index",
-        icon: mdiTableQuestion,
-        label: "Dashboard",
-        roles: [UserEnum.TEACHER],
-    },
+
     {
         route: "teacher.student",
         icon: mdiTableQuestion,

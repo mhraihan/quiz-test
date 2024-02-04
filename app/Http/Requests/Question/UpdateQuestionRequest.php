@@ -16,7 +16,7 @@ class UpdateQuestionRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->isAdmin();
+        return auth()->user()->isAdmin() || auth()->user()->isTeacher();
     }
 
     public function rules(): array
